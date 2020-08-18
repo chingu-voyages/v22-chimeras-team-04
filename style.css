@@ -1,53 +1,127 @@
+:root {
+  --primary-color: #7A3BEA;
+  --secondary-color: #9967FF;
+  --dark-text: #01AF80;
+  --light-text: #f4f4f4;
+  --background-text: lightgreen;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap');
+
   * {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box; 
   }
-  body {
+    body {
+          background: var(--primary-color);
+    font-family: 'Open Sans', sans-serif;
     display: flex;
     min-height: 100vh;
-    flex-direction: column;
+    flex-direction: row;
+        line-height: 1.6;
     margin: 0;
   }
-  #main {
+  .col-1 {
+    flex: 1;
+  }
+  .col-2 {
     display: flex;
-    flex: 1;
+    flex-direction: column;
+    flex: 5;
   }
-  #main > article {
-    flex: 1;
-    order: 3;
+  .content {
+    display: flex;
+    flex-direction: row;
   }
-  #main > nav, 
-  #main > aside {
-    flex: 0 0 20vw;
-  }
-  #main > nav {
-    background: #D7E8D4;
-    order: 1;
-  }
-  #main > aside {
-    background: beige;
-    order: 2;
+  .content > article {
+    flex: 4;
+    min-height: 60vh;
   }
   header, footer {
-    background: yellowgreen;
+
     height: 20vh;
   }
-  header, footer, article, nav, aside {
+  header, footer, article, nav {
     padding: 1em;
   }
 
-.logo {
+
+  .logo {
   width: 100px;
   margin-bottom: 8px;
 }
 
-.icon-layout {
+.nav-layout {
   display: flex;
   flex-direction: column;
-  /* background-color: lightpink; */
+  background-color: var(--secondary-color);
+  padding: 5px;
+  border-radius: 5%;
+  height: 100%;
+}
+.header-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  background-color: var(--secondary-color);
+  border-radius: 5%;
+  height: 100%;
 }
 
-.fas {
-  margin: 10px;
+
+.article-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  background-color: var(--secondary-color);
+  border-radius: 5%;
+  height: 100%;
+}
+
+.fas, 
+.far {
+  margin: 5px;
+  /* color: var(--primary-color) */
+}
+
+h3 {
+  color: var(--light-text)
+}
+
+
+
+.emails-title {
+  background-color: var(--dark-text);
+  color: var(--light-text);
+  font-size: 22px;
+  width: 250px;
+  margin: auto;
+  text-align: center;
+  /* margin: 5px; */
+  /* padding: 5px; */
+}
+
+.table-title {
+  background-color: var(--dark-text);
+  color: var(--light-text);
+  font-size: 22px;
+  width: 250px;
+  margin: auto;
+  text-align: center;
+  margin: 20px;
+  /* padding: 5px; */
+}
+
+table {
+  width: 80%;
+  text-align: center;
+}
+
+table, td, tr {
+  border-style: groove;
+  background-color: var(--dark-text);
+  color: var(--light-text);
 }
