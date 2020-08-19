@@ -27,94 +27,54 @@ for (const [key, value] of Object.entries(data[i])) {
 
 orderData(data);
 
-function compareAsc( a, b ) {
-    if ( a.emailCnt < b.emailCnt ){
-      return -1;
-    }
-    if ( a.emailCnt > b.emailCnt ){
-      return 1;
-    }
-    return 0;
+function genericCmp(a,b){
+  if(a < b){
+    return 1;
   }
-
-function compareDesc( a, b ) {
-if ( a.emailCnt < b.emailCnt ){
-  return 1;
-}
-if ( a.emailCnt > b.emailCnt ){
-  return -1;
-}
-return 0;
+  if ( a > b ){
+    return -1;
+  }
+  return 0;
 }
 
 function compareNumAsc( a, b ) {
-  if ( a.emailCnt < b.emailCnt ){
-    return -1;
-  }
-  if ( a.emailCnt > b.emailCnt ){
-    return 1;
-  }
-  return 0;
+  return genericCmp(b.emailCnt,a.emailCnt)
+
 }
 
 function compareNumDesc( a, b ) {
-  if ( a.emailCnt < b.emailCnt ){
-    return 1;
-  }
-  if ( a.emailCnt > b.emailCnt ){
-    return -1;
-  }
-  return 0;
+  return genericCmp(a.emailCnt,b.emailCnt)
 }
 
 function compareStrAsc( a, b ) {
-  if ( a.emailContact < b.emailContact ){
-    return -1;
-  }
-  if ( a.emailContact > b.emailContact ){
-    return 1;
-  }
-  return 0;
+  return genericCmp(b.emailContact,a.emailContact)
 }
 
 function compareStrDesc( a, b ) {
-  if ( a.emailContact < b.emailContact ){
-    return 1;
-  }
-  if ( a.emailContact > b.emailContact ){
-    return -1;
-  }
-  return 0;
+  return genericCmp(a.emailContact,b.emailContact)
+}
+
+function genericSort(cmpF){
+  data.sort(cmpF);
+  cellCnt = 0;
+  for(j = data.length; j>0; j--)
+  table.deleteRow(j);
+  orderData(data);
 }
 
 var sortAlphUp = function(){
-    data.sort(compareStrAsc);
-    cellCnt = 0;
-   for(j = data.length; j>0; j--)
-    table.deleteRow(j);
-    orderData(data);
+    genericSort(compareStrAsc);
 }
 
 var sortAlphDown = function(){
-  data.sort(compareStrDesc);
-  cellCnt = 0;
- for(j = data.length; j>0; j--)
-  table.deleteRow(j);
-  orderData(data);
+  genericSort(compareStrDesc);
 }
 
 var sortNumUp = function(){
-  data.sort(compareNumAsc);
-  cellCnt = 0;
- for(j = data.length; j>0; j--)
-  table.deleteRow(j);
-  orderData(data);
+  genericSort(compareNumAsc);
 }
 
 var sortNumDown = function(){
-data.sort(compareNumDesc);
-cellCnt = 0;
-for(j = data.length; j>0; j--)
-table.deleteRow(j);
-orderData(data);
+  genericSort(compareNumDesc);
 }
+
