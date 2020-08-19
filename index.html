@@ -6,16 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="topTable.css" />
 
-    <!--<title></title>
+    <title></title>
 
-    <link rel="icon" href="images/favicon.png" />-->
   </head>
 
   <body>
       <table id="topSendersTbl">
           <tr>
-              <th>Email Contact <div onclick="sortAlphUp()"> &#9650;</div><div onclick="sortAlphDown">&#9660;</div></th>
-              <th>Number Of Emails<div> &#9650;</div><div>&#9660;</div></th>
+              <th>Email Contact <div class="sortTriangle" onclick="sortAlphUp()"> &#9650;</div><div class="sortTriangle" onclick="sortAlphDown()">&#9660;</div></th>
+              <th>Number Of Emails<div class="sortTriangle" onclick="sortNumUp()"> &#9650;</div><div class="sortTriangle" onclick="sortNumDown()">&#9660;</div></th>
               <th>Action</th>
           </tr>
 
