@@ -1,4 +1,8 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const webpack = require('webpack');
 const path = require('path');
+
 module.exports = {
   mode: "development",
   entry: "./src/index.js",
@@ -11,6 +15,15 @@ module.exports = {
     open: true,
     inline: true,
   },
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: "Webpack Email Cleaner starter",
+      template: path.resolve("./index.html"),
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+  ],
+
   module: {
     rules: [     
       {
