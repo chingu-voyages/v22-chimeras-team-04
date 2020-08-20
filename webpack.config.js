@@ -14,7 +14,15 @@ module.exports = {
       new OptimizeCSSAssetsPlugin()
     ]
   },
-    
+  watch: true, 
+  watchOptions: {
+    aggregateTimeout: 500, // Process all changes which happened in this time into one rebuild
+    poll: 1000, // Check for changes every second,
+    ignored: /node_modules/,
+    // ignored: [
+    //   '**/*.scss', '/node_modules/'
+    // ]
+  }, 
   devtool: "source-map",
   devServer: {
     contentBase: path.join(__dirname, "dist"),
