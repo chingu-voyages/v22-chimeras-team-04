@@ -2,19 +2,17 @@ const path = require('path');
 module.exports = {
   mode: "development",
   entry: "./src/index.js",
-  output: {
-    path: __dirname + "/dist",
-    filename: "bundle.js",
-  },
-  
-  devtool: "cheap-module-eval-source-map",
+    
+  devtool: "source-map",
   devServer: {
     contentBase: path.join(__dirname, "dist"),
+    watchContentBase: true,
+    hot: true,
+    open: true,
+    inline: true,
   },
   module: {
-    rules: [
-     
-      // For SASS/SCSS
+    rules: [     
       {
         test: /\.s[ac]ss$/i,
         use: [
@@ -23,8 +21,6 @@ module.exports = {
           "sass-loader",
         ],
       },
-
-      // For Babel
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -35,6 +31,24 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.(jpg|jpeg|gif|png|svg|webp)$/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              outputPath: "./images",
+              name: "[name].[ext]",
+            },
+          },
+        ],
+      },
+      {
+        test: /\.html$/,
+        use: {
+          loader: "html-loader",
+        },
+      }
     ],
   },
 };
