@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
+const MinifyPlugin = require("babel-minify-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 const webpack = require('webpack');
 const path = require('path');
@@ -8,6 +9,11 @@ const path = require('path');
 module.exports = {
   mode: "development",
   entry: "./src/index.js",
+  optimization: {
+    minimizer: [
+      new OptimizeCSSAssetsPlugin()
+    ]
+  },
     
   devtool: "source-map",
   devServer: {
@@ -28,7 +34,7 @@ module.exports = {
       filename: "[name].css",
       chunkFilename: "[id].css"
     }),
-    // new MinifyPlugin()
+    new MinifyPlugin()
   ],
 
   module: {
