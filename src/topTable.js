@@ -1,5 +1,4 @@
 var table = document.getElementById("topSendersTbl");
-
 var cellCnt = 0;
 
 var action = 'Delete: <a href=_blank>All</a> | <a href=_blank>Selective</a>'
@@ -62,19 +61,8 @@ function genericSort(cmpF){
   orderData(data);
 }
 
-var sortAlphUp = function(){
-    genericSort(compareStrAsc);
-}
-
-var sortAlphDown = function(){
-  genericSort(compareStrDesc);
-}
-
-var sortNumUp = function(){
-  genericSort(compareNumAsc);
-}
-
-var sortNumDown = function(){
-  genericSort(compareNumDesc);
-}
+document.getElementById('sortNumUp').onclick= function (){ genericSort(compareNumAsc)}
+document.getElementById('sortNumDown').onclick= function () {genericSort(compareNumDesc)}
+document.getElementById('sortAlphUp').onclick= function (){ genericSort(compareStrAsc)}
+document.getElementById('sortAlphDown').onclick= function () {genericSort(compareStrDesc)}
 
