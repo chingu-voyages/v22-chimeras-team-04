@@ -1,27 +1,17 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const MinifyPlugin = require("babel-minify-webpack-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-
+  
 const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
   mode: "development",
   entry: "./src/index.js",
-  optimization: {
-    minimizer: [
-      new OptimizeCSSAssetsPlugin()
-    ]
-  },
+  
   watch: true, 
   watchOptions: {
     aggregateTimeout: 500, // Process all changes which happened in this time into one rebuild
-    poll: 1000, // Check for changes every second,
+    poll: 5000, // Check for changes every 5 seconds,
     ignored: /node_modules/,
-    // ignored: [
-    //   '**/*.scss', '/node_modules/'
-    // ]
   }, 
   devtool: "source-map",
   devServer: {
@@ -35,14 +25,9 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: "Webpack Email Cleaner starter",
-      template: path.resolve("./index.html"),
+      template: path.resolve("./src/index.html"),
     }),
-    new webpack.HotModuleReplacementPlugin(),
-    new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css"
-    }),
-    new MinifyPlugin()
+    new webpack.HotModuleReplacementPlugin()
   ],
 
   module: {
@@ -50,7 +35,7 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         use: [
-          MiniCssExtractPlugin.loader,
+          "style-loader",
           "css-loader",
           "sass-loader",
         ],
@@ -65,24 +50,7 @@ module.exports = {
           },
         },
       },
-      {
-        test: /\.(jpg|jpeg|gif|png|svg|webp)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              outputPath: "./images",
-              name: "[name].[ext]",
-            },
-          },
-        ],
-      },
-      {
-        test: /\.html$/,
-        use: {
-          loader: "html-loader",
-        },
-      }
+     
     ],
   },
 };
