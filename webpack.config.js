@@ -6,10 +6,6 @@ const path = require('path');
 module.exports = {
   mode: "development",
   entry: "./src/index.js",
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
-  },
   watch: true,
   watchOptions: {
     aggregateTimeout: 500, // Process all changes which happened in this time into one rebuild
