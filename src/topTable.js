@@ -1,68 +1,78 @@
 var table = document.getElementById("topSendersTbl");
 var cellCnt = 0;
 
-var action = 'Delete: <a href=_blank>All</a> | <a href=_blank>Selective</a>'
-var data =  [{emailContact:"test1@yan.com", emailCnt: 456, Action:action}, 
-            {emailContact:"av1@rr.com", emailCnt: 3333, Action:action },
-            {emailContact:"bv1@rr.com", emailCnt: 2, Action:action },
-            {emailContact:"twest1@gg.com", emailCnt: 0, Action:action}, 
-            {emailContact:"a1v1@rr.com", emailCnt: 23333, Action:action },
-            {emailContact:"3av1@rr.com", emailCnt: 12, Action:action },
-            {emailContact:"tesfft1@yafffn.com", emailCnt: 54, Action:action}, 
-            {emailContact:"ff@rr.com", emailCnt: 909, Action:action },
-            {emailContact:"zz1@rr.com", emailCnt: 321, Action:action }];
+var data =  [{emailContact:"test1@yan.com", emailCnt: 456}, 
+{emailContact:"av1@rr.com", emailCnt: 3333 },
+{emailContact:"bv1@rr.com", emailCnt: 2 },
+{emailContact:"twest1@gg.com", emailCnt: 0}, 
+{emailContact:"a1v1@rr.com", emailCnt: 23333 },
+{emailContact:"3av1@rr.com", emailCnt: 12 },
+{emailContact:"tesfft1@yafffn.com", emailCnt: 54}, 
+{emailContact:"ff@rr.com", emailCnt: 909 },
+{emailContact:"zz1@rr.com", emailCnt: 321 }];
 
-var orderData = function(data){
-var i = 0;
-for( i =0; i< data.length; i++){
-    var row = table.insertRow(i+1)
+var action = 'Delete: <a href=_blank>All</a> | <a href=_blank>Selective</a>'
+var orderData = function (data) {
+  var i = 0;
+  for (i = 0; i < data.length; i++) {
+    var row = table.insertRow(i + 1)
     cellCnt = 0;
-for (const [key, value] of Object.entries(data[i])) {
+    for (const [key, value] of Object.entries(data[i])) {
+      var cell = row.insertCell(cellCnt++);
+      cell.innerHTML = value;
+    }
+
     var cell = row.insertCell(cellCnt++);
-    cell.innerHTML = value;
+    cell.innerHTML = action;
   }
-}
 }
 
 orderData(data);
 
-function genericCmp(a,b){
-  if(a < b){
+function genericCmp(a, b) {
+  if (a < b) {
     return 1;
   }
-  if ( a > b ){
+  if (a > b) {
     return -1;
   }
   return 0;
 }
 
-function compareNumAsc( a, b ) {
-  return genericCmp(b.emailCnt,a.emailCnt)
+function compareNumAsc(a, b) {
+  return genericCmp(b.emailCnt, a.emailCnt)
 
 }
 
-function compareNumDesc( a, b ) {
-  return genericCmp(a.emailCnt,b.emailCnt)
+function compareNumDesc(a, b) {
+  return genericCmp(a.emailCnt, b.emailCnt)
 }
 
-function compareStrAsc( a, b ) {
-  return genericCmp(b.emailContact,a.emailContact)
+function compareStrAsc(a, b) {
+  return genericCmp(b.emailContact, a.emailContact)
 }
 
-function compareStrDesc( a, b ) {
-  return genericCmp(a.emailContact,b.emailContact)
+function compareStrDesc(a, b) {
+  return genericCmp(a.emailContact, b.emailContact)
 }
 
-function genericSort(cmpF){
+function genericSort(cmpF) {
   data.sort(cmpF);
   cellCnt = 0;
-  for(j = data.length; j>0; j--)
-  table.deleteRow(j);
+  for (j = data.length; j > 0; j--)
+    table.deleteRow(j);
   orderData(data);
 }
 
-document.getElementById('sortNumUp').onclick= function (){ genericSort(compareNumAsc)}
-document.getElementById('sortNumDown').onclick= function () {genericSort(compareNumDesc)}
-document.getElementById('sortAlphUp').onclick= function (){ genericSort(compareStrAsc)}
-document.getElementById('sortAlphDown').onclick= function () {genericSort(compareStrDesc)}
-
+document.getElementById('sortNumUp').onclick = function () {
+  genericSort(compareNumAsc)
+}
+document.getElementById('sortNumDown').onclick = function () {
+  genericSort(compareNumDesc)
+}
+document.getElementById('sortAlphUp').onclick = function () {
+  genericSort(compareStrAsc)
+}
+document.getElementById('sortAlphDown').onclick = function () {
+  genericSort(compareStrDesc)
+}
