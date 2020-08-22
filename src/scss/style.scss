@@ -4,13 +4,12 @@
 @import "_extends.scss";
 
 /* components*/
-// @import "components/buttons";
-// @import "components/texts";
-// @import "components/containers";
-// @import "components/forms";
+@import "components/_buttons";
+@import "components/_containers";
+@import "components/_forms";
 
 /* sections */
-// @import "sections/navbar";
-// @import "sections/main";
-// @import "sections/popup";
-// @import "sections/footer";
+@import "sections/_header";
+@import "sections/_main";
+@import "sections/_sidebar";
+@import "sections/_footer";
