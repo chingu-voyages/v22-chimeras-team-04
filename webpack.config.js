@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
   mode: "development",
-  entry: "./src/index.js",
+  entry: "./src/js/index.js",
   
   devtool: "cheap-module-eval-source-map",
   devServer: {
