@@ -1,3 +1,15 @@
-body{
-    background: green;
-}
+@import "_reset.scss";
+@import "_variables.scss";
+@import "_layout.scss";
+@import "_extends.scss";
+
+/* components*/
+@import "components/_buttons";
+@import "components/_containers";
+@import "components/_forms";
+
+/* sections */
+@import "sections/_header";
+@import "sections/_main";
+@import "sections/_sidebar";
+@import "sections/_footer";
