@@ -1,15 +1,17 @@
-body{
-    background: green;
-}
 
-table{
-    border-collapse: collapse;
-}
+@import "_reset.scss";
+@import "_variables.scss";
+@import "_layout.scss";
+@import "_extends.scss";
 
-table, th, td {
-    border: 1px solid black;
-}
+/* components*/
+@import "components/_buttons";
+@import "components/_containers";
+@import "components/_forms";
 
-.sortTriangle{
-    color: blue;
-}
+/* sections */
+@import "sections/_header";
+@import "sections/_main";
+@import "sections/_sidebar";
+@import "sections/_footer";
+
