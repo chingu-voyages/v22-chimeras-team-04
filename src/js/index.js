@@ -1,6 +1,6 @@
 import another from './another';
 
-import './scss/style.scss';
+import '../scss/style.scss';
 
 
 alert('ok,it is working')
