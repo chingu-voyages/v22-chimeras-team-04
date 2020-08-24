@@ -58,8 +58,8 @@ function compareStrDesc(a, b) {
   return compareFunc(a.emailContact, b.emailContact)
 }
 
-function genericSort(cmpF) {
-  data.sort(cmpF);
+function genericSort(compareFunc) {
+  data.sort(compareFunc);
   for (let j = data.length; j > 0; j--)
     table.deleteRow(j);
   orderData(data);

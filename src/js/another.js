@@ -13,7 +13,10 @@ import {config} from './config';
 
  var authorizeButton = document.getElementById('authorize_button');
  var signoutButton = document.getElementById('signout_button');
+ var labelsButton = document.getElementById('labels_button');
+ var totalEmailsBtn = document.getElementById('totalemails_button');
  var currentStatDiv = document.getElementById('h1');
+
  handleClientLoad();
  function handleClientLoad() {
     gapi.load('client:auth2', initClient);
@@ -37,6 +40,8 @@ import {config} from './config';
       updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
       authorizeButton.onclick = handleAuthClick;
       signoutButton.onclick = handleSignoutClick;
+      labelsButton.onclick = listLabels;
+      totalEmailsBtn.onclick =getTotalEmails;
     }, function(error) {
      // appendPre(JSON.stringify(error, null, 2));
     });
@@ -74,17 +79,17 @@ import {config} from './config';
    *
    * @param {string} message Text to be placed in pre element.
    */
-  /*function appendPre(message) {
-    var pre = document.getElementById('content');
-    var textContent = document.createTextNode(message + '\n');
+  function appendPre(message) {
+    var pre = document.getElementById('info');
+    var textContent = document.createTextNode(message + '\r\n');
     pre.appendChild(textContent);
-  }*/
+  }
 
   /**
    * Print all Labels in the authorized user's inbox. If no labels
    * are found an appropriate message is printed.
    */
- /* function listLabels() {
+  function listLabels() {
     gapi.client.gmail.users.labels.list({
       'userId': 'me'
     }).then(function(response) {
@@ -92,7 +97,7 @@ import {config} from './config';
       appendPre('Labels:');
 
       if (labels && labels.length > 0) {
-        for (i = 0; i < labels.length; i++) {
+        for (let i = 0; i < labels.length; i++) {
           var label = labels[i];
           appendPre(label.name)
         }
@@ -100,4 +105,21 @@ import {config} from './config';
         appendPre('No Labels found.');
       }
     });
-  }*/
+  }
+
+  function getTotalEmails() {
+    gapi.client.gmail.users.getProfile({
+      'userId': 'me'
+    }).then(function(response) {
+      var resp = response.result;
+      appendPre('Profile:');
+
+      if (resp) {
+        appendPre("email address" + resp.emailAddress);
+        appendPre("total threads" + resp.threadsTotal);
+        appendPre("total messages" + resp.messagesTotal);
+      } else {
+        appendPre('Not found.');
+      }
+    });
+  }
