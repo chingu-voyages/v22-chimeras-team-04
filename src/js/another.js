@@ -13,7 +13,7 @@ import {config} from './config';
 
  var authorizeButton = document.getElementById('authorize_button');
  var signoutButton = document.getElementById('signout_button');
- var labelsButton = document.getElementById('labels_button');
+ var threadsButton = document.getElementById('threads_button');
  var totalEmailsBtn = document.getElementById('totalemails_button');
  var currentStatDiv = document.getElementById('h1');
 
@@ -40,7 +40,7 @@ import {config} from './config';
       updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
       authorizeButton.onclick = handleAuthClick;
       signoutButton.onclick = handleSignoutClick;
-      labelsButton.onclick = listLabels;
+      threadsButton.onclick = listThreads;
       totalEmailsBtn.onclick =getTotalEmails;
     }, function(error) {
      // appendPre(JSON.stringify(error, null, 2));
@@ -89,21 +89,43 @@ import {config} from './config';
    * Print all Labels in the authorized user's inbox. If no labels
    * are found an appropriate message is printed.
    */
-  function listLabels() {
-    gapi.client.gmail.users.labels.list({
-      'userId': 'me'
+  function listThreads(nextPageToken) {
+    gapi.client.gmail.users.threads.list({
+      'userId': 'me',
+      'nextPageToken': nextPageToken
     }).then(function(response) {
-      var labels = response.result.labels;
-      appendPre('Labels:');
+      var threads = response.result.threads;
+      appendPre('Threads:');
 
-      if (labels && labels.length > 0) {
-        for (let i = 0; i < labels.length; i++) {
-          var label = labels[i];
-          appendPre(label.name)
+      if (threads && threads.length > 0) {
+        for (let i = 0; i < threads.length; i++) {
+          var thread = threads[i];
+          getMeta(thread.id)
         }
+
+        var nextPageToken = response.result.nextPageToken;
+            if (nextPageToken) {
+               listThreads(nextPageToken);
+
+            } else {
+                return;
+            }
       } else {
-        appendPre('No Labels found.');
+        appendPre('No Threads found.');
       }
+    });
+  }
+
+  function getMeta(threadId){
+    gapi.client.gmail.users.threads.get({
+      'userId': 'me',
+      'id': threadId,
+      'format': 'METADATA',
+      'metadataHeaders': ['From'],
+      'maxResults':'1'
+    }).then(function(response) {
+      var res = response.result.messages[0].payload.headers[0].value;
+      appendPre("id: "+threadId + "from: " + res);
     });
   }
 
