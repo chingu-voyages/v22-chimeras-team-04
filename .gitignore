@@ -4,6 +4,7 @@
 node_modules/
 dist/
 package-lock.json
+debug.log
 *.swp
 .vscode
 .DS_Store
