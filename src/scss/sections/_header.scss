@@ -1,25 +1,32 @@
 .header {
-    height: 70px;
+    height: 100px;
     width: 100%;
     display: flex;
     justify-content: space-between;
     margin-bottom: 25px;
-  
-    .logo-container {
-      height: 100%;
-      width: 70px;
-      padding: 25px;
+    background-color:rgb(241, 227, 227);
+
+    .logo {
+      height:7em;
+      width: 7em;
+      margin-left: 1em;
+      padding-bottom: 0.5em;
     }
-  
+
+    .user{
+      
+    }
+
     .options {
       width: 50%;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: flex-end;
-  
+      margin-right: 2em;
+
       .option {
-        padding: 10px 15px;
+        padding: 15px 15px;
         cursor: pointer;
       }
     }
