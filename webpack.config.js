@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   mode: "development",
   entry: "./src/js/index.js",
-
+  
   devtool: "cheap-module-eval-source-map",
   devServer: {
     contentBase: path.join(__dirname, "dist"),
@@ -22,15 +22,9 @@ module.exports = {
       filename: 'topTable.html',
       template: 'src/html/topTable.html'
     }),
-  ],
+],
   module: {
     rules: [
-      {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader'
-        ]
-      },
       {
         test: /\.scss$/,
         use: ["style-loader", "css-loader", "sass-loader"],
@@ -45,6 +39,22 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.(jpg|jpeg|gif|png|svg|webp)$/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              outputPath: "./images",
+              name: "[name].[ext]",
+            },
+          },
+        ],
+      },
+      {
+        test: /\.html$/i,
+        loader: 'html-loader',
+      },  
     ],
   },
 };
