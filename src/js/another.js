@@ -16,8 +16,11 @@ import {config} from './config';
  var threadsButton = document.getElementById('threads_button');
  var totalEmailsBtn = document.getElementById('totalemails_button');
  var currentStatDiv = document.getElementById('h1');
+ var allEmails = [];
+ var myPromises = []
 
  handleClientLoad();
+
  function handleClientLoad() {
     gapi.load('client:auth2', initClient);
   }
@@ -89,7 +92,12 @@ import {config} from './config';
    * Print all Labels in the authorized user's inbox. If no labels
    * are found an appropriate message is printed.
    */
+
+
+
   function listThreads(nextPageToken) {
+
+    let newData = [];
     gapi.client.gmail.users.threads.list({
       'userId': 'me',
       'nextPageToken': nextPageToken
@@ -100,34 +108,87 @@ import {config} from './config';
       if (threads && threads.length > 0) {
         for (let i = 0; i < threads.length; i++) {
           var thread = threads[i];
-          getMeta(thread.id)
+          myPromises.push(getMeta(thread.id));
+     
         }
 
-        var nextPageToken = response.result.nextPageToken;
+        Promise.all(myPromises).then(() => {
+          allEmails.sort(function(a, b) {
+            var textA = a.emailAddress.toUpperCase();
+            var textB = b.emailAddress.toUpperCase();
+            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        });
+      
+        console.log(allEmails);
+        let sum = 1;
+        let ids = [];
+        let newArr = [];
+        ids.push(allEmails[0].id);
+        let obj = {emailContact: allEmails[0].emailAddress, emailCnt:1, threadIds: ids };
+
+         console.log(newArr);
+        for(let i = 1; i<allEmails.length; i++)
+        {
+            if(allEmails[i].emailAddress==obj.emailContact)
+            {
+              obj.emailCnt++;
+              ids.push(allEmails[i].id);
+              obj.threadIds = ids;
+            }
+
+            else{
+              newArr.push(obj);
+              ids.length = 0;
+              obj.emailContact = allEmails[i].emailAddress;
+              obj.emailCnt = 1;
+              ids.push(allEmails[i].id);
+              obj.threadIds = ids;
+            }
+        }
+      });
+        
+
+       /* var nextPageToken = response.result.nextPageToken;
             if (nextPageToken) {
                listThreads(nextPageToken);
 
             } else {
                 return;
-            }
+            }*/
       } else {
         appendPre('No Threads found.');
       }
-    });
+    }
+    
+    );
+
+  
   }
 
   function getMeta(threadId){
-    gapi.client.gmail.users.threads.get({
+     
+    return new Promise(function(resolve,reject){
+    var request = gapi.client.gmail.users.threads.get({
       'userId': 'me',
       'id': threadId,
       'format': 'METADATA',
       'metadataHeaders': ['From'],
       'maxResults':'1'
-    }).then(function(response) {
-      var res = response.result.messages[0].payload.headers[0].value;
-      appendPre("id: "+threadId + "from: " + res);
     });
-  }
+    
+    request.execute(function(response){
+      var res = response.result.messages[0].payload.headers[0].value;
+     // appendPre("id: "+threadId + "from: " + res);
+      let myData = {};
+      myData['emailAddress'] = res;
+      myData['id'] = threadId;
+      allEmails.push(myData);
+
+      resolve(res);
+    })
+  });
+}
+
 
   function getTotalEmails() {
     gapi.client.gmail.users.getProfile({
