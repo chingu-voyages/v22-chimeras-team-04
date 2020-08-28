@@ -1,5 +1,6 @@
 import {gapi} from 'gapi-script';
 import {config} from './config';
+import {getData} from './topTable';
 import Bottleneck from "bottleneck";
 
 
@@ -16,8 +17,7 @@ const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
-
-  minTime: 200
+  minTime: 50 
 });
 
 var authorizeButton = document.getElementById('authorize_button');
@@ -26,7 +26,6 @@ var threadsButton = document.getElementById('threads_button');
 var totalEmailsBtn = document.getElementById('totalemails_button');
 var currentStatDiv = document.getElementById('h1');
 var allEmails = [];
-var myPromises = []
 
 handleClientLoad();
 
@@ -107,6 +106,8 @@ function appendPre(message) {
 function listThreads(nextPageToken) {
 
   let newData = [];
+  let myPromises = []
+
   gapi.client.gmail.users.threads.list({
     'userId': 'me',
     'nextPageToken': nextPageToken
@@ -118,52 +119,56 @@ function listThreads(nextPageToken) {
         for (let i = 0; i < threads.length; i++) {
           var thread = threads[i];
           myPromises.push(getMeta(thread.id));
-
         }
 
-        Promise.all(myPromises).then(() => {
-          allEmails.sort(function (a, b) {
-            var textA = a.emailAddress.toUpperCase();
-            var textB = b.emailAddress.toUpperCase();
-            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-          });
-
-          console.log(allEmails);
-          let sum = 1;
-          let ids = [];
-          let newArr = [];
-          ids.push(allEmails[0].id);
-          let obj = {
-            emailContact: allEmails[0].emailAddress,
-            emailCnt: 1,
-            threadIds: ids
-          };
-
-          console.log(newArr);
-          for (let i = 1; i < allEmails.length; i++) {
-            if (allEmails[i].emailAddress == obj.emailContact) {
-              obj.emailCnt++;
-              ids.push(allEmails[i].id);
-              obj.threadIds = ids;
-            } else {
-              newArr.push(obj);
-              ids.length = 0;
-              obj.emailContact = allEmails[i].emailAddress;
-              obj.emailCnt = 1;
-              ids.push(allEmails[i].id);
-              obj.threadIds = ids;
-            }
-          }
-        });
 
 
-        /* var nextPageToken = response.result.nextPageToken;
+
+        var nextPageToken = response.result.nextPageToken;
+        nextPageToken = null; //run only for 100 first only
              if (nextPageToken) {
                 listThreads(nextPageToken);
 
              } else {
-                 return;
-             }*/
+              Promise.all(myPromises).then(() => {
+                allEmails.sort(function (a, b) {
+                  var textA = a.emailAddress.toUpperCase();
+                  var textB = b.emailAddress.toUpperCase();
+                  return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                });
+            
+                console.log(allEmails);
+                let sum = 1;
+                let ids = [];
+                let newArr = [];
+                ids.push(allEmails[0].id);
+                let obj = {
+                  emailContact: allEmails[0].emailAddress,
+                  emailCnt: 1,
+                  threadIds: ids
+                };
+            
+                for (let i = 1; i < allEmails.length; i++) {
+                  if (allEmails[i].emailAddress == obj.emailContact) {
+                    obj.emailCnt++;
+                    ids.push(allEmails[i].id);
+                    obj.threadIds = ids;
+                  } else {
+                    newArr.push(obj);
+                    obj = {};
+                    ids = [];
+                    obj.emailContact = allEmails[i].emailAddress;
+                    obj.emailCnt = 1;
+                    ids.push(allEmails[i].id);
+                    obj.threadIds = ids;
+                  }
+                }
+                console.log(newArr);
+
+                getData(newArr);
+            
+              });
+             }
       } else {
         appendPre('No Threads found.');
       }
@@ -171,6 +176,7 @@ function listThreads(nextPageToken) {
 
   );
 
+ 
 
 }
 

@@ -1,8 +1,15 @@
-import {data} from './demoData'
+//import {data} from './demoData'
+
 let table = document.getElementById("topSendersTbl");
 
 const action = 'Delete: <a href=_blank>All</a> | <a href=_blank>Selective</a>';
-orderData(data);
+let data = [];
+
+function getData(extData)
+{
+  data = extData;
+  orderData(data);
+}
 
 document.getElementById('sortNumUp').onclick = function () {
   genericSort(compareNumAsc)
@@ -65,3 +72,4 @@ function genericSort(compareFunc) {
   orderData(data);
 }
 
+export {getData};
