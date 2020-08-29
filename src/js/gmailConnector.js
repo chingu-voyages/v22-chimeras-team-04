@@ -1,6 +1,12 @@
-import {gapi} from 'gapi-script';
-import {config} from './config';
-import {getData} from './topTable';
+import {
+  gapi
+} from 'gapi-script';
+import {
+  config
+} from './config';
+import {
+  getData
+} from './topTable';
 import Bottleneck from "bottleneck";
 
 
@@ -17,7 +23,7 @@ const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
-  minTime: 50 
+  minTime: 3000
 });
 
 var authorizeButton = document.getElementById('authorize_button');
@@ -52,9 +58,9 @@ function initClient() {
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
     threadsButton.onclick = listThreads;
-    totalEmailsBtn.onclick = getTotalEmails;
+    totalEmailsBtn.onclick = getEmailProfile;
   }, function (error) {
-    // appendPre(JSON.stringify(error, null, 2));
+    console.log(JSON.stringify(error, null, 2));
   });
 }
 
@@ -73,71 +79,93 @@ function updateSigninStatus(isSignedIn) {
 /**
  *  Sign in the user upon button click.
  */
-function handleAuthClick(event) {
+function handleAuthClick() {
   gapi.auth2.getAuthInstance().signIn();
 }
 
 /**
  *  Sign out the user upon button click.
  */
-function handleSignoutClick(event) {
+function handleSignoutClick() {
   gapi.auth2.getAuthInstance().signOut();
 }
-
-/**
- * Append a pre element to the body containing the given message
- * as its text node. Used to display the results of the API call.
- *
- * @param {string} message Text to be placed in pre element.
- */
-function appendPre(message) {
-  var pre = document.getElementById('info');
-  var textContent = document.createTextNode(message + '\r\n');
-  pre.appendChild(textContent);
+var threadsGeMetatReq = function (id) {
+  return gapi.client.gmail.users.threads.get({
+    'userId': 'me',
+    'id': id,
+    'format': 'METADATA',
+    'metadataHeaders': ['From'],
+    'maxResults': '1'
+  })
 }
 
-/**
- * Print all Labels in the authorized user's inbox. If no labels
- * are found an appropriate message is printed.
- */
+let myPromises = []
+let cnt = 0;
+let batches = [];
 
-
+function createNewBatch() {
+  let batch = gapi.client.newBatch();
+  batches.push(batch);
+  return batch;
+}
 
 function listThreads(nextPageToken) {
-
+  let batch = createNewBatch();
   let newData = [];
-  let myPromises = []
 
   gapi.client.gmail.users.threads.list({
-    'userId': 'me',
-    'nextPageToken': nextPageToken
-  }).then(function (response) {
-      var threads = response.result.threads;
-      appendPre('Threads:');
+      'userId': 'me',
+      'nextPageToken': nextPageToken
+    }).then(function (response) {
 
-      if (threads && threads.length > 0) {
-        for (let i = 0; i < threads.length; i++) {
-          var thread = threads[i];
-          myPromises.push(getMeta(thread.id));
-        }
+        var threads = response.result.threads;
 
+        if (threads && threads.length > 0) {
+          for (let i = 0; i < threads.length; i++) {
+            var thread = threads[i];
+            let val = threadsGeMetatReq(thread.id);
+            batch.add(val);
+          }
+          
+          cnt++;
+          var nextPageToken = response.result.nextPageToken;
 
+          if (nextPageToken && cnt < 10) {
+            console.log(cnt);
+            listThreads(nextPageToken);
 
+          } else {
 
-        var nextPageToken = response.result.nextPageToken;
-        nextPageToken = null; //run only for 100 first only
-             if (nextPageToken) {
-                listThreads(nextPageToken);
+            batches.forEach(batch => {
 
-             } else {
-              Promise.all(myPromises).then(() => {
+              let promise = new Promise(function (resolve){
+                limiter.schedule(()=> {batch.then(function (resp) {
+                  let items = resp.result;
+                  Object.values(items).forEach(item => {
+                    let threadid = item.result.id;
+                    let res = item.result.messages[0].payload.headers[0].value;
+                    let myData = {};
+                    myData['emailAddress'] = res;
+                    myData['id'] = threadid;
+                    allEmails.push(myData);
+                    resolve(res);
+
+                  })
+                })
+              })})
+
+              myPromises.push(promise);
+
+  
+              })
+
+                Promise.all(myPromises).then(() => {
                 allEmails.sort(function (a, b) {
                   var textA = a.emailAddress.toUpperCase();
                   var textB = b.emailAddress.toUpperCase();
                   return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
                 });
-            
-                console.log(allEmails);
+
                 let sum = 1;
                 let ids = [];
                 let newArr = [];
@@ -147,7 +175,7 @@ function listThreads(nextPageToken) {
                   emailCnt: 1,
                   threadIds: ids
                 };
-            
+
                 for (let i = 1; i < allEmails.length; i++) {
                   if (allEmails[i].emailAddress == obj.emailContact) {
                     obj.emailCnt++;
@@ -163,57 +191,24 @@ function listThreads(nextPageToken) {
                     obj.threadIds = ids;
                   }
                 }
-                console.log(newArr);
 
                 getData(newArr);
-            
-              });
-             }
-      } else {
-        appendPre('No Threads found.');
+
+                 });
+              }
+            }
+            else {
+              console.log("No threads found");
+            }
+          }
+
+        );
       }
-    }
 
-  );
-
- 
-
-}
-
-function getMeta(threadId) {
-
-  return new Promise(function (resolve, reject) {
-    limiter.schedule(()=> {gapi.client.gmail.users.threads.get({
-      'userId': 'me',
-      'id': threadId,
-      'format': 'METADATA',
-      'metadataHeaders': ['From'],
-      'maxResults': '1'
-    }).then((function (response) {
-      var res = response.result.messages[0].payload.headers[0].value;
-      let myData = {};
-      myData['emailAddress'] = res;
-      myData['id'] = threadId;
-      allEmails.push(myData);
-      resolve(res);
-    }));
-  })})
-}
-
-
-function getTotalEmails() {
-  gapi.client.gmail.users.getProfile({
-    'userId': 'me'
-  }).then(function (response) {
-    var resp = response.result;
-    appendPre('Profile:');
-
-    if (resp) {
-      appendPre("email address" + resp.emailAddress);
-      appendPre("total threads" + resp.threadsTotal);
-      appendPre("total messages" + resp.messagesTotal);
-    } else {
-      appendPre('Not found.');
-    }
-  });
-}
+      function getEmailProfile() {
+        gapi.client.gmail.users.getProfile({
+          'userId': 'me'
+        }).then(function (response) {
+          return response.result;
+        });
+      }
