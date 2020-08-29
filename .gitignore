@@ -8,5 +8,7 @@ debug.log
 *.swp
 .vscode
 .DS_Store
-.config.js
+config.js
+
+
 
