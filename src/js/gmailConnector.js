@@ -3,16 +3,10 @@ import {config} from './config';
 import { getData} from './topTable';
 import Bottleneck from "bottleneck";
 
-
-// Client ID and API key from the Developer Console
 const CLIENT_ID = config.CLIENT_ID;
 const API_KEY = config.API_KEY;
-
-// Array of API discovery doc URLs for APIs used by the quickstart
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
 
-// Authorization scopes required by the API; multiple scopes can be
-// included, separated by spaces.
 const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 
 const limiter = new Bottleneck({
@@ -33,10 +27,7 @@ function handleClientLoad() {
   gapi.load('client:auth2', initClient);
 }
 
-/**
- *  Initializes the API client library and sets up sign-in state
- *  listeners.
- */
+
 function initClient() {
   gapi.client.init({
     apiKey: API_KEY,
@@ -44,10 +35,7 @@ function initClient() {
     discoveryDocs: DISCOVERY_DOCS,
     scope: SCOPES
   }).then(function () {
-    // Listen for sign-in state changes.
     gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-    // Handle the initial sign-in state.
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
@@ -58,10 +46,7 @@ function initClient() {
   });
 }
 
-/**
- *  Called when the signed in status changes, to update the UI
- *  appropriately. After a sign-in, the API is called.
- */
+
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     currentStatDiv.innerHTML = "*****signed-in*****";
@@ -70,16 +55,11 @@ function updateSigninStatus(isSignedIn) {
   }
 }
 
-/**
- *  Sign in the user upon button click.
- */
+
 function handleAuthClick() {
   gapi.auth2.getAuthInstance().signIn();
 }
 
-/**
- *  Sign out the user upon button click.
- */
 function handleSignoutClick() {
   gapi.auth2.getAuthInstance().signOut();
 }
@@ -106,120 +86,116 @@ function createNewBatch() {
 function listThreads(nextPageToken = null) {
   let batch = createNewBatch();
   let newData = [];
-  let reqObj = {'userId': 'me'};
-  if(!isNaN(nextPageToken))
-  {
+  let reqObj = {
+    'userId': 'me'
+  };
+  if (!isNaN(nextPageToken)) {
     reqObj = {
       'userId': 'me',
       'pageToken': nextPageToken
     }
-  } 
-
-
+  }
 
   gapi.client.gmail.users.threads.list(reqObj).then(function (response) {
 
-        var threads = response.result.threads;
+      var threads = response.result.threads;
 
-        if (threads && threads.length > 0) {
-          for (let i = 0; i < threads.length; i++) {
-            var thread = threads[i];
-            let val = threadsGeMetatReq(thread.id);
-            batch.add(val);
-          }
-          
-          cnt++;
-          var nextPageToken = response.result.nextPageToken;
+      if (threads && threads.length > 0) {
+        for (let i = 0; i < threads.length; i++) {
+          var thread = threads[i];
+          let val = threadsGeMetatReq(thread.id);
+          batch.add(val);
+        }
 
-          if (nextPageToken && cnt < 50) {
-            console.log(cnt);
-            listThreads(nextPageToken);
+        cnt++;
+        var nextPageToken = response.result.nextPageToken;
 
-          } else {
+        if (nextPageToken && cnt < 50) {
+          listThreads(nextPageToken);
 
-            batches.forEach(batch => {
+        } else {
 
-              let promise = new Promise(function (resolve, reject){
-                limiter.schedule(()=> {batch.then(function (resp) {
+          batches.forEach(batch => {
+
+            let promise = new Promise(function (resolve, reject) {
+              limiter.schedule(() => {
+                batch.then(function (resp) {
                   let items = resp.result;
                   Object.values(items).forEach(item => {
                     let threadid = item.result.id;
-                    console.log(item.result);
-                    if(item.result.error)
-                    {
+                    if (item.result.error) {
                       reject(item.result.error)
-                    }
-                     else{
+                    } else {
 
-                      
-                    let res = item.result.messages[0].payload.headers[0].value;
-                    let myData = {};
-                    myData['emailAddress'] = res;
-                    myData['id'] = threadid;
-                    allEmails.push(myData);
-                    resolve(res);
+
+                      let res = item.result.messages[0].payload.headers[0].value;
+                      let myData = {};
+                      myData['emailAddress'] = res;
+                      myData['id'] = threadid;
+                      allEmails.push(myData);
+                      resolve(res);
                     }
 
 
                   })
                 })
-              })})
-
-              myPromises.push(promise);
-
-  
               })
+            })
 
-                Promise.allSettled(myPromises).then(() => {
-                allEmails.sort(function (a, b) {
-                  var textA = a.emailAddress.toUpperCase();
-                  var textB = b.emailAddress.toUpperCase();
-                  return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-                });
+            myPromises.push(promise);
 
-                let sum = 1;
-                let ids = [];
-                let newArr = [];
-                ids.push(allEmails[0].id);
-                let obj = {
-                  emailContact: allEmails[0].emailAddress,
-                  emailCnt: 1,
-                  threadIds: ids
-                };
 
-                for (let i = 1; i < allEmails.length; i++) {
-                  if (allEmails[i].emailAddress == obj.emailContact) {
-                    obj.emailCnt++;
-                    ids.push(allEmails[i].id);
-                    obj.threadIds = ids;
-                  } else {
-                    newArr.push(obj);
-                    obj = {};
-                    ids = [];
-                    obj.emailContact = allEmails[i].emailAddress;
-                    obj.emailCnt = 1;
-                    ids.push(allEmails[i].id);
-                    obj.threadIds = ids;
-                  }
-                }
+          })
 
-                getData(newArr);
+          Promise.allSettled(myPromises).then(() => {
+            allEmails.sort(function (a, b) {
+              var textA = a.emailAddress.toUpperCase();
+              var textB = b.emailAddress.toUpperCase();
+              return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+            });
 
-                 });
+            let sum = 1;
+            let ids = [];
+            let newArr = [];
+            ids.push(allEmails[0].id);
+            let obj = {
+              emailContact: allEmails[0].emailAddress,
+              emailCnt: 1,
+              threadIds: ids
+            };
+
+            for (let i = 1; i < allEmails.length; i++) {
+              if (allEmails[i].emailAddress == obj.emailContact) {
+                obj.emailCnt++;
+                ids.push(allEmails[i].id);
+                obj.threadIds = ids;
+              } else {
+                newArr.push(obj);
+                obj = {};
+                ids = [];
+                obj.emailContact = allEmails[i].emailAddress;
+                obj.emailCnt = 1;
+                ids.push(allEmails[i].id);
+                obj.threadIds = ids;
               }
             }
-            else {
-              console.log("No threads found");
-            }
-          }
 
-        );
-      }
+            getData(newArr);
 
-      function getEmailProfile() {
-        gapi.client.gmail.users.getProfile({
-          'userId': 'me'
-        }).then(function (response) {
-          return response.result;
-        });
+          });
+        }
+      } else {
+        console.log("No threads found");
       }
+    }
+
+  );
+}
+
+function getEmailProfile() {
+  gapi.client.gmail.users.getProfile({
+    'userId': 'me'
+  }).then(function (response) {
+    return response.result;
+  });
+}
