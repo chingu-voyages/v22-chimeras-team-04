@@ -1,12 +1,6 @@
-import {
-  gapi
-} from 'gapi-script';
-import {
-  config
-} from './config';
-import {
-  getData
-} from './topTable';
+import {gapi} from 'gapi-script';
+import {config} from './config';
+import { getData} from './topTable';
 import Bottleneck from "bottleneck";
 
 
@@ -23,7 +17,7 @@ const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
-  minTime: 3000
+  minTime: 5000
 });
 
 var authorizeButton = document.getElementById('authorize_button');
@@ -109,14 +103,21 @@ function createNewBatch() {
   return batch;
 }
 
-function listThreads(nextPageToken) {
+function listThreads(nextPageToken = null) {
   let batch = createNewBatch();
   let newData = [];
-
-  gapi.client.gmail.users.threads.list({
+  let reqObj = {'userId': 'me'};
+  if(!isNaN(nextPageToken))
+  {
+    reqObj = {
       'userId': 'me',
-      'nextPageToken': nextPageToken
-    }).then(function (response) {
+      'pageToken': nextPageToken
+    }
+  } 
+
+
+
+  gapi.client.gmail.users.threads.list(reqObj).then(function (response) {
 
         var threads = response.result.threads;
 
@@ -130,7 +131,7 @@ function listThreads(nextPageToken) {
           cnt++;
           var nextPageToken = response.result.nextPageToken;
 
-          if (nextPageToken && cnt < 10) {
+          if (nextPageToken && cnt < 5) {
             console.log(cnt);
             listThreads(nextPageToken);
 
