@@ -17,7 +17,7 @@ const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
-  minTime: 5000
+  minTime: 2000
 });
 
 var authorizeButton = document.getElementById('authorize_button');
@@ -131,7 +131,7 @@ function listThreads(nextPageToken = null) {
           cnt++;
           var nextPageToken = response.result.nextPageToken;
 
-          if (nextPageToken && cnt < 5) {
+          if (nextPageToken && cnt < 50) {
             console.log(cnt);
             listThreads(nextPageToken);
 
@@ -139,17 +139,27 @@ function listThreads(nextPageToken = null) {
 
             batches.forEach(batch => {
 
-              let promise = new Promise(function (resolve){
+              let promise = new Promise(function (resolve, reject){
                 limiter.schedule(()=> {batch.then(function (resp) {
                   let items = resp.result;
                   Object.values(items).forEach(item => {
                     let threadid = item.result.id;
+                    console.log(item.result);
+                    if(item.result.error)
+                    {
+                      reject(item.result.error)
+                    }
+                     else{
+
+                      
                     let res = item.result.messages[0].payload.headers[0].value;
                     let myData = {};
                     myData['emailAddress'] = res;
                     myData['id'] = threadid;
                     allEmails.push(myData);
                     resolve(res);
+                    }
+
 
                   })
                 })
@@ -160,7 +170,7 @@ function listThreads(nextPageToken = null) {
   
               })
 
-                Promise.all(myPromises).then(() => {
+                Promise.allSettled(myPromises).then(() => {
                 allEmails.sort(function (a, b) {
                   var textA = a.emailAddress.toUpperCase();
                   var textB = b.emailAddress.toUpperCase();
