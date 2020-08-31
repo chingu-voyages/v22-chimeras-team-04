@@ -1,14 +1,20 @@
-let table = document.getElementById("topSendersTbl");
-
+let topSendersTbl = document.getElementById("topSendersTbl");
+let selectiveTbl = document.getElementById("selectiveTbl"); //temporary
 const action = 'Delete: <a href=_blank>All</a> | <a href=_blank>Selective</a>';
-let data = [];
-
+let topTblData = [];
 function getData(extData)
 {
-  data = extData;
-  orderData(data);
+  topTblData = extData;
+  orderData(topSendersTbl, topTblData);
   genericSort(compareNumDesc)
+}
 
+/*Temporary*/
+function getDataSubjects(extData)
+{
+  let selectiveTblData = [];
+  selectiveTblData = extData;
+  orderData(selectiveTbl, selectiveTblData);
 }
 
 document.getElementById('sortNumUp').onclick = function () {
@@ -24,7 +30,8 @@ document.getElementById('sortAlphDown').onclick = function () {
   genericSort(compareStrDesc)
 }
 
-function orderData (data) {
+function orderData (inTable, data) {
+  let table =inTable;
   for (let i = 0, cellCnt = 0; i < data.length; i++) {
     let row = table.insertRow(i + 1)
     for (const [key, value] of Object.entries(data[i])) {
@@ -33,7 +40,7 @@ function orderData (data) {
     }
 
     let cell = row.insertCell(cellCnt++);
-    cell.innerText = action;
+    cell.innerHTML = action;
     cellCnt = 0;
   }
 }
@@ -49,27 +56,26 @@ function compareFunc(a, b) {
 }
 
 function compareNumAsc(a, b) {
-  return compareFunc(b.emailCnt, a.emailCnt)
-
+  return compareFunc(b.counter, a.counter)
 }
 
 function compareNumDesc(a, b) {
-  return compareFunc(a.emailCnt, b.emailCnt)
+  return compareFunc(a.counter, b.counter)
 }
 
 function compareStrAsc(a, b) {
-  return compareFunc(b.emailContact, a.emailContact)
+  return compareFunc(b.emailAddress, a.emailAddress)
 }
 
 function compareStrDesc(a, b) {
-  return compareFunc(a.emailContact, b.emailContact)
+  return compareFunc(a.emailAddress, b.emailAddress)
 }
 
 function genericSort(compareFunc) {
-  data.sort(compareFunc);
-  for (let j = data.length; j > 0; j--)
-    table.deleteRow(j);
-  orderData(data);
+  topTblData.sort(compareFunc);
+  for (let j = topTblData.length; j > 0; j--)
+  topSendersTbl.deleteRow(j);
+  orderData(topSendersTbl,topTblData);
 }
 
-export {getData};
+export {getData,getDataSubjects};

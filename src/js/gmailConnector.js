@@ -1,5 +1,5 @@
 import {gapi} from 'gapi-script';
-import {getData} from './topTable';
+import {getData,getDataSubjects} from './topTable';
 import Bottleneck from "bottleneck";
 
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -19,6 +19,7 @@ var threadsButton = document.getElementById('threads_button');
 var totalEmailsBtn = document.getElementById('totalemails_button');
 var currentStatDiv = document.getElementById('h1');
 var allEmails = [];
+var allSubjects = [];
 
 handleClientLoad();
 
@@ -82,6 +83,44 @@ function createNewBatch() {
   return batch;
 }
 
+function listSubjects(from, ids) {
+  let batch = createNewBatch();
+
+  for (let i = 0; i < ids.length; i++) {
+    let val = getSubjectById(ids[i]);
+    batch.add(val);
+  }
+
+  batch.then(function (resp) {
+    let items = resp.result;
+    Object.values(items).forEach(item => {
+      let threadId = item.result.id;
+      if (item.result.error) {
+        reject(item.result.error)
+      } else {
+        let res = item.result.messages[0].payload.headers[0].value;
+        let myData = {};
+        myData['subject'] = res;
+        myData['id'] = threadId;
+        allSubjects.push(myData);
+      }
+    })
+    let newArr = removeDuplicates(allSubjects, "subject");
+    getDataSubjects(newArr);
+  })
+}
+
+var getSubjectById = function (id) {
+  return gapi.client.gmail.users.threads.get({
+    'userId': 'me',
+    'id': id,
+    'format': 'METADATA',
+    'metadataHeaders': ['Subject'],
+    'maxResults': '1'
+  })
+}
+
+
 function listThreads(nextPageToken = null) {
   let batch = createNewBatch();
   let newData = [];
@@ -92,7 +131,7 @@ function listThreads(nextPageToken = null) {
   if (!isNaN(nextPageToken)) {
     reqObj = {
       'userId': 'me',
-    'labelIds': 'INBOX',
+      'labelIds': 'INBOX',
       'pageToken': nextPageToken
     }
   }
@@ -127,8 +166,6 @@ function listThreads(nextPageToken = null) {
                     if (item.result.error) {
                       reject(item.result.error)
                     } else {
-
-
                       let res = item.result.messages[0].payload.headers[0].value;
                       let myData = {};
                       myData['emailAddress'] = res;
@@ -136,8 +173,6 @@ function listThreads(nextPageToken = null) {
                       allEmails.push(myData);
                       resolve(res);
                     }
-
-
                   })
                 })
               })
@@ -148,41 +183,10 @@ function listThreads(nextPageToken = null) {
 
           })
 
-          Promise.allSettled(myPromises).then(() => {
-            allEmails.sort(function (a, b) {
-              var textA = a.emailAddress.toUpperCase();
-              var textB = b.emailAddress.toUpperCase();
-              return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-            });
-
-            let sum = 1;
-            let ids = [];
-            let newArr = [];
-            ids.push(allEmails[0].id);
-            let obj = {
-              emailContact: allEmails[0].emailAddress,
-              emailCnt: 1,
-              threadIds: ids
-            };
-
-            for (let i = 1; i < allEmails.length; i++) {
-              if (allEmails[i].emailAddress == obj.emailContact) {
-                obj.emailCnt++;
-                ids.push(allEmails[i].id);
-                obj.threadIds = ids;
-              } else {
-                newArr.push(obj);
-                obj = {};
-                ids = [];
-                obj.emailContact = allEmails[i].emailAddress;
-                obj.emailCnt = 1;
-                ids.push(allEmails[i].id);
-                obj.threadIds = ids;
-              }
-            }
-
+         Promise.allSettled(myPromises).then(() => {
+            let newArr = removeDuplicates(allEmails, "emailAddress");
             getData(newArr);
-
+            listSubjects(newArr[0].emailContact, newArr[0].threadIds);
           });
         }
       } else {
@@ -199,4 +203,41 @@ function getEmailProfile() {
   }).then(function (response) {
     return response.result;
   });
+}
+
+function removeDuplicates(allObjs, property) {
+  allObjs.sort(function (a, b) {
+    var textA = a[property].toUpperCase();
+    var textB = b[property].toUpperCase();
+    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+  });
+
+  let sum = 1;
+  let ids = [];
+  let newArr = [];
+  ids.push(allObjs[0].id);
+  let obj = {
+    [property]: allObjs[0][property],
+    counter: 1,
+    threadIds: ids
+  };
+
+  for (let i = 1; i < allObjs.length; i++) {
+    if (allObjs[i][property] == obj[property]) {
+      obj.counter++;
+      ids.push(allObjs[i].id);
+      obj.threadIds = ids;
+    } else {
+      newArr.push(obj);
+      obj = {};
+      ids = [];
+      obj[property] = allObjs[i][property];
+      obj.counter = 1;
+      ids.push(allObjs[i].id);
+      obj.threadIds = ids;
+    }
+  }
+
+  return newArr;
+
 }
