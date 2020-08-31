@@ -1,19 +1,19 @@
 import {gapi} from 'gapi-script';
-import {config} from './config';
-import { getData} from './topTable';
+import {getData} from './topTable';
 import Bottleneck from "bottleneck";
 
-const CLIENT_ID = config.CLIENT_ID;
-const API_KEY = config.API_KEY;
+const CLIENT_ID = process.env.CLIENT_ID;
+const API_KEY = process.env.API_KEY;
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
 
 const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
-  minTime: 2000
+  minTime: 50
 });
-
+console.log("y"+CLIENT_ID);
+console.log("k"+process.env.CLIENT_ID);
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
 var threadsButton = document.getElementById('threads_button');
@@ -87,11 +87,13 @@ function listThreads(nextPageToken = null) {
   let batch = createNewBatch();
   let newData = [];
   let reqObj = {
-    'userId': 'me'
+    'userId': 'me',
+    'labelIds': 'INBOX'
   };
   if (!isNaN(nextPageToken)) {
     reqObj = {
       'userId': 'me',
+    'labelIds': 'INBOX',
       'pageToken': nextPageToken
     }
   }
@@ -110,7 +112,7 @@ function listThreads(nextPageToken = null) {
         cnt++;
         var nextPageToken = response.result.nextPageToken;
 
-        if (nextPageToken && cnt < 50) {
+        if (nextPageToken && cnt < 2) {
           listThreads(nextPageToken);
 
         } else {
