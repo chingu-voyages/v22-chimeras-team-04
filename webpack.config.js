@@ -18,7 +18,10 @@ module.exports = {
       title: "Webpack starter project",
       template: path.resolve("./src/index.html"),
     }),
-    new Dotenv()
+    new Dotenv({
+      systemvars: true
+    }
+    )
 ],
   module: {
     rules: [
