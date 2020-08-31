@@ -29,11 +29,11 @@ function orderData (data) {
     let row = table.insertRow(i + 1)
     for (const [key, value] of Object.entries(data[i])) {
       let cell = row.insertCell(cellCnt++);
-      cell.innerHTML = value;
+      cell.innerText = decodeURIComponent(value);
     }
 
     let cell = row.insertCell(cellCnt++);
-    cell.innerHTML = action;
+    cell.innerText = action;
     cellCnt = 0;
   }
 }

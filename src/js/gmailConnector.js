@@ -12,8 +12,7 @@ const limiter = new Bottleneck({
   maxConcurrent: 1,
   minTime: 50
 });
-console.log("y"+CLIENT_ID);
-console.log("k"+process.env.CLIENT_ID);
+
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
 var threadsButton = document.getElementById('threads_button');
@@ -112,7 +111,7 @@ function listThreads(nextPageToken = null) {
         cnt++;
         var nextPageToken = response.result.nextPageToken;
 
-        if (nextPageToken && cnt < 2) {
+        if (nextPageToken && cnt < 4) {
           listThreads(nextPageToken);
 
         } else {
