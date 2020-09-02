@@ -18,8 +18,6 @@ var signoutButton = document.getElementById('signout_button');
 var threadsButton = document.getElementById('threads_button');
 var totalEmailsBtn = document.getElementById('totalemails_button');
 var currentStatDiv = document.getElementById('h1');
-var allEmails = [];
-var allSubjects = [];
 
 handleClientLoad();
 
@@ -84,6 +82,7 @@ function createNewBatch() {
 }
 
 function listSubjects(from, ids) {
+  let allSubjects = [];
   let batch = createNewBatch();
 
   for (let i = 0; i < ids.length; i++) {
@@ -123,6 +122,8 @@ var getSubjectById = function (id) {
 
 function listThreads(nextPageToken = null) {
   let batch = createNewBatch();
+  let allEmails = [];
+
   let newData = [];
   let reqObj = {
     'userId': 'me',
@@ -186,7 +187,6 @@ function listThreads(nextPageToken = null) {
          Promise.allSettled(myPromises).then(() => {
             let newArr = removeDuplicates(allEmails, "emailAddress");
             getData(newArr);
-            listSubjects(newArr[0].emailContact, newArr[0].threadIds);
           });
         }
       } else {
@@ -237,7 +237,10 @@ function removeDuplicates(allObjs, property) {
       obj.threadIds = ids;
     }
   }
+  newArr.push(obj);
 
   return newArr;
 
 }
+
+export {listSubjects};
