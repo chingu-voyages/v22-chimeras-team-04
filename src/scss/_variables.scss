@@ -1,23 +1,19 @@
 // Guitarhub786
 
 // UTILITIES SCSS
-$font-stack: 'Poppins', sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap');
+
+$font-stack: 'Open Sans', sans-serif;
 $primary-background: #fff;
 $primary-color: #333;
-$navbar-text-color: #333;
-$text-primary: #28a745;
-$text-secondary: #0284d0;
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
-
 
 
 .text-primary {
-    color: $text-primary;
+    color: #28a745;
 }
 
 .text-secondary {
-    color: $text-secondary;
+    color: #0284d0;
 }
 
 /* Button */
@@ -56,6 +52,9 @@ $text-secondary: #0284d0;
     background: transparent;
     border: 1px solid #fff;
 }
+
+
+
 
 
 
