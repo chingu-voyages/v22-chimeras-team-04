@@ -10,14 +10,14 @@ const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
-  minTime: 50
+  minTime: 50 
 });
 
-var authorizeButton = document.getElementById('authorize_button');
-var signoutButton = document.getElementById('signout_button');
-var threadsButton = document.getElementById('threads_button');
-var totalEmailsBtn = document.getElementById('totalemails_button');
-var currentStatDiv = document.getElementById('h1');
+let authorizeButton = document.getElementById('authorize_button');
+let signoutButton = document.getElementById('signout_button');
+let threadsButton = document.getElementById('threads_button');
+let totalEmailsBtn = document.getElementById('totalemails_button');
+let currentStatDiv = document.getElementById('h1');
 
 handleClientLoad();
 
@@ -61,7 +61,7 @@ function handleAuthClick() {
 function handleSignoutClick() {
   gapi.auth2.getAuthInstance().signOut();
 }
-var threadsGeMetatReq = function (id) {
+function threadsGeMetatReq (id) {
   return gapi.client.gmail.users.threads.get({
     'userId': 'me',
     'id': id,
@@ -84,32 +84,69 @@ function createNewBatch() {
 function listSubjects(from, ids) {
   let allSubjects = [];
   let batch = createNewBatch();
+  let myBatches = [];
 
   for (let i = 0; i < ids.length; i++) {
     let val = getSubjectById(ids[i]);
     batch.add(val);
+
+    if((i + 1)%100 == 0){
+      myBatches.push(batch);
+      batch = createNewBatch();
+    }
   }
 
-  batch.then(function (resp) {
-    let items = resp.result;
-    Object.values(items).forEach(item => {
-      let threadId = item.result.id;
-      if (item.result.error) {
-        reject(item.result.error)
-      } else {
-        let res = item.result.messages[0].payload.headers[0].value;
-        let myData = {};
-        myData['subject'] = res;
-        myData['id'] = threadId;
-        allSubjects.push(myData);
-      }
+  myBatches.push(batch);
+    let mySubPromises = [];
+    myBatches.forEach(batch => {
+
+      let promise = new Promise(function (resolve, reject) {
+        limiter.schedule(() => {
+          batch.then(function (resp) {
+
+            let items = resp.result;
+            Object.values(items).forEach(item => {
+              let threadId = item.result.id;
+              if (item.result.error) {
+                reject(item.result.error)
+              } else {
+                
+                  console.log(threadId);
+                let payload = item.result.messages[0].payload;
+                let res = ""
+                if(payload.hasOwnProperty('headers'))
+                {
+                  res = payload.headers[0].value;
+                }
+                let myData = {};
+                myData['subject'] = res;
+                myData['id'] = threadId;
+                allSubjects.push(myData);
+                resolve(res)
+                
+              }
+            })
+
+          })
+        })
+      })
+
+      mySubPromises.push(promise);
+
+
     })
-    let newArr = removeDuplicates(allSubjects, "subject");
-    getDataSubjects(newArr);
-  })
+
+   Promise.allSettled(mySubPromises).then(() => {
+
+      let newArr = removeDuplicates(allSubjects, "subject");
+      getDataSubjects(newArr);
+      
+    });
+  
+
 }
 
-var getSubjectById = function (id) {
+ function getSubjectById  (id) {
   return gapi.client.gmail.users.threads.get({
     'userId': 'me',
     'id': id,
@@ -139,19 +176,19 @@ function listThreads(nextPageToken = null) {
 
   gapi.client.gmail.users.threads.list(reqObj).then(function (response) {
 
-      var threads = response.result.threads;
+      let threads = response.result.threads;
 
       if (threads && threads.length > 0) {
         for (let i = 0; i < threads.length; i++) {
-          var thread = threads[i];
+          let thread = threads[i];
           let val = threadsGeMetatReq(thread.id);
           batch.add(val);
         }
 
         cnt++;
-        var nextPageToken = response.result.nextPageToken;
+        let nextPageToken = response.result.nextPageToken;
 
-        if (nextPageToken && cnt < 4) {
+        if (nextPageToken && cnt < 5) {
           listThreads(nextPageToken);
 
         } else {
@@ -187,6 +224,10 @@ function listThreads(nextPageToken = null) {
          Promise.allSettled(myPromises).then(() => {
             let newArr = removeDuplicates(allEmails, "emailAddress");
             getData(newArr);
+            cnt = 0;
+            batches = [];
+            myPromises = [];
+            
           });
         }
       } else {
@@ -201,14 +242,14 @@ function getEmailProfile() {
   gapi.client.gmail.users.getProfile({
     'userId': 'me'
   }).then(function (response) {
-    return response.result;
+    return response.result; 
   });
 }
 
 function removeDuplicates(allObjs, property) {
   allObjs.sort(function (a, b) {
-    var textA = a[property].toUpperCase();
-    var textB = b[property].toUpperCase();
+    let textA = a[property].toUpperCase();
+    let textB = b[property].toUpperCase();
     return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
   });
 
