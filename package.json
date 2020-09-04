@@ -26,13 +26,14 @@
     "file-loader": "^6.0.0",
     "html-loader": "^1.2.1",
     "html-webpack-plugin": "^4.3.0",
-    "mini-css-extract-plugin": "^0.10.0",
     "node-sass": "^4.14.1",
     "sass-loader": "^9.0.3",
     "style-loader": "^1.2.1",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
-  },
-  "dependencies": {}
+    "webpack-dev-server": "^3.11.0",
+    "gapi-script": "^1.0.2",
+    "bottleneck": "~2.19.5",
+    "dotenv-webpack": "^2.0.0"
+  }
 }

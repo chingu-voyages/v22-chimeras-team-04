@@ -5,31 +5,44 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <title>Webpack starter kit</title>
 </head>
 
-<body >
-    <header class="header">
-        <a class="logo-container" to="/">
-            <img class="logo" src="images/pngwave.png" alt="app-logo">
-        </a>
-        <div>
-            <div>Yan Pelov</div>
-            <div>yanpelov@gmail.com</div>
-        </div>
-        <div>
-            Total Emails: 11,344
-        </div>
-
-        <div class="options">
-            <div class='option'>SIGN OUT</div> 
-            <div class='option'>SIGN IN</div>            
-        </div>
-    </header>
+<body>
     <h1 id="h1"></h1>
 
-      
+    <table id="topSendersTbl">
+        <tr>
+            <th>Email Contact <div id="sortAlphUp" class="sortTriangle"> &#9650;</div>
+                <div id="sortAlphDown" class="sortTriangle">&#9660;</div>
+            </th>
+            <th>Number Of Emails<div id="sortNumUp" class="sortTriangle"> &#9650;</div>
+                <div id="sortNumDown" class="sortTriangle">&#9660;</div>
+            </th>
+            <th>Ids</th>
+            <th>Action</th>
+        </tr>
+    </table>
+    <button id="authorize_button" >Authorize</button>
+    <button id="signout_button" >Sign Out</button>
+    <button id="totalemails_button" >Total Emails</button>
+    <button id="threads_button" >Threads</button>
+    <!--Temporary-->
+     <table id="selectiveTbl">
+        <tr>
+            <th>Subjects <div id="sortAlphUp" class="sortTriangle"> &#9650;</div>
+                <div id="sortAlphDown" class="sortTriangle">&#9660;</div>
+            </th>
+            <th>Number Of Emails<div id="sortNumUp" class="sortTriangle"> &#9650;</div>
+                <div id="sortNumDown" class="sortTriangle">&#9660;</div>
+            </th>
+            <th>Ids</th>
+            <th>Action</th>
+        </tr>
+    </table>
+
+
+    <div id="info"></div>
 
 </body>
 

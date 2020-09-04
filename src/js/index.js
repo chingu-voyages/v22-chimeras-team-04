@@ -1,7 +1,4 @@
-import another from './another';
-
+import gmailConnector from './gmailConnector';
+import topTable from './topTable';
 
 import '../scss/style.scss';
-
-
-// alert('ok,it is working')
