@@ -4,14 +4,22 @@ body {
 
 table {
   border-collapse: collapse;
+  width: 100%;
 }
 
 table,
 th,
 td {
-  border: 1px solid black;
+border: 1px solid black;
 }
 
-.sortTriangle {
+
+td:nth-child(2),td:nth-child(4){
+text-align: center;
+}
+
+th:nth-child(3),td:nth-child(3){
+display: none;
+}.sortTriangle {
   color: blue;
 }

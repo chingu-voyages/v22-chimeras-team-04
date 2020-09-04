@@ -47,7 +47,7 @@ function orderData (inTable, data) {
 
     let cell = row.insertCell(cellCnt++);
 
-    let action = 'Delete: <a href=# id=delete-'+(i+1)+' onclick=deleteAllAct(this.id)>All</a> | <a href=# id=select-'+(i+1)+' onclick=deleteSomeAct(this.id)>Selective</a>';
+    let action = '<a href=# id=delete-'+(i+1)+' onclick=deleteAllAct(this.id)>All</a> | <a href=# id=select-'+(i+1)+' onclick=deleteSomeAct(this.id)>Selective</a>';
     cell.innerHTML = action;
     cellCnt = 0;
   }
