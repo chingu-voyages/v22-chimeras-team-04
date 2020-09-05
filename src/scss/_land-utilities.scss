@@ -52,3 +52,15 @@ $primary-color: #333;
     background: transparent;
     border: 1px solid #fff;
 }
+
+/* Flex items */
+.flex-items {
+  display: flex;
+  // justify-content: center;
+  text-align: center;
+  height: 100%;
+}
+
+.flex-items {
+  padding: 20px;
+}
