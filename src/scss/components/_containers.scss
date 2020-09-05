@@ -1,0 +1,25 @@
+.modal-box,
+.modal-trash-info  {
+    width: 300px;
+    height: 250px;
+    position: absolute;
+    top: 90px;
+    background: $bg-blue;
+    color: white;
+    top: 80px;
+    right: 10px;
+    padding: 1.5rem;
+    border: 8px solid $bg-darkblue;
+    border-radius: 5px;
+
+    h3 {
+        line-height: 1.75;
+        text-align: center;
+    }
+
+    button {
+        justify-content: center;
+        max-width: 50%;
+        align-items: center;
+    }
+}

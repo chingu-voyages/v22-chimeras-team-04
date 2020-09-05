@@ -1,0 +1,14 @@
+#selectiveTbl {
+    display: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+table td {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}

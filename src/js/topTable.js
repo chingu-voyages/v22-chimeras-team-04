@@ -1,21 +1,21 @@
-import {listSubjects} from './gmailConnector'
+import { listSubjects } from './gmailConnector'
 let topSendersTbl = document.getElementById("topSendersTbl");
 let selectiveTbl = document.getElementById("selectiveTbl"); //temporary
 let topTblData = [];
-function getData(extData)
-{
+function getData(extData) {
   topTblData = extData;
   orderData(topSendersTbl, topTblData);
   genericSort(compareNumDesc)
 }
 
+console.log(`Top table data: ${topTblData}`)
+
 
 /*Temporary*/
-function getDataSubjects(extData)
-{
-  let length = selectiveTbl.rows.length; 
+function getDataSubjects(extData) {
+  let length = selectiveTbl.rows.length;
   for (let j = length - 1; j > 0; j--)
-  selectiveTbl.deleteRow(j);
+    selectiveTbl.deleteRow(j);
 
   let selectiveTblData = [];
   selectiveTblData = extData;
@@ -35,9 +35,9 @@ document.getElementById('sortAlphDown').onclick = function () {
   genericSort(compareStrDesc)
 }
 
-function orderData (inTable, data) {
+function orderData(inTable, data) {
 
-  let table =inTable;
+  let table = inTable;
   for (let i = 0, cellCnt = 0; i < data.length; i++) {
     let row = table.insertRow(i + 1)
     for (const [key, value] of Object.entries(data[i])) {
@@ -47,7 +47,7 @@ function orderData (inTable, data) {
 
     let cell = row.insertCell(cellCnt++);
 
-    let action = 'Delete: <a href=# id=delete-'+(i+1)+' onclick=deleteAllAct(this.id)>All</a> | <a href=# id=select-'+(i+1)+' onclick=deleteSomeAct(this.id)>Selective</a>';
+    let action = 'Delete: <a href=# id=delete-' + (i + 1) + ' onclick=deleteAllAct(this.id)>All</a> | <a href=# id=select-' + (i + 1) + ' onclick=deleteSomeAct(this.id)>Selective</a>';
     cell.innerHTML = action;
     cellCnt = 0;
   }
@@ -83,21 +83,21 @@ function compareStrDesc(a, b) {
 function genericSort(compareFunc) {
   topTblData.sort(compareFunc);
   for (let j = topTblData.length; j > 0; j--)
-  topSendersTbl.deleteRow(j);
-  orderData(topSendersTbl,topTblData);
+    topSendersTbl.deleteRow(j);
+  orderData(topSendersTbl, topTblData);
 }
 
-window.deleteAllAct = function(id){
-  let myid = id.replace("delete-",'')
-  let cells = topSendersTbl.rows[myid].cells;
-}
+// window.deleteAllAct = function (id) {
+//     let myid = id.replace("delete-", '')
+//     let cells = topSendersTbl.rows[myid].cells;    
+// }
 
-window.deleteSomeAct = function(id){
-  let myid = id.replace("select-",'')
+window.deleteSomeAct = function (id) {
+  let myid = id.replace("select-", '')
   let cells = topSendersTbl.rows[myid].cells;
-  let threads =cells[2].innerText.split(',');
+  let threads = cells[2].innerText.split(',');
   let from = cells[0].innerText;
-  listSubjects(from,threads);
+  listSubjects(from, threads);
 
 }
-export {getData,getDataSubjects};
+export { getData, getDataSubjects };

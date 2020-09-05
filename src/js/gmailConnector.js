@@ -1,12 +1,12 @@
-import {gapi} from 'gapi-script';
-import {getData,getDataSubjects} from './topTable';
+import { gapi } from 'gapi-script';
+import { getData, getDataSubjects } from './topTable';
 import Bottleneck from "bottleneck";
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const API_KEY = process.env.API_KEY;
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
 
-const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+const SCOPES = 'https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.readonly https://mail.google.com/';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
@@ -139,60 +139,60 @@ function listThreads(nextPageToken = null) {
 
   gapi.client.gmail.users.threads.list(reqObj).then(function (response) {
 
-      var threads = response.result.threads;
+    var threads = response.result.threads;
 
-      if (threads && threads.length > 0) {
-        for (let i = 0; i < threads.length; i++) {
-          var thread = threads[i];
-          let val = threadsGeMetatReq(thread.id);
-          batch.add(val);
-        }
+    if (threads && threads.length > 0) {
+      for (let i = 0; i < threads.length; i++) {
+        var thread = threads[i];
+        let val = threadsGeMetatReq(thread.id);
+        batch.add(val);
+      }
 
-        cnt++;
-        var nextPageToken = response.result.nextPageToken;
+      cnt++;
+      var nextPageToken = response.result.nextPageToken;
 
-        if (nextPageToken && cnt < 4) {
-          listThreads(nextPageToken);
+      if (nextPageToken && cnt < 4) {
+        listThreads(nextPageToken);
 
-        } else {
+      } else {
 
-          batches.forEach(batch => {
+        batches.forEach(batch => {
 
-            let promise = new Promise(function (resolve, reject) {
-              limiter.schedule(() => {
-                batch.then(function (resp) {
-                  let items = resp.result;
-                  Object.values(items).forEach(item => {
-                    let threadid = item.result.id;
-                    if (item.result.error) {
-                      reject(item.result.error)
-                    } else {
-                      let res = item.result.messages[0].payload.headers[0].value;
-                      let myData = {};
-                      myData['emailAddress'] = res;
-                      myData['id'] = threadid;
-                      allEmails.push(myData);
-                      resolve(res);
-                    }
-                  })
+          let promise = new Promise(function (resolve, reject) {
+            limiter.schedule(() => {
+              batch.then(function (resp) {
+                let items = resp.result;
+                Object.values(items).forEach(item => {
+                  let threadid = item.result.id;
+                  if (item.result.error) {
+                    reject(item.result.error)
+                  } else {
+                    let res = item.result.messages[0].payload.headers[0].value;
+                    let myData = {};
+                    myData['emailAddress'] = res;
+                    myData['id'] = threadid;
+                    allEmails.push(myData);
+                    resolve(res);
+                  }
                 })
               })
             })
-
-            myPromises.push(promise);
-
-
           })
 
-         Promise.allSettled(myPromises).then(() => {
-            let newArr = removeDuplicates(allEmails, "emailAddress");
-            getData(newArr);
-          });
-        }
-      } else {
-        console.log("No threads found");
+          myPromises.push(promise);
+
+
+        })
+
+        Promise.allSettled(myPromises).then(() => {
+          let newArr = removeDuplicates(allEmails, "emailAddress");
+          getData(newArr);
+        });
       }
+    } else {
+      console.log("No threads found");
     }
+  }
 
   );
 }
@@ -243,4 +243,4 @@ function removeDuplicates(allObjs, property) {
 
 }
 
-export {listSubjects};
+export { listSubjects };
