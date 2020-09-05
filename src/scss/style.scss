@@ -1,7 +1,13 @@
 
+
+// Need to import land-utilities.scss before land-style.scss
+@import "land-utilities.scss";
+@import "land-style.scss";
+
+
 // @import "_reset.scss";
-@import "_variables.scss";
-@import "_layout.scss";
+// @import "_variables.scss";
+// @import "_layout.scss";
 // @import "_extends.scss";
 
 /* components*/
