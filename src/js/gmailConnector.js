@@ -4,9 +4,10 @@ import Bottleneck from "bottleneck";
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const API_KEY = process.env.API_KEY;
-const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
+const DISCOVERY_DOCS = [
+  "https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
 
-const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+  const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
@@ -17,19 +18,17 @@ const limiter = new Bottleneck({
 let threadsButton = document.getElementById('threads_button');
 let totalEmailsBtn = document.getElementById('totalemails_button');
 let currentStatDiv = document.getElementById('h1');
-const userName = document.getElementById('user-name');
+// const userName = document.getElementById('user-name');
 const userEmail = document.getElementById('user-email');
 const totalEmails = document.getElementById('total-emails');
 const signOut = document.getElementById('sign-out');
 const signIn = document.getElementById('sign-in');
-
 
 handleClientLoad();
 
 function handleClientLoad() {
   gapi.load('client:auth2', initClient);
 }
-
 
 function initClient() {
   gapi.client.init({
@@ -49,7 +48,6 @@ function initClient() {
   });
 }
 
-
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     currentStatDiv.innerHTML = "*****signed-in*****";
@@ -64,7 +62,6 @@ function updateSigninStatus(isSignedIn) {
     signIn.style.display = 'block';
   }
 }
-
 
 function handleAuthClick() {
   gapi.auth2.getAuthInstance().signIn();
@@ -154,9 +151,8 @@ function listSubjects(from, ids) {
       getDataSubjects(newArr);
       
     });
-  
-
 }
+
 
  function getSubjectById  (id) {
   return gapi.client.gmail.users.threads.get({

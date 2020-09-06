@@ -35,6 +35,5 @@
     "gapi-script": "^1.0.2",
     "bottleneck": "~2.19.5",
     "dotenv-webpack": "^2.0.0"
-  },
-  "dependencies": {}
+  }
 }
