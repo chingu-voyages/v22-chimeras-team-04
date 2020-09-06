@@ -9,6 +9,24 @@
 </head>
 
 <body>
+    <header class="header">
+        <a class="logo-container" href="#">
+            <img class="logo" src="images/pngwave.png" alt="app-logo">
+        </a>
+        <div class="user-info">
+            <div id="user-name">Username</div>
+            <div id="user-email">Email Address</div>
+        </div>
+        <div class="user-info">
+            Total Emails: 
+            <span id="total-emails">Number of Emails</span> 
+        </div>
+
+        <div class="options">
+            <div id="sign-out" class='option' style="display: none;">SIGN OUT</div> 
+            <div id="sign-in" class='option' style="display: none;" >SIGN IN</div>            
+        </div>
+    </header>
     <h1 id="h1"></h1>
 
     <table id="topSendersTbl">
@@ -23,8 +41,6 @@
             <th>Action</th>
         </tr>
     </table>
-    <button id="authorize_button" >Authorize</button>
-    <button id="signout_button" >Sign Out</button>
     <button id="totalemails_button" >Total Emails</button>
     <button id="threads_button" >Threads</button>
     <!--Temporary-->
