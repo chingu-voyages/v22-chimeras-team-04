@@ -136,7 +136,7 @@ img {
   margin-bottom: 15px;
 }
 
-.team img {
+.team .github {
   height: 200px;
   width:200px;
   border-radius: 50%;
@@ -144,6 +144,12 @@ img {
 
 .team a, span {
   font-weight: bold;
+}
+
+.team .team-logo {
+  // width: 500px;
+  height: 125px;
+  border-radius: 0%;
 }
 
 /* Callback form */
