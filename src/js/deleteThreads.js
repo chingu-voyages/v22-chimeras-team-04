@@ -9,8 +9,6 @@ const btnDelete = document.querySelector('.btn-delete');
 const btnTrash = document.querySelector('.btn-trash');
 const closeInfoModal = document.querySelector('.close');
 
-const topSenders = document.getElementById('topSendersTbl')
-
 modalBox.style.display = "none";
 modalInfo.style.display = 'none';
 
@@ -22,6 +20,7 @@ const popUp = () => {
 }
 
 const infoPopUp = () => {
+    modalBox.style.display = "none";
     modalInfo.style.display = 'block';
     closeInfoModal.addEventListener('click', () => {
         modalInfo.style.display = "none";
@@ -33,19 +32,15 @@ window.deleteAllAct = function (id) {
     let myid = id.replace('delete-', '');
     let cells = topSendersTbl.rows[myid].cells;
     let threads = cells[2].innerText.split(',');
-    console.log(threads)
+    console.log(myid)
 
     let row = document.getElementById('row-' + myid);
     console.log(row)
-
-    // let deleteAll = document.getElementById('delete-' + myid)
-    console.log(myid)
 
     popUp();
 
     btnTrash.addEventListener('click', function toTrash() {
         console.log(threads)
-        console.log(cells[2].innerHTML)
         for (let thread of threads) {
             gapi.client.gmail.users.threads.trash({ 'userId': 'me', 'id': thread })
                 .then(function (response) {
@@ -56,12 +51,12 @@ window.deleteAllAct = function (id) {
                     console.log(error)
                 })
         }
-        modalBox.style.display = "none";
-        row.style.display = "none";
         infoPopUp();
         infoText.innerText = `${threads.length} messages from  \r\n`;;
         infoText.innerText += `${cells[0].innerText} \r\n`;
         infoText.innerText += `were moved to trash`;
+        row.style.display = "none";
+        threads = [];
     });
 
     btnDelete.addEventListener('click', function deleteEmails() {
@@ -76,13 +71,12 @@ window.deleteAllAct = function (id) {
                     console.log(error)
                 })
         }
-
-        modalBox.style.display = "none";
         infoPopUp();
         infoText.innerText = `${threads.length} messages from \r\n`;;
         infoText.innerText += `${cells[0].innerText} \r\n`;
         infoText.innerText += `were deleted permamently`;
         row.style.display = "none";
+        threads = [];
     });
 
 
