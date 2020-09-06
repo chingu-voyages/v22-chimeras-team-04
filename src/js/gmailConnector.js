@@ -51,7 +51,7 @@ function initClient() {
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     currentStatDiv.innerHTML = "*****signed-in*****";
-    getUserInfo();
+    getEmailProfile()
     signOut.style.display = 'block';
     signIn.style.display = 'none';
   } else {
@@ -250,18 +250,10 @@ function getEmailProfile() {
   gapi.client.gmail.users.getProfile({
     'userId': 'me'
   }).then(function (response) {
-    return response.result; 
-  });
-}
-
-function getUserInfo() {
-  gapi.client.gmail.users.getProfile({
-    'userId': 'me'
-  }).then(function (response) {
     let{emailAddress, messagesTotal } = response.result
     userEmail.innerText = emailAddress;
     totalEmails.innerText = messagesTotal;
-    return 
+    return response.result; 
   });
 }
 
