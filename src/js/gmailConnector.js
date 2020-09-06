@@ -18,7 +18,6 @@ const limiter = new Bottleneck({
 let threadsButton = document.getElementById('threads_button');
 let totalEmailsBtn = document.getElementById('totalemails_button');
 let currentStatDiv = document.getElementById('h1');
-// const userName = document.getElementById('user-name');
 const userEmail = document.getElementById('user-email');
 const totalEmails = document.getElementById('total-emails');
 const signOut = document.getElementById('sign-out');
@@ -250,9 +249,10 @@ function getEmailProfile() {
   gapi.client.gmail.users.getProfile({
     'userId': 'me'
   }).then(function (response) {
-    let{emailAddress, messagesTotal } = response.result
+    let{emailAddress, threadsTotal } = response.result
     userEmail.innerText = emailAddress;
-    totalEmails.innerText = messagesTotal;
+    totalEmails.innerText = threadsTotal;
+    console.log(response.result)
     return response.result; 
   });
 }
