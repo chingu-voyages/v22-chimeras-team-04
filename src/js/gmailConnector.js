@@ -151,8 +151,8 @@ function listSubjects(from, ids) {
       getDataSubjects(newArr);
       
     });
+  
 }
-
 
  function getSubjectById  (id) {
   return gapi.client.gmail.users.threads.get({
