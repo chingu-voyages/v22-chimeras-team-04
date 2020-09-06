@@ -3,12 +3,16 @@ import { getData, getDataSubjects } from './topTable';
 const modalBox = document.querySelector('.modal-box');
 const modalInfo = document.querySelector('.modal-trash-info');
 const infoText = document.querySelector('.info-text');
-modalBox.style.display = "none";
-modalInfo.style.display = 'none';
+
 const closeBtn = document.querySelector('.closeBtn')
 const btnDelete = document.querySelector('.btn-delete');
 const btnTrash = document.querySelector('.btn-trash');
 const closeInfoModal = document.querySelector('.close');
+
+const topSenders = document.getElementById('topSendersTbl')
+
+modalBox.style.display = "none";
+modalInfo.style.display = 'none';
 
 const popUp = () => {
     modalBox.style.display = "block";
@@ -29,44 +33,58 @@ window.deleteAllAct = function (id) {
     let myid = id.replace('delete-', '');
     let cells = topSendersTbl.rows[myid].cells;
     let threads = cells[2].innerText.split(',');
-    console.log(cells)
-    let deleteAllBtn = document.getElementById('delete-' + myid)
-    console.log(deleteAllBtn)
+    console.log(threads)
+
+    let row = document.getElementById('row-' + myid);
+    console.log(row)
+
+    // let deleteAll = document.getElementById('delete-' + myid)
+    console.log(myid)
+
     popUp();
+
     btnTrash.addEventListener('click', function toTrash() {
+        console.log(threads)
+        console.log(cells[2].innerHTML)
         for (let thread of threads) {
-            console.log(thread)
             gapi.client.gmail.users.threads.trash({ 'userId': 'me', 'id': thread })
                 .then(function (response) {
-                    console.log(`Message moved to trash`)
+                    console.log(`Message from ${cells[0].innerText} moved to trash`)
+                    console.log(`Row ${row.id}`)
                 })
                 .catch(function (error) {
-                    console.log("There is an error")
+                    console.log(error)
                 })
         }
-        console.log(`Messages from ${cells[0].innerText} were moved to trash`)
         modalBox.style.display = "none";
+        row.style.display = "none";
         infoPopUp();
-        infoText.innerText = `Messages from ${cells[0].innerText} were moved to trash`;
+        infoText.innerText = `${threads.length} messages from  \r\n`;;
+        infoText.innerText += `${cells[0].innerText} \r\n`;
+        infoText.innerText += `were moved to trash`;
     });
 
     btnDelete.addEventListener('click', function deleteEmails() {
-
+        console.log(threads)
         for (let thread of threads) {
-            console.log(thread)
             gapi.client.gmail.users.threads.delete({ 'userId': 'me', 'id': thread })
                 .then(function (response) {
-                    console.log(`Message from ${cells[0].innerText} was deleted permamently`)
+                    console.log(response)
+                    console.log(`Message from  ${cells[0].innerText} was deleted permamently`)
                 })
                 .catch(function (error) {
-                    console.log("There is an error")
+                    console.log(error)
                 })
         }
-        console.log(`Messages from ${cells[0].innerText} were deleted permamently`)
+
         modalBox.style.display = "none";
         infoPopUp();
-        infoText.innerText = `Messages from ${cells[0].innerText} were deleted permamently`;
+        infoText.innerText = `${threads.length} messages from \r\n`;;
+        infoText.innerText += `${cells[0].innerText} \r\n`;
+        infoText.innerText += `were deleted permamently`;
+        row.style.display = "none";
     });
+
 
 }
 

@@ -8,9 +8,6 @@ function getData(extData) {
   genericSort(compareNumDesc)
 }
 
-console.log(`Top table data: ${topTblData}`)
-
-
 /*Temporary*/
 function getDataSubjects(extData) {
   let length = selectiveTbl.rows.length;
@@ -40,6 +37,7 @@ function orderData(inTable, data) {
   let table = inTable;
   for (let i = 0, cellCnt = 0; i < data.length; i++) {
     let row = table.insertRow(i + 1)
+    row.id = "row-" + (i + 1)
     for (const [key, value] of Object.entries(data[i])) {
       let cell = row.insertCell(cellCnt++);
       cell.innerText = decodeURIComponent(value);
