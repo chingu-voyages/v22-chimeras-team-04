@@ -53,7 +53,7 @@ img {
 }
 
 .navbar.top {
-  background: transparent;
+  // background: transparent;
 }
 
 .navbar a {
@@ -203,4 +203,37 @@ img {
 
 .footer .social > * {
     margin-right: 30px;
+}
+
+/* Mobile */
+@media(max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    height: 120px;
+    padding-bottom: 20px;
+  }
+
+  .navbar .logo {
+    width: 200px;
+  }
+
+  .navbar a {
+    padding: 10px 10px;
+    margin: 0 3px;
+  }
+
+  .flex-items {
+    flex-direction: column;
+  }
+
+  .flex-columns .column {
+    flex: 100%;
+    max-width: 100%;
+  }
+
+  .team .github {
+    width: 30%;
+    height: 30%;
+  }
+
 }
