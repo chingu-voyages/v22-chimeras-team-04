@@ -3,6 +3,10 @@ let topSendersTbl = document.getElementById("topSendersTbl");
 let selectiveTbl = document.getElementById("selectiveTbl"); //temporary
 let topTblData = [];
 function getData(extData) {
+  let length = topSendersTbl.rows.length;
+  for (let j = length - 1; j > 0; j--)
+    topSendersTbl.deleteRow(j);
+
   topTblData = extData;
   orderData(topSendersTbl, topTblData);
   genericSort(compareNumDesc)
