@@ -1,11 +1,10 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 
 module.exports = {
   mode: "development",
   entry: "./src/js/index.js",
-  
   devtool: "cheap-module-eval-source-map",
   devServer: {
     contentBase: path.join(__dirname, "dist"),
@@ -19,14 +18,10 @@ module.exports = {
       title: "Webpack starter project",
       template: path.resolve("./src/index.html"),
     }),
-    new HtmlWebpackPlugin({ // Also generate a test.html
-      filename: 'topTable.html',
-      template: 'src/html/topTable.html'
-    }),
-    new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css"
-    }),
+    new Dotenv({
+      systemvars: true
+    }
+    )
 ],
   module: {
     rules: [
