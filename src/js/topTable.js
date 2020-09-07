@@ -89,10 +89,9 @@ function genericSort(compareFunc) {
   orderData(topSendersTbl, topTblData);
 }
 
-// window.deleteAllAct = function (id) {
-//     let myid = id.replace("delete-", '')
-//     let cells = topSendersTbl.rows[myid].cells;    
-// }
+
+const selectiveTable = document.getElementById('selectiveTbl');
+// selectiveTable.style.display = "none";
 
 window.deleteSomeAct = function (id) {
   let myid = id.replace("select-", '')

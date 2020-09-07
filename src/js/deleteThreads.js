@@ -9,6 +9,7 @@ const btnDelete = document.querySelector('.btn-delete');
 const btnTrash = document.querySelector('.btn-trash');
 const closeInfoModal = document.querySelector('.close');
 
+
 modalBox.style.display = "none";
 modalInfo.style.display = 'none';
 
