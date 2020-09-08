@@ -1,6 +1,7 @@
 import {gapi} from 'gapi-script';
 import {getData,getDataSubjects} from './topTable';
 import Bottleneck from "bottleneck";
+import {jaccard} from 'wuzzy';
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const API_KEY = process.env.API_KEY;
@@ -97,14 +98,17 @@ function listSubjects(from, ids) {
       if (item.result.error) {
         reject(item.result.error)
       } else {
-        let res = item.result.messages[0].payload.headers[0].value;
-        let myData = {};
+        let res = '';
+        if(item.result.messages[0].payload.hasOwnProperty('headers'))
+        { res = item.result.messages[0].payload.headers[0].value;
+        }
+          let myData = {};
         myData['subject'] = res;
         myData['id'] = threadId;
         allSubjects.push(myData);
       }
     })
-    let newArr = removeDuplicates(allSubjects, "subject");
+    let newArr = combineSubjects(allSubjects, "subject");
     getDataSubjects(newArr);
   })
 }
@@ -151,7 +155,7 @@ function listThreads(nextPageToken = null) {
         cnt++;
         var nextPageToken = response.result.nextPageToken;
 
-        if (nextPageToken && cnt < 4) {
+        if (nextPageToken && cnt < 10) {
           listThreads(nextPageToken);
 
         } else {
@@ -204,6 +208,51 @@ function getEmailProfile() {
     return response.result;
   });
 }
+
+
+function combineSubjects(allObjs, property){
+  allObjs.sort(function (a, b) {
+    var textA = a[property].toUpperCase();
+    var textB = b[property].toUpperCase();
+    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+  });
+  let ids = [];
+  let newArr = [];
+  let subjects = [];
+  subjects.push(allObjs[0][property]);
+  ids.push(allObjs[0].id);
+  let obj = {
+    [property]: subjects,
+    counter: 1,
+    threadIds: ids
+  };
+
+  for (let i = 1; i < allObjs.length; i++) {
+    let jaccardIdx = jaccard(allObjs[i][property],obj[property][0]);
+    if (jaccardIdx >= 0.8) {
+      obj.counter++;
+      ids.push(allObjs[i].id);
+      subjects.push(allObjs[i][property]);
+      obj.threadIds = ids;
+    } else {
+      newArr.push(obj);
+      obj = {};
+      ids = [];
+      subjects = [];
+      subjects.push(allObjs[i][property]);
+      
+      obj[property] = subjects;
+      obj.counter = 1;
+      ids.push(allObjs[i].id);
+      obj.threadIds = ids;
+    }
+  }
+  newArr.push(obj);
+
+  return newArr;
+
+  }
+
 
 function removeDuplicates(allObjs, property) {
   allObjs.sort(function (a, b) {
