@@ -2,6 +2,8 @@ import {gapi} from 'gapi-script';
 import {getData,getDataSubjects} from './topTable';
 import Bottleneck from "bottleneck";
 
+import { userEmail, signIn, signOut, totalEmails,getEmailProfile } from './getEmailProfile';
+
 const CLIENT_ID = process.env.CLIENT_ID;
 const API_KEY = process.env.API_KEY;
 const DISCOVERY_DOCS = [
@@ -18,10 +20,6 @@ const limiter = new Bottleneck({
 let threadsButton = document.getElementById('threads_button');
 let totalEmailsBtn = document.getElementById('totalemails_button');
 let currentStatDiv = document.getElementById('h1');
-const userEmail = document.getElementById('user-email');
-const totalEmails = document.getElementById('total-emails');
-const signOut = document.getElementById('sign-out');
-const signIn = document.getElementById('sign-in');
 
 handleClientLoad();
 
@@ -243,18 +241,6 @@ function listThreads(nextPageToken = null) {
     }
 
   );
-}
-
-function getEmailProfile() {
-  gapi.client.gmail.users.getProfile({
-    'userId': 'me'
-  }).then(function (response) {
-    let{emailAddress, threadsTotal } = response.result
-    userEmail.innerText = emailAddress;
-    totalEmails.innerText = threadsTotal;
-    console.log(response.result)
-    return response.result; 
-  });
 }
 
 function removeDuplicates(allObjs, property) {
