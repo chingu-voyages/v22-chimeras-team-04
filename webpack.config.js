@@ -1,11 +1,11 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 
 module.exports = {
   mode: "development",
   entry: "./src/js/index.js",
-  
   devtool: "cheap-module-eval-source-map",
   devServer: {
     contentBase: path.join(__dirname, "dist"),
@@ -27,7 +27,11 @@ module.exports = {
       filename: "[name].css",
       chunkFilename: "[id].css"
     }),
-],
+    new Dotenv({
+      systemvars: true
+    }
+    )
+  ],
   module: {
     rules: [
       {
@@ -59,7 +63,7 @@ module.exports = {
       {
         test: /\.html$/i,
         loader: 'html-loader',
-      },  
+      },
     ],
   },
 };
