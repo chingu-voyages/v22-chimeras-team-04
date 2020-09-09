@@ -51,9 +51,9 @@ let threadsInBatches = [];
 const batchThreads = () => {
     let batch = gapi.client.newBatch();
     threadsInBatches.push(batch);
-    console.log(batch)
     return batch
 }
+
 const listBatches = (threads, action, row) => {
     console.log(threads)
     let allThreads = [];
@@ -62,9 +62,9 @@ const listBatches = (threads, action, row) => {
 
     for (let i = 0; i < threads.length; i++) {
         let val = "";
-        if (action == "delete") {
+        if (action === "delete") {
             val = deleteById(threads[i])
-        } else {
+        } else if (action === "trash") {
             val = trashById(threads[i])
         }
 
@@ -75,6 +75,7 @@ const listBatches = (threads, action, row) => {
             batch = batchThreads();
         }
     }
+
     threadsBatches.push(batch);
     let nextPromises = [];
     threadsBatches.forEach(batch => {
@@ -84,17 +85,15 @@ const listBatches = (threads, action, row) => {
                     let items = resp.result
                     console.log(items)
                     Object.values(items).forEach(item => {
-                        console.log(item)
                         if (item.result.error) {
                             reject(item.result.error)
-                            errorPopUp();
-                            errorMessage.innerText = "Operation was unsuccessful due to an error."
                         } else {
                             let threadItem = item.result.id
                             allThreads.push(threadItem)
                             resolve(threadItem)
                         }
                     })
+
                 })
             })
         })
@@ -103,11 +102,10 @@ const listBatches = (threads, action, row) => {
 
 
     Promise.allSettled(nextPromises).then(() => {
-        allThreads = []
-        console.log("All threads: " + allThreads)
+
         row.style.display = "none";
         infoPopUp();
-
+        // threads.length = 0;
     })
 }
 
@@ -156,5 +154,6 @@ window.deleteAllAct = function (id) {
     btnDelete.addEventListener('click', function deleteEmails() {
         listBatches(threads, "delete", row);
         addMessage("delete", threads.length);
+        // threads.length = 0;
     });
 }
