@@ -6,7 +6,7 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const API_KEY = process.env.API_KEY;
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
 
-const SCOPES = 'https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.readonly https://mail.google.com/';
+const SCOPES = 'https://mail.google.com/';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,

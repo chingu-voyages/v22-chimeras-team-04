@@ -1,5 +1,6 @@
 .modal-box,
-.modal-trash-info  {
+.modal-trash-info,
+.modal-error  {
     width: auto;
     height: auto;
     position: absolute;
@@ -11,6 +12,8 @@
     padding: 1.5rem;
     border: 8px solid $bg-darkblue;
     border-radius: 5px;
+    // opacity: 0;
+    // visibility: hidden;
 
     h3 {
         line-height: 1.75;
@@ -22,4 +25,9 @@
         max-width: 50%;
         align-items: center;
     }
+
+    // .show-modal {
+    //     opacity: 1;
+    //     visibility: visible;
+    // }
 }
