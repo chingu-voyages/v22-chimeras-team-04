@@ -12,7 +12,7 @@ const closeBtn = document.querySelector('.closeBtn')
 const btnDelete = document.querySelector('.btn-delete');
 const btnTrash = document.querySelector('.btn-trash');
 const closeInfoModal = document.querySelector('.close');
-const errorCls = document.querySelector('.errorCls')
+const errorCls = document.querySelector('.errorCls');
 
 
 modalBox.style.display = "none";
@@ -24,6 +24,8 @@ const popUp = () => {
     closeBtn.addEventListener('click', () => {
         modalBox.style.display = "none";
     })
+
+
 }
 
 const infoPopUp = () => {
@@ -32,15 +34,24 @@ const infoPopUp = () => {
     closeInfoModal.addEventListener('click', () => {
         modalInfo.style.display = "none";
     })
+    window.addEventListener("click", () => {
+        modalInfo.style.display = "none";
+    })
 }
 
 const errorPopUp = () => {
     modalBox.style.display = "none";
     modalError.style.display = "block";
+    errorMessage.innerText = "The operation failed due to error"
     errorCls.addEventListener('click', () => {
         modalError.style.display = "none";
     })
+    window.addEventListener("click", () => {
+        modalError.style.display = "none";
+    })
 }
+
+
 const limiter = new Bottleneck({
     maxConcurrent: 1,
     minTime: 50
@@ -85,10 +96,11 @@ const listBatches = (threads, action, row) => {
                     let items = resp.result
                     console.log(items)
                     Object.values(items).forEach(item => {
+                        let threadItem = item.result.id
                         if (item.result.error) {
+                            errorPopUp();
                             reject(item.result.error)
                         } else {
-                            let threadItem = item.result.id
                             allThreads.push(threadItem)
                             resolve(threadItem)
                         }
@@ -102,10 +114,9 @@ const listBatches = (threads, action, row) => {
 
 
     Promise.allSettled(nextPromises).then(() => {
-
         row.style.display = "none";
         infoPopUp();
-        // threads.length = 0;
+
     })
 }
 
@@ -123,6 +134,8 @@ function trashById(id) {
     })
 }
 
+
+
 window.deleteAllAct = function (id) {
     let myid = id.replace('delete-', '');
     let cells = topSendersTbl.rows[myid].cells;
@@ -134,6 +147,7 @@ window.deleteAllAct = function (id) {
     console.log(row)
 
     popUp();
+
 
     const addMessage = (action, number) => {
         infoText.innerText = `${number} messages from \r\n`;
@@ -148,6 +162,7 @@ window.deleteAllAct = function (id) {
     btnTrash.addEventListener('click', function toTrash() {
         listBatches(threads, "trash", row);
         addMessage("trash", threads.length);
+        threads.length = 0;
 
     });
 
@@ -156,4 +171,5 @@ window.deleteAllAct = function (id) {
         addMessage("delete", threads.length);
         // threads.length = 0;
     });
+
 }
