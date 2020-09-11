@@ -139,23 +139,20 @@ function addMessage(action,number){
           infoText.innerText += `were moved to trash`;
       }
 }
-
-let threads = "";
-
 window.deleteAllAct = function (id) {
     let myid = id.replace('delete-', '');
     let cells = topSendersTbl.rows[myid].cells;
-     threads = cells[2].innerText.split(',');
+    let threads = cells[2].innerText.split(',');
 
     let row = document.getElementById('row-' + myid);
     popUp();
 
     btnTrash.addEventListener('click', function toTrash() {
         listBatches(threads, "trash", row);
-    });
+    }, { once: true });
 
     btnDelete.addEventListener('click', function deleteEmails() {
         listBatches(threads, "delete", row);
-    });
+    }, { once: true });
 
 }
