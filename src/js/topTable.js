@@ -2,6 +2,9 @@ import { listSubjects } from './gmailConnector'
 let topSendersTbl = document.getElementById("topSendersTbl");
 let selectiveTbl = document.getElementById("selectiveTbl"); //temporary
 let topTblData = [];
+
+const loaderBg = document.querySelector('.loader_bg');
+
 function getData(extData) {
   let length = topSendersTbl.rows.length;
   for (let j = length - 1; j > 0; j--)
@@ -39,6 +42,7 @@ document.getElementById('sortAlphDown').onclick = function () {
 function orderData(inTable, data) {
 
   let table = inTable;
+  let countRows = null;
   for (let i = 0, cellCnt = 0; i < data.length; i++) {
     let row = table.insertRow(i + 1)
     row.id = "row-" + (i + 1)
@@ -53,9 +57,16 @@ function orderData(inTable, data) {
     let action = '<button class=btn-all><a href=# id=delete-' + (i + 1) + ' onclick=deleteAllAct(this.id) >All</a></button>  <button class=btn-selective><a href=# id=select-' + (i + 1) + ' onclick=deleteSomeAct(this.id)>Selective</a></button>';
     cell.innerHTML = action;
     cellCnt = 0;
+    countRows++
+  }
+  console.log(countRows)
+  if (countRows > 1) {
+    loaderBg.style.display = "none";
   }
 
 }
+
+
 
 function compareFunc(a, b) {
   if (a < b) {
