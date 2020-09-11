@@ -14,7 +14,6 @@ const btnTrash = document.querySelector('.btn-trash');
 const closeInfoModal = document.querySelector('.close');
 const errorCls = document.querySelector('.errorCls');
 
-
 modalBox.style.display = "none";
 modalInfo.style.display = 'none';
 modalError.style.display = "none";
@@ -57,16 +56,13 @@ const limiter = new Bottleneck({
     minTime: 50
 })
 
-let threadsInBatches = [];
 
 const batchThreads = () => {
     let batch = gapi.client.newBatch();
-    threadsInBatches.push(batch);
-    return batch
+    return batch;
 }
 
 const listBatches = (threads, action, row) => {
-    console.log(threads)
     let allThreads = [];
     let batch = batchThreads();
     let threadsBatches = []
@@ -96,13 +92,13 @@ const listBatches = (threads, action, row) => {
                     let items = resp.result
                     console.log(items)
                     Object.values(items).forEach(item => {
-                        let threadItem = item.result.id
-                        if (item.result.error) {
+                        if (item.status == '204' || item.status == '200') {
+                            resolve(item.status)
+                        }
+                        else
+                        {
                             errorPopUp();
-                            reject(item.result.error)
-                        } else {
-                            allThreads.push(threadItem)
-                            resolve(threadItem)
+                            reject(item.status)
                         }
                     })
 
@@ -116,7 +112,7 @@ const listBatches = (threads, action, row) => {
     Promise.allSettled(nextPromises).then(() => {
         row.style.display = "none";
         infoPopUp();
-
+        addMessage(action, threads.length);
     })
 }
 
@@ -134,42 +130,32 @@ function trashById(id) {
     })
 }
 
+function addMessage(action,number){
+    infoText.innerText = `${number} messages from \r\n`;
+     // infoText.innerText += `${cells[0].innerText} \r\n`;
+      if (action === "delete") {
+          infoText.innerText += `were deleted permamently`;
+      } else if (action === "trash") {
+          infoText.innerText += `were moved to trash`;
+      }
+}
 
+let threads = "";
 
 window.deleteAllAct = function (id) {
     let myid = id.replace('delete-', '');
     let cells = topSendersTbl.rows[myid].cells;
-    let threads = cells[2].innerText.split(',');
-    console.log(threads.length)
-    console.log(myid)
+     threads = cells[2].innerText.split(',');
 
     let row = document.getElementById('row-' + myid);
-    console.log(row)
-
     popUp();
-
-
-    const addMessage = (action, number) => {
-        infoText.innerText = `${number} messages from \r\n`;
-        infoText.innerText += `${cells[0].innerText} \r\n`;
-        if (action === "delete") {
-            infoText.innerText += `were deleted permamently`;
-        } else if (action === "trash") {
-            infoText.innerText += `were moved to trash`;
-        }
-    }
 
     btnTrash.addEventListener('click', function toTrash() {
         listBatches(threads, "trash", row);
-        addMessage("trash", threads.length);
-        threads.length = 0;
-
     });
 
     btnDelete.addEventListener('click', function deleteEmails() {
         listBatches(threads, "delete", row);
-        addMessage("delete", threads.length);
-        // threads.length = 0;
     });
 
 }
