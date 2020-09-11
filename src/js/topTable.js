@@ -50,7 +50,7 @@ function orderData(inTable, data) {
     let cell = row.insertCell(cellCnt++);
     // let action = 'Delete" <a href=# id=delete-' + (i + 1) + '>All</a> | <a href=# id=select-' + (i + 1) + '> Selective</a> '
 
-    let action = 'Delete: <a href=# id=delete-' + (i + 1) + ' onclick=deleteAllAct(this.id) >All</a> | <a href=# id=select-' + (i + 1) + ' onclick=deleteSomeAct(this.id)>Selective</a>';
+    let action = '<button class=btn-all><a href=# id=delete-' + (i + 1) + ' onclick=deleteAllAct(this.id) >All</a></button>  <button class=btn-selective><a href=# id=select-' + (i + 1) + ' onclick=deleteSomeAct(this.id)>Selective</a></button>';
     cell.innerHTML = action;
     cellCnt = 0;
   }
@@ -89,16 +89,30 @@ function genericSort(compareFunc) {
     topSendersTbl.deleteRow(j);
   orderData(topSendersTbl, topTblData);
 }
+const topTable = document.querySelector('.all-senders');
+const selectiveTable = document.querySelector('.selective');
+const btnBack = document.querySelector('.back');
+selectiveTable.style.display = "none";
 
-
-const selectiveTable = document.getElementById('selectiveTbl');
-// selectiveTable.style.display = "none";
 
 window.deleteSomeAct = function (id) {
   let myid = id.replace("select-", '')
   let cells = topSendersTbl.rows[myid].cells;
   let threads = cells[2].innerText.split(',');
   let from = cells[0].innerText;
+
+  const btnSelective = document.querySelector('.btn-selective');
+
+  btnSelective.addEventListener('click', () => {
+    selectiveTable.style.display = "block";
+    topTable.style.display = "none";
+  })
+
+  btnBack.addEventListener('click', () => {
+
+    topTable.style.display = "block";
+  })
+
   listSubjects(from, threads);
 
 }

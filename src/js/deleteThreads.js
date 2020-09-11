@@ -24,8 +24,6 @@ const popUp = () => {
     closeBtn.addEventListener('click', () => {
         modalBox.style.display = "none";
     })
-
-
 }
 
 const infoPopUp = () => {
@@ -140,14 +138,8 @@ window.deleteAllAct = function (id) {
     let myid = id.replace('delete-', '');
     let cells = topSendersTbl.rows[myid].cells;
     let threads = cells[2].innerText.split(',');
-    console.log(threads.length)
-    console.log(myid)
-
     let row = document.getElementById('row-' + myid);
-    console.log(row)
-
     popUp();
-
 
     const addMessage = (action, number) => {
         infoText.innerText = `${number} messages from \r\n`;
