@@ -149,20 +149,19 @@ tr:nth-child(1) {
             display: flex;
             justify-content: flex-end;
         }
-        th:nth-child(4) {
-            display: flex;
-            justify-content: center;
-            color: $cl-red;
-        }
+    
         @media screen and (min-width: $min-md) {
         
             th:nth-child(4) {
                 display: none;
             }
+            th:nth-child(4) {
+                display: flex;
+                justify-content: center;
+                color: $cl-red;
+            }
         }        
-    }
-
-   
+    }   
     .btn-selective {
         display: none;
     }
