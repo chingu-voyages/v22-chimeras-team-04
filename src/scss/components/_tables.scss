@@ -3,24 +3,26 @@ table {
     border-collapse: collapse;
     table-layout: fixed;    
     border: none;
-    width: 90%;
+    width: 95%;
     margin: 2rem auto;  
    
     th:nth-child(2),
     th:nth-child(4),
+    th:nth-child(5),
     td:nth-child(3)  {
      display: none;
     }
 
     th {
-        display: flex;        
+        display: flex; 
+        height: 50px;       
     }  
 
 
 tr {
     display: grid;
     grid-template-columns: minmax(150px, 1fr) auto;
-    grid-template-rows: minmax(80px, 1fr) auto;
+    grid-template-rows: minmax(50px, 1fr) auto;
     grid-template-areas: "first  number"
                          "third third";
     
@@ -61,7 +63,7 @@ tr {
 }
 tr:nth-child(1) {
     border: none;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 50px;
     text-align: center; 
     font-weight: bolder;
@@ -71,19 +73,19 @@ tr:nth-child(1) {
     th {
         border: none;
         text-align: left;
-        height: 80px;
+        height: 50px;
     }
     th:nth-child(4) {
         display: none;
+    }
+    th:nth-child(1) {
+        justify-content: flex-start;
     }
 
     th:nth-child(3) {
         justify-content: flex-end;
     }
-    th:nth-child(5) {
-        justify-content: center;
-        color: $cl-red;
-    }
+   
 }
 
 
@@ -92,12 +94,16 @@ tr:nth-child(1) {
     tr {
         grid-template-columns: 450px auto;
         grid-template-rows: 120px auto;
-    }  
+    } 
+    tr:nth-child(1)  {
+        grid-template-columns: repeat(2, 1fr);
+    }
+ 
 }
 
-@media screen and (min-width: $min-lg) {
+@media screen and (min-width: $min-md)  {
     tr {
-        grid-template-columns: 1.5fr 0.4fr 1fr;
+        grid-template-columns: 1.5fr 0.4fr 1.1fr;
         grid-template-rows: auto;
         grid-template-areas: "first number third";
         padding-top: 0.5rem;
@@ -113,6 +119,11 @@ tr:nth-child(1) {
             grid-column:  3 / 4;
             border: none;
         }        
+    }
+    th:nth-child(5) {
+        display: flex;
+        justify-content: center;
+        color: $cl-red;
     }
 
     tr:nth-child(1) {
@@ -143,8 +154,15 @@ tr:nth-child(1) {
             justify-content: center;
             color: $cl-red;
         }
+        @media screen and (min-width: $min-md) {
         
+            th:nth-child(4) {
+                display: none;
+            }
+        }        
     }
+
+   
     .btn-selective {
         display: none;
     }

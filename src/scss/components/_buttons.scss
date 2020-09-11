@@ -3,8 +3,11 @@
     background: $cl-yellow;
     border: 2px solid $cl-yellow;
     color: $bg-darkblue;
-    border-radius: 5px;    
-
+    border-radius: 5px;  
+    display: block; 
+    margin: 1rem auto;
+    cursor: pointer;
+    
     &:hover {
         transform: scale(1.1);
         
@@ -18,6 +21,7 @@
     margin-right: 5px;
     border-radius: 5px;
     opacity: 0.9;
+    cursor: pointer;
     
     a {
         color: white;

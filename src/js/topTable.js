@@ -101,16 +101,13 @@ window.deleteSomeAct = function (id) {
   let threads = cells[2].innerText.split(',');
   let from = cells[0].innerText;
 
-  const btnSelective = document.querySelector('.btn-selective');
+  topTable.style.display = "none";
 
-  btnSelective.addEventListener('click', () => {
-    selectiveTable.style.display = "block";
-    topTable.style.display = "none";
-  })
-
+  selectiveTable.style.display = "block";
   btnBack.addEventListener('click', () => {
 
     topTable.style.display = "block";
+    selectiveTable.style.display = "none";
   })
 
   listSubjects(from, threads);
