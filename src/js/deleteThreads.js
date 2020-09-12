@@ -23,8 +23,6 @@ const popUp = () => {
     closeBtn.addEventListener('click', () => {
         modalBox.style.display = "none";
     })
-
-
 }
 
 const infoPopUp = () => {
@@ -146,6 +144,7 @@ window.deleteAllAct = function (id) {
 
     let row = document.getElementById('row-' + myid);
     popUp();
+
 
     btnTrash.addEventListener('click', function toTrash() {
         listBatches(threads, "trash", row);

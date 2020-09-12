@@ -1,3 +1,63 @@
-.btn {
-    border: 2px solid green;
+.back {
+    padding: 0.5rem 1.25rem;
+    background: $cl-yellow;
+    border: 2px solid $cl-yellow;
+    color: $bg-darkblue;
+    border-radius: 5px;  
+    display: block; 
+    margin: 1rem auto;
+    cursor: pointer;
+    
+    &:hover {
+        transform: scale(1.1);
+        
+    }
+}
+.btn-all,
+.btn-selective {
+    width: 40%;
+    padding: 0.5rem;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 5px;
+    opacity: 0.9;
+    cursor: pointer;
+    
+    a {
+        color: white;
+    }
+    
+}
+.btn-all {
+    background: $cl-red;
+    border: 2px solid $cl-red;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+.btn-selective {
+    background: $cl-green;
+    border: 2px solid $cl-green;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+@media screen and (min-width: $max-sm) {
+    .btn-all,
+    .btn-selective {
+        width: 40%;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+}
+
+@media screen and (min-width: $min-md) {
+    .btn-all,
+    .btn-selective {
+        width: 30%;
+    }
 }

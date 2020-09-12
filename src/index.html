@@ -9,38 +9,55 @@
 </head>
 
 <body>
-    <h1 id="h1"></h1>
+    <nav>
+        <button id="authorize_button" >Authorize</button>
+        <button id="signout_button" >Sign Out</button>
+        <button id="totalemails_button" >Total Emails</button>
+        <button id="threads_button" >Threads</button>
+        <h1 id="h1"></h1>
+    </nav>
+    <main class="main-table"> 
+    
+        <section class="all-senders">
+            <table id="topSendersTbl">
+                <tr>
+                    
+                    <th>Email Contact <div id="sortAlphUp" class="sortTriangle"> &#9650;</div>
+                        <div id="sortAlphDown" class="sortTriangle">&#9660;</div>
+                    </th>
+                    <th>Name</th>
+                    
+                    <th>Number Of Emails<div id="sortNumUp" class="sortTriangle"> &#9650;</div>
+                        <div id="sortNumDown" class="sortTriangle">&#9660;</div>
+                    </th>
+                    <th>Ids</th>
+                    <th>Delete</th>
+                </tr>
 
-    <table id="topSendersTbl">
-        <tr>
-            <th>Email Contact <div id="sortAlphUp" class="sortTriangle"> &#9650;</div>
-                <div id="sortAlphDown" class="sortTriangle">&#9660;</div>
-            </th>
-            <th>Number Of Emails<div id="sortNumUp" class="sortTriangle"> &#9650;</div>
-                <div id="sortNumDown" class="sortTriangle">&#9660;</div>
-            </th>
-            <th>Ids</th>
-            <th>Action</th>
-        </tr>
-    </table>
-    <button id="authorize_button" >Authorize</button>
-    <button id="signout_button" >Sign Out</button>
-    <button id="totalemails_button" >Total Emails</button>
-    <button id="threads_button" >Threads</button>
+            
+            </table>
+        </section>
+    
     <!--Temporary-->
-     <table id="selectiveTbl">
-        <tr>
-            <th>Subjects <div id="sortAlphUp" class="sortTriangle"> &#9650;</div>
-                <div id="sortAlphDown" class="sortTriangle">&#9660;</div>
-            </th>
-            <th>Number Of Emails<div id="sortNumUp" class="sortTriangle"> &#9650;</div>
-                <div id="sortNumDown" class="sortTriangle">&#9660;</div>
-            </th>
-            <th>Ids</th>
-            <th>Action</th>
-        </tr>
-    </table>
-
+    <section class="selective">
+        <button class="back">
+            Return to All
+        </button>
+        <table id="selectiveTbl">
+            <tr>
+                <th>Subjects <div id="sortAlphUp" class="sortTriangle"> &#9650;</div>
+                    <div id="sortAlphDown" class="sortTriangle">&#9660;</div>
+                </th>
+                <th>Number Of Emails<div id="sortNumUp" class="sortTriangle"> &#9650;</div>
+                    <div id="sortNumDown" class="sortTriangle">&#9660;</div>
+                </th>
+                <th>Ids</th>
+                <th>Delete</th>
+            </tr>
+        </table>
+    
+    </section>
+    
     <div class="modal-box">
         <button class="closeBtn">x</button>
                
@@ -61,6 +78,7 @@
 
 
     <div id="info"></div>
+</main>
 
 </body>
 
