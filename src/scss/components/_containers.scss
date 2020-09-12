@@ -21,6 +21,12 @@
         font-size: 1.15rem;
     }
 
+    button {
+        justify-content: center;
+        max-width: 50%;
+        align-items: center;
+    }
+
 }
 .modal-error {
     border: 8px solid $cl-red;   
