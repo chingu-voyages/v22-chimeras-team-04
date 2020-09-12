@@ -37,8 +37,7 @@
   @keyframes loader {
      
       50% {
-          transform: translateY(-30px);
-          
+          transform: translateY(-30px);          
       }
      
   }
@@ -47,6 +46,5 @@
     position: absolute;
     top: calc(50vh + 10px);
     left: calc(50vw - 60px);
-
   }
 }
