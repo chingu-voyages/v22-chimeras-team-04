@@ -7,6 +7,7 @@ const infoText = document.querySelector('.info-text');
 
 const modalError = document.querySelector('.modal-error');
 const errorMessage = document.querySelector('.error-message')
+const modalLoader = document.querySelector('.modal-loader');
 
 const closeBtn = document.querySelector('.closeBtn')
 const btnDelete = document.querySelector('.btn-delete');
@@ -17,6 +18,7 @@ const errorCls = document.querySelector('.errorCls');
 modalBox.style.display = "none";
 modalInfo.style.display = 'none';
 modalError.style.display = "none";
+modalLoader.style.display = "none";
 
 const popUp = () => {
     modalBox.style.display = "block";
@@ -28,6 +30,9 @@ const popUp = () => {
 const infoPopUp = () => {
     modalBox.style.display = "none";
     modalInfo.style.display = 'block';
+    if (!modalLoader.closed) {
+        modalLoader.style.display = "none";
+    }
     closeInfoModal.addEventListener('click', () => {
         modalInfo.style.display = "none";
     })
@@ -61,6 +66,8 @@ const batchThreads = () => {
 }
 
 const listBatches = (threads, action, row) => {
+    let start = Date.now();
+    console.log(start)
     let allThreads = [];
     let batch = batchThreads();
     let threadsBatches = []
@@ -111,6 +118,16 @@ const listBatches = (threads, action, row) => {
         infoPopUp();
         addMessage(action, threads.length);
     })
+    let end = Date.now();
+    let functionTime = end - start;
+    if (functionTime > 3) {
+        modalLoader.style.display = "flex";
+        if (!modalBox.closed) {
+            modalBox.style.display = "none";
+        }
+
+    }
+
 }
 
 function deleteById(id) {
@@ -128,7 +145,7 @@ function trashById(id) {
 }
 
 function addMessage(action, number) {
-    infoText.innerText = `${number} messages from \r\n`;
+    infoText.innerText = `${number} messages  \r\n`;
     // infoText.innerText += `${cells[0].innerText} \r\n`;
     if (action === "delete") {
         infoText.innerText += `were deleted permamently`;
