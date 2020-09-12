@@ -1,25 +1,22 @@
-import {listSubjects} from './gmailConnector'
+import { listSubjects } from './gmailConnector'
 let topSendersTbl = document.getElementById("topSendersTbl");
 let selectiveTbl = document.getElementById("selectiveTbl"); //temporary
 let topTblData = [];
-function getData(extData)
-{
-  let length = topSendersTbl.rows.length; 
+function getData(extData) {
+  let length = topSendersTbl.rows.length;
   for (let j = length - 1; j > 0; j--)
-  topSendersTbl.deleteRow(j);
+    topSendersTbl.deleteRow(j);
 
   topTblData = extData;
   orderData(topSendersTbl, topTblData);
   genericSort(compareNumDesc)
 }
 
-
 /*Temporary*/
-function getDataSubjects(extData)
-{
-  let length = selectiveTbl.rows.length; 
+function getDataSubjects(extData) {
+  let length = selectiveTbl.rows.length;
   for (let j = length - 1; j > 0; j--)
-  selectiveTbl.deleteRow(j);
+    selectiveTbl.deleteRow(j);
 
   let selectiveTblData = [];
   selectiveTblData = extData;
@@ -39,19 +36,21 @@ document.getElementById('sortAlphDown').onclick = function () {
   genericSort(compareStrDesc)
 }
 
-function orderData (inTable, data) {
+function orderData(inTable, data) {
 
-  let table =inTable;
+  let table = inTable;
   for (let i = 0, cellCnt = 0; i < data.length; i++) {
     let row = table.insertRow(i + 1)
+    row.id = "row-" + (i + 1)
     for (const [key, value] of Object.entries(data[i])) {
       let cell = row.insertCell(cellCnt++);
       cell.innerText = decodeURIComponent(value);
     }
 
     let cell = row.insertCell(cellCnt++);
+    // let action = 'Delete" <a href=# id=delete-' + (i + 1) + '>All</a> | <a href=# id=select-' + (i + 1) + '> Selective</a> '
 
-    let action = 'Delete: <a href=# id=delete-'+(i+1)+' onclick=deleteAllAct(this.id)>All</a> | <a href=# id=select-'+(i+1)+' onclick=deleteSomeAct(this.id)>Selective</a>';
+    let action = 'Delete: <a href=# id=delete-' + (i + 1) + ' onclick=deleteAllAct(this.id) >All</a> | <a href=# id=select-' + (i + 1) + ' onclick=deleteSomeAct(this.id)>Selective</a>';
     cell.innerHTML = action;
     cellCnt = 0;
   }
@@ -87,21 +86,20 @@ function compareStrDesc(a, b) {
 function genericSort(compareFunc) {
   topTblData.sort(compareFunc);
   for (let j = topTblData.length; j > 0; j--)
-  topSendersTbl.deleteRow(j);
-  orderData(topSendersTbl,topTblData);
+    topSendersTbl.deleteRow(j);
+  orderData(topSendersTbl, topTblData);
 }
 
-window.deleteAllAct = function(id){
-  let myid = id.replace("delete-",'')
-  let cells = topSendersTbl.rows[myid].cells;
-}
 
-window.deleteSomeAct = function(id){
-  let myid = id.replace("select-",'')
+const selectiveTable = document.getElementById('selectiveTbl');
+// selectiveTable.style.display = "none";
+
+window.deleteSomeAct = function (id) {
+  let myid = id.replace("select-", '')
   let cells = topSendersTbl.rows[myid].cells;
-  let threads =cells[2].innerText.split(',');
+  let threads = cells[2].innerText.split(',');
   let from = cells[0].innerText;
-  listSubjects(from,threads);
+  listSubjects(from, threads);
 
 }
-export {getData,getDataSubjects};
+export { getData, getDataSubjects };

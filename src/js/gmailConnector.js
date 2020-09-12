@@ -1,16 +1,16 @@
-import {gapi} from 'gapi-script';
-import {getData,getDataSubjects} from './topTable';
+import { gapi } from 'gapi-script';
+import { getData, getDataSubjects } from './topTable';
 import Bottleneck from "bottleneck";
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const API_KEY = process.env.API_KEY;
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
 
-const SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+const SCOPES = 'https://mail.google.com/';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
-  minTime: 50 
+  minTime: 50
 });
 
 let authorizeButton = document.getElementById('authorize_button');
@@ -61,7 +61,7 @@ function handleAuthClick() {
 function handleSignoutClick() {
   gapi.auth2.getAuthInstance().signOut();
 }
-function threadsGeMetatReq (id) {
+function threadsGeMetatReq(id) {
   return gapi.client.gmail.users.threads.get({
     'userId': 'me',
     'id': id,
@@ -90,63 +90,62 @@ function listSubjects(from, ids) {
     let val = getSubjectById(ids[i]);
     batch.add(val);
 
-    if((i + 1)%100 == 0){
+    if ((i + 1) % 100 == 0) {
       myBatches.push(batch);
       batch = createNewBatch();
     }
   }
 
   myBatches.push(batch);
-    let mySubPromises = [];
-    myBatches.forEach(batch => {
+  let mySubPromises = [];
+  myBatches.forEach(batch => {
 
-      let promise = new Promise(function (resolve, reject) {
-        limiter.schedule(() => {
-          batch.then(function (resp) {
+    let promise = new Promise(function (resolve, reject) {
+      limiter.schedule(() => {
+        batch.then(function (resp) {
 
-            let items = resp.result;
-            Object.values(items).forEach(item => {
-              let threadId = item.result.id;
-              if (item.result.error) {
-                reject(item.result.error)
-              } else {
-                
-                  console.log(threadId);
-                let payload = item.result.messages[0].payload;
-                let res = ""
-                if(payload.hasOwnProperty('headers'))
-                {
-                  res = payload.headers[0].value;
-                }
-                let myData = {};
-                myData['subject'] = res;
-                myData['id'] = threadId;
-                allSubjects.push(myData);
-                resolve(res)
-                
+          let items = resp.result;
+          Object.values(items).forEach(item => {
+            let threadId = item.result.id;
+            if (item.result.error) {
+              reject(item.result.error)
+            } else {
+
+              console.log(threadId);
+              let payload = item.result.messages[0].payload;
+              let res = ""
+              if (payload.hasOwnProperty('headers')) {
+                res = payload.headers[0].value;
               }
-            })
+              let myData = {};
+              myData['subject'] = res;
+              myData['id'] = threadId;
+              allSubjects.push(myData);
+              resolve(res)
 
+            }
           })
+
         })
       })
-
-      mySubPromises.push(promise);
-
-
     })
 
-   Promise.allSettled(mySubPromises).then(() => {
+    mySubPromises.push(promise);
 
-      let newArr = removeDuplicates(allSubjects, "subject");
-      getDataSubjects(newArr);
-      
-    });
-  
+
+  })
+
+  Promise.allSettled(mySubPromises).then(() => {
+
+    let newArr = removeDuplicates(allSubjects, "subject");
+    getDataSubjects(newArr);
+
+  });
+
 
 }
 
- function getSubjectById  (id) {
+function getSubjectById(id) {
   return gapi.client.gmail.users.threads.get({
     'userId': 'me',
     'id': id,
@@ -176,64 +175,67 @@ function listThreads(nextPageToken = null) {
 
   gapi.client.gmail.users.threads.list(reqObj).then(function (response) {
 
-      let threads = response.result.threads;
+    let threads = response.result.threads;
 
-      if (threads && threads.length > 0) {
-        for (let i = 0; i < threads.length; i++) {
-          let thread = threads[i];
-          let val = threadsGeMetatReq(thread.id);
-          batch.add(val);
-        }
+    if (threads && threads.length > 0) {
+      for (let i = 0; i < threads.length; i++) {
+        let thread = threads[i];
+        let val = threadsGeMetatReq(thread.id);
+        batch.add(val);
+      }
 
-        cnt++;
-        let nextPageToken = response.result.nextPageToken;
+      cnt++;
+      let nextPageToken = response.result.nextPageToken;
 
-        if (nextPageToken && cnt < 5) {
-          listThreads(nextPageToken);
+      if (nextPageToken && cnt < 5) {
+        listThreads(nextPageToken);
 
-        } else {
+      } else {
 
-          batches.forEach(batch => {
+        batches.forEach(batch => {
 
-            let promise = new Promise(function (resolve, reject) {
-              limiter.schedule(() => {
-                batch.then(function (resp) {
-                  let items = resp.result;
-                  Object.values(items).forEach(item => {
-                    let threadid = item.result.id;
-                    if (item.result.error) {
-                      reject(item.result.error)
-                    } else {
-                      let res = item.result.messages[0].payload.headers[0].value;
-                      let myData = {};
-                      myData['emailAddress'] = res;
-                      myData['id'] = threadid;
-                      allEmails.push(myData);
-                      resolve(res);
-                    }
-                  })
+          let promise = new Promise(function (resolve, reject) {
+            limiter.schedule(() => {
+              batch.then(function (resp) {
+                let items = resp.result;
+                Object.values(items).forEach(item => {
+                  let threadid = item.result.id;
+                  if (item.result.error) {
+                    reject(item.result.error)
+                  } else {
+                    let res = item.result.messages[0].payload.headers[0].value;
+                    let myData = {};
+                    myData['emailAddress'] = res;
+                    myData['id'] = threadid;
+                    allEmails.push(myData);
+                    resolve(res);
+                  }
                 })
               })
             })
-
-            myPromises.push(promise);
-
-
           })
 
-         Promise.allSettled(myPromises).then(() => {
-            let newArr = removeDuplicates(allEmails, "emailAddress");
-            getData(newArr);
-            cnt = 0;
-            batches = [];
-            myPromises = [];
-            
-          });
-        }
-      } else {
-        console.log("No threads found");
+
+          myPromises.push(promise);
+
+
+        })
+
+
+        Promise.allSettled(myPromises).then(() => {
+          let newArr = removeDuplicates(allEmails, "emailAddress");
+          getData(newArr);
+          cnt = 0;
+          batches = [];
+          myPromises = [];
+
+        });
       }
+    } else {
+      console.log("No threads found");
     }
+
+  }
 
   );
 }
@@ -242,7 +244,7 @@ function getEmailProfile() {
   gapi.client.gmail.users.getProfile({
     'userId': 'me'
   }).then(function (response) {
-    return response.result; 
+    return response.result;
   });
 }
 
@@ -284,4 +286,4 @@ function removeDuplicates(allObjs, property) {
 
 }
 
-export {listSubjects};
+export { listSubjects };

@@ -1,0 +1,11 @@
+table {
+    width: 80%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 3rem;
+}
+
+table td {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
