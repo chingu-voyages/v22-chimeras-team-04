@@ -59,7 +59,6 @@ function orderData(inTable, data) {
     cellCnt = 0;
     countRows++
   }
-  console.log(countRows)
   if (countRows > 1) {
     loaderBg.style.display = "none";
   }

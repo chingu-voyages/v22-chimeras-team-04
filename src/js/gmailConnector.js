@@ -111,8 +111,6 @@ function listSubjects(from, ids) {
             if (item.result.error) {
               reject(item.result.error)
             } else {
-
-              console.log(threadId);
               let payload = item.result.messages[0].payload;
               let res = ""
               if (payload.hasOwnProperty('headers')) {
@@ -204,12 +202,14 @@ function listThreads(nextPageToken = null) {
                     reject(item.result.error)
                   } else {
                     let res = item.result.messages[0].payload.headers[0].value;
-                    let fromArray = res.split(" ");
-                    let arrayLength = fromArray.length;
                     let myData = {};
-                    myData['name'] = fromArray.slice(0, arrayLength - 1).join(" ")
-                    let address = fromArray.slice(-1)[0]
-                    myData['emailAddress'] = address.substring(1, address.length - 1);
+                    // let fromArray = res.split(" ");
+                    // let arrayLength = fromArray.length;
+                    // 
+                    // myData['name'] = fromArray.slice(0, arrayLength - 1).join(" ")
+                    // let address = fromArray.slice(-1)[0]
+                    // myData['emailAddress'] = address.substring(1, address.length - 1);
+                    myData['emailAddress'] = res;
                     myData['id'] = threadid;
                     allEmails.push(myData);
                     resolve(res);
