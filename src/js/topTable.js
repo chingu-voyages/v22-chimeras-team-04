@@ -63,7 +63,6 @@ function orderData(inTable, data) {
   if (countRows > 1) {
     loaderBg.style.display = "none";
   }
-
 }
 
 
