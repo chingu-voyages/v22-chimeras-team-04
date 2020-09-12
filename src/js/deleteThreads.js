@@ -67,8 +67,6 @@ const batchThreads = () => {
 
 const listBatches = (threads, action, row) => {
     let start = Date.now();
-    console.log(start)
-    let allThreads = [];
     let batch = batchThreads();
     let threadsBatches = []
 
@@ -95,7 +93,6 @@ const listBatches = (threads, action, row) => {
             limiter.schedule(() => {
                 batch.then(function (resp) {
                     let items = resp.result
-                    console.log(items)
                     Object.values(items).forEach(item => {
                         if (item.status == '204' || item.status == '200') {
                             resolve(item.status)
@@ -125,7 +122,6 @@ const listBatches = (threads, action, row) => {
         if (!modalBox.closed) {
             modalBox.style.display = "none";
         }
-
     }
 
 }
