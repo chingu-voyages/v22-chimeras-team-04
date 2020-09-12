@@ -9,8 +9,8 @@ export function getEmailProfile() {
       'userId': 'me'
     }).then(function (response) {
       let{emailAddress, threadsTotal } = response.result
-      userEmail.innerText = emailAddress;
-      totalEmails.innerText = threadsTotal;
+      userEmail.innerText = `Email Address: ${emailAddress}`;
+      totalEmails.innerText = `Total Email: ${threadsTotal}`;
       return response.result; 
     });
   }

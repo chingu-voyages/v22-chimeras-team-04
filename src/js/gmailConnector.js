@@ -53,8 +53,8 @@ function updateSigninStatus(isSignedIn) {
     signIn.style.display = 'none';
   } else {
     currentStatDiv.innerHTML = "*****signed-out*****";
-    userEmail.innerText = "Email Address";
-    totalEmails.innerText = "Number of Emails";
+    userEmail.innerText = "";
+    totalEmails.innerText = "";
     signOut.style.display = 'none';
     signIn.style.display = 'block';
   }
@@ -143,7 +143,6 @@ function listSubjects(from, ids) {
     })
 
    Promise.allSettled(mySubPromises).then(() => {
-
       let newArr = removeDuplicates(allSubjects, "subject");
       getDataSubjects(newArr);
       
@@ -160,7 +159,6 @@ function listSubjects(from, ids) {
     'maxResults': '1'
   })
 }
-
 
 function listThreads(nextPageToken = null) {
   let batch = createNewBatch();
