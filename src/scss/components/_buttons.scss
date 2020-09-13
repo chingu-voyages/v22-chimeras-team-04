@@ -1,0 +1,107 @@
+.back {
+    padding: 0.5rem 1.25rem;
+    background: $cl-yellow;
+    border: 2px solid $cl-yellow;
+    color: $bg-darkblue;
+    border-radius: 5px;  
+    display: block; 
+    margin: 1rem auto;
+    cursor: pointer;
+    
+    &:hover {
+        transform: scale(1.1);
+        
+    }
+}
+.btn-all,
+.btn-selective {
+    width: 40%;
+    padding: 0.5rem;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 5px;
+    opacity: 0.9;
+    cursor: pointer;
+    
+    a {
+        color: white;
+    }
+    
+}
+.btn-all {
+    background: $cl-red;
+    border: 2px solid $cl-red;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+.btn-selective {
+    background: $cl-green;
+    border: 2px solid $cl-green;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+@media screen and (min-width: $max-sm) {
+    .btn-all,
+    .btn-selective {
+        width: 40%;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+}
+
+@media screen and (min-width: $min-md) {
+    .btn-all,
+    .btn-selective {
+        width: 30%;
+    }
+}
+
+.close,
+.closeBtn,
+.errorCls {
+    position: absolute;
+    color: $cl-yellow;
+    border: none;
+    outline: transparent;
+    background: transparent;
+    font-weight: bolder;
+    font-size: 1.15rem;
+    letter-spacing: 3px;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+}
+.errorCls {
+    color: $cl-red;
+}
+
+.btn-delete,
+.btn-trash {
+    padding: 0.5rem 1.25rem;
+    border-radius: 5px;
+    display: block;
+    margin: 0.75rem auto;
+    cursor: pointer;    
+    color: white;
+    letter-spacing: 1px;
+    font-weight: bold;
+    opacity: 0.9;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+.btn-delete {
+    background: $cl-red;
+    border: 2px solid $cl-red;
+}
+.btn-trash {
+    background: $cl-green;
+    border: 2px solid $cl-green;
+}
