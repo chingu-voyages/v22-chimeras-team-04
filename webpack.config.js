@@ -27,7 +27,7 @@ module.exports = {
     rules: [
       {
         test: /\.scss$/,
-        use: ["style-loader", "css-loader", "sass-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
 
       {
@@ -39,6 +39,22 @@ module.exports = {
             presets: ["@babel/preset-env"],
           },
         },
+      },
+      {
+        test: /\.(jpg|jpeg|gif|png|svg|webp)$/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              outputPath: "./images",
+              name: "[name].[ext]",
+            },
+          },
+        ],
+      },
+      {
+        test: /\.html$/i,
+        loader: 'html-loader',
       },
     ],
   },
