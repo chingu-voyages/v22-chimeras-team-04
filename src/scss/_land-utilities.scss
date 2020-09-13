@@ -63,6 +63,7 @@ $primary-color: #333;
 
 .flex-items > div {
   padding: 20px;
+  flex: 1;
 }
 
 /* Flex columns */
@@ -120,6 +121,7 @@ $primary-color: #333;
 /* Section header */
 .section-header {
   padding: 30px;
+  padding-bottom: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -130,6 +132,10 @@ $primary-color: #333;
 .section-header h2 {
   font-size: 40px;
   margin: 20px 0;
+}
+
+.section-header p {
+  margin-bottom: 30px;
 }
 
 .section-padding {

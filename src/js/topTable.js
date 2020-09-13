@@ -103,7 +103,6 @@ const selectiveTable = document.querySelector('.selective');
 const btnBack = document.querySelector('.back');
 selectiveTable.style.display = "none";
 
-
 window.deleteSomeAct = function (id) {
   let myid = id.replace("select-", '')
   let cells = topSendersTbl.rows[myid].cells;

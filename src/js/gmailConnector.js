@@ -111,6 +111,8 @@ function listSubjects(from, ids) {
             if (item.result.error) {
               reject(item.result.error)
             } else {
+
+              console.log(threadId);
               let payload = item.result.messages[0].payload;
               let res = ""
               if (payload.hasOwnProperty('headers')) {
@@ -135,7 +137,8 @@ function listSubjects(from, ids) {
   })
 
   Promise.allSettled(mySubPromises).then(() => {
-    let newArr = combineSubjects(allSubjects, "subject");
+
+    let newArr = removeDuplicates(allSubjects, "subject");
     getDataSubjects(newArr);
 
   });
@@ -222,9 +225,7 @@ function listThreads(nextPageToken = null) {
 
           myPromises.push(promise);
 
-
         })
-
 
         Promise.allSettled(myPromises).then(() => {
           let newArr = removeDuplicates(allEmails, "emailAddress");
@@ -238,7 +239,6 @@ function listThreads(nextPageToken = null) {
     } else {
       console.log("No threads found");
     }
-
   }
 
   );
@@ -335,4 +335,4 @@ function removeDuplicates(allObjs, property) {
 
 }
 
-export { listSubjects };
+export { listSubjects, handleAuthClick };
