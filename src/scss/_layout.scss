@@ -1,5 +1,5 @@
 .loader_bg {
-  margin-top: 3rem; // should be removed after adding all login functionality
+  margin-top: 3rem; 
   position: fixed;
   z-index: 999;
   background: $bg-darkblue;
@@ -13,6 +13,7 @@
 
  
   .loader {
+      display: none;
       border: 0 solid transparent;
       border-radius: 50%;
       width: 100px;

@@ -3,8 +3,6 @@ import { getData, getDataSubjects } from './topTable';
 import Bottleneck from "bottleneck";
 import { jaccard } from 'wuzzy';
 
-import { userEmail, signIn, signOut, totalEmails, getEmailProfile } from './getEmailProfile';
-
 const CLIENT_ID = process.env.CLIENT_ID;
 const API_KEY = process.env.API_KEY;
 const DISCOVERY_DOCS = [
@@ -14,13 +12,12 @@ const SCOPES = 'https://mail.google.com/';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
-  minTime: 50
+  minTime: 1500
 });
 
 
 let threadsButton = document.getElementById('threads_button');
-let totalEmailsBtn = document.getElementById('totalemails_button');
-let currentStatDiv = document.getElementById('h1');
+const modalBg = document.querySelector('.loader_bg');
 
 handleClientLoad();
 
@@ -40,7 +37,7 @@ function initClient() {
     signIn.onclick = handleAuthClick;
     signOut.onclick = handleSignoutClick;
     threadsButton.onclick = listThreads;
-    totalEmailsBtn.onclick = getEmailProfile;
+    listThreads()
   }, function (error) {
     console.log(JSON.stringify(error, null, 2));
   });
@@ -48,12 +45,12 @@ function initClient() {
 
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
-    currentStatDiv.innerHTML = "*****signed-in*****";
+    // currentStatDiv.innerHTML = "*****signed-in*****";
     getEmailProfile()
     signOut.style.display = 'block';
     signIn.style.display = 'none';
   } else {
-    currentStatDiv.innerHTML = "*****signed-out*****";
+    // currentStatDiv.innerHTML = "*****signed-out*****";
     userEmail.innerText = "";
     totalEmails.innerText = "";
     signOut.style.display = 'none';
@@ -163,6 +160,7 @@ function getSubjectById(id) {
 }
 
 function listThreads(nextPageToken = null) {
+  document.querySelector('.loader').style.display = "block";
   let batch = createNewBatch();
   let allEmails = [];
 
@@ -193,7 +191,7 @@ function listThreads(nextPageToken = null) {
       cnt++;
       let nextPageToken = response.result.nextPageToken;
 
-      if (nextPageToken && cnt < 5) {
+      if (nextPageToken && cnt < 10) {
         listThreads(nextPageToken);
 
       } else {
@@ -238,6 +236,7 @@ function listThreads(nextPageToken = null) {
           cnt = 0;
           batches = [];
           myPromises = [];
+          getEmailProfile()
 
         });
       }
@@ -249,21 +248,21 @@ function listThreads(nextPageToken = null) {
   );
 }
 
-// const userEmail = document.getElementById('user-email');
-// const totalEmails = document.getElementById('total-emails');
-// const signOut = document.getElementById('sign-out');
-// const signIn = document.getElementById('sign-in');
+const userEmail = document.getElementById('user-email');
+const totalEmails = document.getElementById('total-emails');
+const signOut = document.getElementById('sign-out');
+const signIn = document.getElementById('sign-in');
 
-// function getEmailProfile() {
-//   gapi.client.gmail.users.getProfile({
-//     'userId': 'me'
-//   }).then(function (response) {
-//     let { emailAddress, threadsTotal } = response.result
-//     userEmail.innerText = `Email Address: ${emailAddress}`;
-//     totalEmails.innerText = `Total Email: ${threadsTotal}`;
-//     return response.result;
-//   });
-// }
+function getEmailProfile() {
+  gapi.client.gmail.users.getProfile({
+    'userId': 'me'
+  }).then(function (response) {
+    let { emailAddress, threadsTotal } = response.result
+    userEmail.innerText = `Email Address: ${emailAddress}`;
+    totalEmails.innerText = `Total Email: ${threadsTotal}`;
+    return response.result;
+  });
+}
 
 
 function combineSubjects(allObjs, property) {
