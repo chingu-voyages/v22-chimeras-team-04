@@ -8,6 +8,8 @@
 }
 
 body {
+  // max-width: 1440px;
+  margin: 0 auto;
   font-family: $font-stack;
 	background: $primary-background;
   color: $primary-color;
@@ -34,6 +36,10 @@ p {
 
 img {
   width: 100%;
+}
+
+.img-about {
+  padding: 20px;
 }
 
 /* Navbar */
@@ -119,7 +125,8 @@ img {
 
 /* Icons */
 .icons {
-  padding: 30px;
+  // padding: 30px;
+  padding: 100px 30px;
 }
 
 .icons h3 {
@@ -147,8 +154,13 @@ img {
 
 .team .team-logo {
   // width: 500px;
+  // margin: 50px 30px 100px;
   height: 125px;
   border-radius: 0%;
+}
+
+.team {
+  padding: 100px 30px;
 }
 
 /* Callback form */
@@ -233,6 +245,10 @@ img {
   .team .github {
     width: 30%;
     height: 30%;
+  }
+
+  h2 {
+    height: 40vh;
   }
 
 }
