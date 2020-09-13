@@ -3,9 +3,12 @@ import { getData, getDataSubjects } from './topTable';
 import Bottleneck from "bottleneck";
 import { jaccard } from 'wuzzy';
 
+import { userEmail, signIn, signOut, totalEmails, getEmailProfile } from './getEmailProfile';
+
 const CLIENT_ID = process.env.CLIENT_ID;
 const API_KEY = process.env.API_KEY;
-const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
+const DISCOVERY_DOCS = [
+  "https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
 
 const SCOPES = 'https://mail.google.com/';
 
@@ -14,8 +17,7 @@ const limiter = new Bottleneck({
   minTime: 50
 });
 
-let authorizeButton = document.getElementById('authorize_button');
-let signoutButton = document.getElementById('signout_button');
+
 let threadsButton = document.getElementById('threads_button');
 let totalEmailsBtn = document.getElementById('totalemails_button');
 let currentStatDiv = document.getElementById('h1');
@@ -26,7 +28,6 @@ function handleClientLoad() {
   gapi.load('client:auth2', initClient);
 }
 
-
 function initClient() {
   gapi.client.init({
     apiKey: API_KEY,
@@ -36,8 +37,8 @@ function initClient() {
   }).then(function () {
     gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    authorizeButton.onclick = handleAuthClick;
-    signoutButton.onclick = handleSignoutClick;
+    signIn.onclick = handleAuthClick;
+    signOut.onclick = handleSignoutClick;
     threadsButton.onclick = listThreads;
     totalEmailsBtn.onclick = getEmailProfile;
   }, function (error) {
@@ -45,15 +46,20 @@ function initClient() {
   });
 }
 
-
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     currentStatDiv.innerHTML = "*****signed-in*****";
+    getEmailProfile()
+    signOut.style.display = 'block';
+    signIn.style.display = 'none';
   } else {
     currentStatDiv.innerHTML = "*****signed-out*****";
+    userEmail.innerText = "";
+    totalEmails.innerText = "";
+    signOut.style.display = 'none';
+    signIn.style.display = 'block';
   }
 }
-
 
 function handleAuthClick() {
   gapi.auth2.getAuthInstance().signIn();
@@ -156,7 +162,6 @@ function getSubjectById(id) {
   })
 }
 
-
 function listThreads(nextPageToken = null) {
   let batch = createNewBatch();
   let allEmails = [];
@@ -244,13 +249,21 @@ function listThreads(nextPageToken = null) {
   );
 }
 
-function getEmailProfile() {
-  gapi.client.gmail.users.getProfile({
-    'userId': 'me'
-  }).then(function (response) {
-    return response.result;
-  });
-}
+// const userEmail = document.getElementById('user-email');
+// const totalEmails = document.getElementById('total-emails');
+// const signOut = document.getElementById('sign-out');
+// const signIn = document.getElementById('sign-in');
+
+// function getEmailProfile() {
+//   gapi.client.gmail.users.getProfile({
+//     'userId': 'me'
+//   }).then(function (response) {
+//     let { emailAddress, threadsTotal } = response.result
+//     userEmail.innerText = `Email Address: ${emailAddress}`;
+//     totalEmails.innerText = `Total Email: ${threadsTotal}`;
+//     return response.result;
+//   });
+// }
 
 
 function combineSubjects(allObjs, property) {
