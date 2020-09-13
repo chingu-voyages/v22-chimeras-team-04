@@ -13,6 +13,19 @@
         
     }
 }
+
+#threads_button {
+    padding: 0.5rem 1.25rem;
+    background: $cl-yellow;
+    border: 2px solid $cl-yellow;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1.5rem;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
 .btn-all,
 .btn-selective {
     width: 40%;

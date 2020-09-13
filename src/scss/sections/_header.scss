@@ -1,34 +1,37 @@
 .header {
     height: 100px;
     width: 100%;
-    display: flex;
-    justify-content:space-evenly;
+    display: flex;   
+    justify-content:space-between;
     background-color:white;
     cursor: pointer;
-    padding: 1.5em;
+    padding: 1.5em 2.5rem 0 2.5rem;
     font-family: $font-stack;
+    align-content: baseline;
+
+    // line-height: 80px;
     
-    .logo-container {
-      margin-right: 3.5em;
-      
+            
       .logo{
-        position: absolute;
-        top: 0;
-        left: 10px;
+        position: relative;
         width: 80px;
         height: auto;
-        margin-right: 3em;
-        // margin-bottom: 5em;
+        order: 1;
       }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      padding-top: 1.5rem;
+
+      .total-emails {
+        padding-top: 1.5rem;
+      }
+      
+    }
+    .options {
+      padding-top: 2.5rem;
     }
     
-
-    div {
-      margin-left: .8em;
-
-      @media only screen and (max-width: 800px) {
-        margin-left: 0.8em;
-      }
-    }
-
+  
   }
