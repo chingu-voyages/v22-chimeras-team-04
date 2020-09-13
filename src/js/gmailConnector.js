@@ -3,8 +3,6 @@ import { getData, getDataSubjects } from './topTable';
 import Bottleneck from "bottleneck";
 import { jaccard } from 'wuzzy';
 
-// import { userEmail, signIn, signOut, totalEmails, getEmailProfile } from './getEmailProfile';
-
 const CLIENT_ID = process.env.CLIENT_ID;
 const API_KEY = process.env.API_KEY;
 const DISCOVERY_DOCS = [
@@ -14,14 +12,11 @@ const SCOPES = 'https://mail.google.com/';
 
 const limiter = new Bottleneck({
   maxConcurrent: 1,
-  minTime: 50
+  minTime: 1500
 });
 
 
 let threadsButton = document.getElementById('threads_button');
-console.log(threadsButton)
-let totalEmailsBtn = document.getElementById('totalemails_button');
-let currentStatDiv = document.getElementById('h1');
 const modalBg = document.querySelector('.loader_bg');
 
 handleClientLoad();
@@ -42,7 +37,7 @@ function initClient() {
     signIn.onclick = handleAuthClick;
     signOut.onclick = handleSignoutClick;
     threadsButton.onclick = listThreads;
-    totalEmailsBtn.onclick = getEmailProfile;
+    listThreads()
   }, function (error) {
     console.log(JSON.stringify(error, null, 2));
   });
@@ -68,7 +63,6 @@ function handleAuthClick() {
 }
 
 function handleSignoutClick() {
-  modalBg.style.display = "flex";
   gapi.auth2.getAuthInstance().signOut();
 }
 function threadsGeMetatReq(id) {
@@ -166,6 +160,7 @@ function getSubjectById(id) {
 }
 
 function listThreads(nextPageToken = null) {
+  document.querySelector('.loader').style.display = "block";
   let batch = createNewBatch();
   let allEmails = [];
 
@@ -196,7 +191,7 @@ function listThreads(nextPageToken = null) {
       cnt++;
       let nextPageToken = response.result.nextPageToken;
 
-      if (nextPageToken && cnt < 5) {
+      if (nextPageToken && cnt < 10) {
         listThreads(nextPageToken);
 
       } else {
@@ -241,6 +236,7 @@ function listThreads(nextPageToken = null) {
           cnt = 0;
           batches = [];
           myPromises = [];
+          getEmailProfile()
 
         });
       }

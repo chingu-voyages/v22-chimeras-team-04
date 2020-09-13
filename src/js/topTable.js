@@ -5,6 +5,7 @@ let topTblData = [];
 
 const loaderBg = document.querySelector('.loader_bg');
 
+
 function getData(extData) {
   let length = topSendersTbl.rows.length;
   for (let j = length - 1; j > 0; j--)

@@ -8,11 +8,12 @@
     background: $bg-darkblue;
     color: white;
     max-width: 350px;   
-    top: 110px;
+    top: 170px;
     right: 10px;
     padding: 2rem;
     border: 8px solid $cl-yellow;
     border-radius: 7px;
+    display: none;
 
     h3 {
         line-height: 1.75;

@@ -15,9 +15,9 @@ const btnTrash = document.querySelector('.btn-trash');
 const closeInfoModal = document.querySelector('.close');
 const errorCls = document.querySelector('.errorCls');
 
-modalBox.style.display = "none";
-modalInfo.style.display = 'none';
-modalError.style.display = "none";
+// modalBox.style.display = "none";
+// modalInfo.style.display = 'none';
+// modalError.style.display = "none";
 modalLoader.style.display = "none";
 
 const popUp = () => {
@@ -56,7 +56,7 @@ const errorPopUp = () => {
 
 const limiter = new Bottleneck({
     maxConcurrent: 1,
-    minTime: 50
+    minTime: 1500
 })
 
 
