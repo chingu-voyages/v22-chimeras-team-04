@@ -13,18 +13,24 @@
     <div class="logo-container" href="#">
         <img class="logo" src="../images/icon.png" alt="app-logo">
     </div>
-    <div class="user-info">
-        <div id="user-email"></div>
     
-        <div id="total-emails"></div> 
+    <input type="checkbox" id="toggle" />
+    <div class="top-table-nav">
+        <div class="user-info">
+            <div id="user-email"></div>
+        
+            <div id="total-emails"></div> 
+        </div>
+        <button id="threads_button">Refresh Table</button>
+    
+    
+        <div class="options">
+            <div id="sign-out" class='option' style="display: none;">Sign Out</div> 
+            <div id="sign-in" class='option'>Sign In</div>            
+        </div>
     </div>
-    <button id="threads_button">Refresh Table</button>
-
-
-    <div class="options">
-        <div id="sign-out" class='option' style="display: none;">Sign Out</div> 
-        <div id="sign-in" class='option'>Sign In</div>            
-    </div>
+    <label data-menu-toggle for="toggle">&#9776;</label>
+ 
 </header>
   <div class="loader_bg">
     
