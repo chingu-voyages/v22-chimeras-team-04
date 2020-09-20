@@ -151,12 +151,25 @@ function addMessage(action, number) {
 }
 
 
-window.deleteAllAct = function (id) {
-    let myid = id.replace('delete-', '');
+window.deleteAllAct = function (id, isSelective) {
+
+    let myid = id.replace('p-delete-', '');
+    
+    if(isSelective){
+        myid = id.replace('s-delete-', '')
+    }
+
     let cells = topSendersTbl.rows[myid].cells;
+    if(isSelective){
+        cells = selectiveTbl.rows[myid].cells;
+    }
     let threads = cells[2].innerText.split(',');
 
-    let row = document.getElementById('row-' + myid);
+    let row = document.getElementById('p-row-' + myid);
+    if(isSelective)
+    {
+        row =  document.getElementById('s-row-' + myid);
+    }
     popUp();
 
     let trashHandler = function(event){

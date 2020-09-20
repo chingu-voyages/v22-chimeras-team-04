@@ -12,7 +12,7 @@ function getData(extData) {
     topSendersTbl.deleteRow(j);
 
   topTblData = extData;
-  orderData(topSendersTbl, topTblData);
+  orderData(topSendersTbl, topTblData, false);
   genericSort(compareNumDesc)
 }
 
@@ -24,7 +24,7 @@ function getDataSubjects(extData) {
 
   let selectiveTblData = [];
   selectiveTblData = extData;
-  orderData(selectiveTbl, selectiveTblData);
+  orderData(selectiveTbl, selectiveTblData, true);
 }
 
 document.getElementById('sortNumUp').onclick = function () {
@@ -40,22 +40,28 @@ document.getElementById('sortAlphDown').onclick = function () {
   genericSort(compareStrDesc)
 }
 
-function orderData(inTable, data) {
+function orderData(inTable, data, isSelective) {
 
   let table = inTable;
   let countRows = null;
   for (let i = 0, cellCnt = 0; i < data.length; i++) {
     let row = table.insertRow(i + 1)
-    row.id = "row-" + (i + 1)
+    
+    row.id = "p-row-" + (i + 1)
+    if(isSelective){
+      row.id = "s-row-" + (i + 1)
+
+    }
     for (const [key, value] of Object.entries(data[i])) {
       let cell = row.insertCell(cellCnt++);
       cell.innerText = decodeURIComponent(value);
     }
 
     let cell = row.insertCell(cellCnt++);
-    // let action = 'Delete" <a href=# id=delete-' + (i + 1) + '>All</a> | <a href=# id=select-' + (i + 1) + '> Selective</a> '
-
-    let action = '<button class=btn-all><a href=# id=delete-' + (i + 1) + ' onclick=deleteAllAct(this.id) >All</a></button>  <button class=btn-selective><a href=# id=select-' + (i + 1) + ' onclick=deleteSomeAct(this.id)>Selective</a></button>';
+    let action = '<button class=btn-all><a href=# id=p-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,false) >All</a></button>  <button class=btn-selective><a href=# id=p-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,false)>Selective</a></button>';
+    if(isSelective){
+       action = '<button class=btn-all><a href=# id=s-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,true) >All</a></button>  <button class=btn-selective><a href=# id=s-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,true)>Selective</a></button>';
+    }
     cell.innerHTML = action;
     cellCnt = 0;
     countRows++
@@ -104,8 +110,12 @@ const selectiveTable = document.querySelector('.selective');
 const btnBack = document.querySelector('.back');
 selectiveTable.style.display = "none";
 
-window.deleteSomeAct = function (id) {
-  let myid = id.replace("select-", '')
+window.deleteSomeAct = function (id, isSelective) {
+  
+  let myid = id.replace("p-select-", '')
+  if(isSelective){
+    myid = id.replace("s-select-", '')
+  }
   let cells = topSendersTbl.rows[myid].cells;
   let threads = cells[2].innerText.split(',');
   let from = cells[0].innerText;
@@ -119,7 +129,7 @@ window.deleteSomeAct = function (id) {
     selectiveTable.style.display = "none";
   })
 
-  listSubjects(from, threads);
+  listSubjects(threads);
 
 }
 export { getData, getDataSubjects };
