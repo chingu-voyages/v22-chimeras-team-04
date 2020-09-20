@@ -149,6 +149,8 @@ function addMessage(action, number) {
         infoText.innerText += `were moved to trash`;
     }
 }
+
+
 window.deleteAllAct = function (id) {
     let myid = id.replace('delete-', '');
     let cells = topSendersTbl.rows[myid].cells;
@@ -157,12 +159,16 @@ window.deleteAllAct = function (id) {
     let row = document.getElementById('row-' + myid);
     popUp();
 
-    btnTrash.addEventListener('click', function toTrash() {
+    let trashHandler = function(event){
         listBatches(threads, "trash", row);
-    }, { once: true });
+        btnDelete.removeEventListener('click', deleteHandler,{once:true});
+    };
 
-    btnDelete.addEventListener('click', function deleteEmails() {
+    let deleteHandler = function(event){
         listBatches(threads, "delete", row);
-    }, { once: true });
+        btnTrash.removeEventListener('click', trashHandler,{once:true});
+    }
+    btnTrash.addEventListener('click', trashHandler, { once: true });
+    btnDelete.addEventListener('click', deleteHandler, { once: true });
 
 }
