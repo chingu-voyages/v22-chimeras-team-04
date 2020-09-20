@@ -1,111 +1,103 @@
 .header {
   height: 100px;
-  width: 100%;
+  width: 95%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   background-color: white;
   cursor: pointer;
-  padding: 1.5em 2.5rem 0 2.5rem;
+  padding: 1.5em 0.5rem 0;
   font-family: $font-stack;
-  align-content: baseline;
-
-  @media screen and (max-width: $min-lg) {
-    padding: 1.5rem 1.5rem 0 1.5rem;
-  }
-
-  .top-table-nav {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: calc(100% - 100px);
-    padding-left: 5rem;
-    padding-right: 0;
-  }
+  vertical-align: baseline;
+  color: $bg-darkblue;
+  margin: 0 auto;
+  font-weight: bold;
 
   .logo {
-    position: absolute;
     width: 80px;
     height: auto;
-    left: 2.5rem;
+  }
+
+  .filter-blue {
+    filter: invert(6%) sepia(60%) saturate(4393%) hue-rotate(213deg)
+      brightness(98%) contrast(98%);
   }
 
   #threads_button {
     background: transparent;
-    height: 60px;
-    width: 60px;
+    height: 55px;
+    width: 55px;
     border: none;
     outline: none;
     cursor: pointer;
     margin-top: 0.25rem;
-    padding-top: 0.75rem;
+    padding-top: 1.5rem;
   }
 
   .refresh {
-    height: 60px;
-    width: 60px;
+    height: 55px;
+    width: 55px;
   }
 
   .user-info {
     display: flex;
     flex-direction: column;
     padding-top: 1.5rem;
+    font-size: 1.25rem;
 
     .total-emails {
       padding-top: 1.5rem;
     }
   }
   .options {
-    padding-top: 1rem;
+    padding-top: 1.75rem;
   }
 
   #sign-in,
   #sign-out {
-    max-width: 60px;
+    max-width: 55px;
   }
 }
+@media screen and (max-width: $max-xs) {
+  .user-info {
+    font-size: 1rem;
+  }
+}
+
 @media screen and (max-width: $max-sm) {
   .header {
-    padding: 0.5rem 0.25rem;
+    padding: 0.75rem 0.25rem;
     height: 2rem;
     line-height: 2rem;
-    justify-content: space-around;
+
     .logo {
       width: 2.5rem;
-      left: 0.5rem;
-      top: 1rem;
+      padding-top: 0.25rem;
     }
 
-    .top-table-nav {
-      justify-content: space-around;
-      padding-left: 1.5rem;
-      padding-right: 0;
-      background: white;
-      text-align: left;
-      width: calc(100% - 2.5rem);
-    }
     .user-info {
       padding-top: 0;
-      font-size: 0.9rem;
       text-align: center;
       font-size: 0.65em;
+      top: -3rem;
     }
     #threads_button {
-      height: 2.5rem;
-      width: 2.5rem;
-      margin-top: 0;
+      height: 1.9rem;
+      width: 1.9rem;
+      margin-top: 0.75rem;
+      padding-top: 0.25rem;
     }
     .refresh {
-      width: 2.5rem;
-      height: 2.5rem;
+      width: 1.9rem;
+      height: 1.9rem;
     }
 
     .options {
-      padding-top: 0.75rem;
+      padding-top: 1rem;
     }
     #sign-in,
     #sign-out {
-      height: 2.5rem;
-      width: 2.5rem;
+      height: 2rem;
+      width: 2rem;
     }
   }
 }

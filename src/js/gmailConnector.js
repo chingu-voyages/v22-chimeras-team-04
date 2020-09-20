@@ -246,7 +246,7 @@ function getEmailProfile() {
     .then(function (response) {
       let { emailAddress, threadsTotal } = response.result;
       userEmail.innerText = `${emailAddress}`;
-      totalEmails.innerText = `${threadsTotal}`;
+      totalEmails.innerText = `(${threadsTotal})`;
       return response.result;
     });
 }

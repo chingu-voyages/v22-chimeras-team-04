@@ -18,29 +18,35 @@
         </a>
       </div>
 
-      <div class="top-table-nav">
-        <div class="user-info">
-          <div id="user-email"></div>
+      <div class="user-info">
+        <div id="user-email"></div>
 
-          <div id="total-emails"></div>
-        </div>
-        <button id="threads_button">
+        <div id="total-emails"></div>
+      </div>
+
+      <div class="options">
+        <div id="sign-out" class="option" style="display: none">
           <img
-            class="refresh"
-            src="../images/Refresh-512.png"
-            alt="refresh button"
+            class="filter-blue"
+            src="../images/sign-out.svg"
+            alt="logout icon"
           />
-        </button>
-
-        <div class="options">
-          <div id="sign-out" class="option" style="display: none">
-            <img src="../images/logout.png" alt="logout icon" />
-          </div>
-          <div id="sign-in" class="option">
-            <img src="../images/login.png" alt="login icon" />
-          </div>
+        </div>
+        <div id="sign-in" class="option">
+          <img
+            class="filter-blue"
+            src="../images/sign-in.svg"
+            alt="login icon"
+          />
         </div>
       </div>
+      <button id="threads_button">
+        <img
+          class="refresh filter-blue"
+          src="../images/refresh.svg"
+          alt="refresh button"
+        />
+      </button>
     </header>
     <div class="loader_bg">
       <div class="loader" style="display: block">
