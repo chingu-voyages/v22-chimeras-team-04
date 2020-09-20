@@ -37,7 +37,11 @@ function initClient() {
     signIn.onclick = handleAuthClick;
     signOut.onclick = handleSignoutClick;
     threadsButton.onclick = listThreadsWrapper;
-    listThreadsWrapper()
+    if(!gapi.auth2.getAuthInstance().isSignedIn.get())
+    {
+      handleAuthClick();
+    }
+
   }, function (error) {
     console.log(JSON.stringify(error, null, 2));
   });
@@ -47,6 +51,8 @@ function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     // currentStatDiv.innerHTML = "*****signed-in*****";
     getEmailProfile()
+    listThreadsWrapper()
+
     signOut.style.display = 'block';
     signIn.style.display = 'none';
   } else {
