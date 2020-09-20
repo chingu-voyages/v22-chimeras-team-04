@@ -72,9 +72,9 @@ function orderData(inTable, data, isSelective) {
     }
 
     let cell = row.insertCell(cellCnt++);
-    let action = '<button class=btn-all><a href=# id=p-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,false) >All</a></button>  <button class=btn-selective><a href=# id=p-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,false)>Selective</a></button>';
+    let action = '<button class=btn-all id=p-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,false) >All</button>  <button class=btn-selective id=p-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,false)>Selective</button>';
     if(isSelective){
-       action = '<button class=btn-all><a href=# id=s-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,true) >All</a></button>  <button class=btn-selective><a href=# id=s-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,true)>Selective</a></button>';
+       action = '<button class=btn-all id=s-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,true) >All</button>  <button class=btn-selective id=s-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,true)>Selective</button>';
     }
     cell.innerHTML = action;
     cellCnt = 0;
