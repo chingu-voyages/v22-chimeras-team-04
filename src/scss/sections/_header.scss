@@ -1,34 +1,47 @@
 .header {
-    height: 100px;
-    width: 100%;
-    display: flex;
-    justify-content:space-evenly;
-    background-color:white;
-    cursor: pointer;
-    padding: 1.5em;
-    font-family: $font-stack;
-    
-    .logo-container {
-      margin-right: 3.5em;
-      
-      .logo{
-        position: absolute;
-        top: 0;
-        left: 10px;
-        width: 80px;
-        height: auto;
-        margin-right: 3em;
-        // margin-bottom: 5em;
+  height: 120px;
+  width: 100%;
+  display: flex;
+  justify-content:space-evenly;
+  background-color:white;
+  cursor: pointer;
+  padding: 1.5em;
+  font-family: $font-stack;
+
+  @media only screen and (max-width: 800px) {
+    display: grid;
+    justify-content: flex-end;
+    height: 140px;
+  }
+
+  #user{
+    justify-content:space-between;
+
+    @media only screen and (max-width: 800px) {
+      margin-left: 8em;
+    }
+
+    div, button {
+      margin-top: 0.5em;
+      @media only screen and (max-width: 800px) {
+        margin-top: 0.5em;
       }
     }
+  }
+  
+  .logo-container {
     
-
-    div {
-      margin-left: .8em;
+    .logo{
+      position: absolute;
+      top: 1em;
+      left: 50px;
+      width: 80px;
+      height: auto;
 
       @media only screen and (max-width: 800px) {
-        margin-left: 0.8em;
+        left:15px;
       }
     }
-
   }
+
+}
