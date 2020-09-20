@@ -11,8 +11,8 @@ const DISCOVERY_DOCS = [
 const SCOPES = 'https://mail.google.com/';
 
 const limiter = new Bottleneck({
-  maxConcurrent: 1,
-  minTime: 1500
+  maxConcurrent: 2,
+  minTime: 1000
 });
 
 
@@ -145,7 +145,7 @@ function listSubjects(ids) {
 
   Promise.allSettled(mySubPromises).then(() => {
 
-    let newArr = removeDuplicates(allSubjects, "subject");
+    let newArr = combineSubjects(allSubjects, "subject");
     getDataSubjects(newArr);
 
   });
@@ -165,7 +165,7 @@ function getSubjectById(id) {
 
 function listThreadsWrapper()
 {
-  let maxCnt = 3;
+  let maxCnt = 10;
   let batches = [];
   let myPromises = []
 
@@ -204,7 +204,7 @@ function listThreads(batches, maxCnt, nextPageToken,myPromises) {
 
       let nextPageToken = response.result.nextPageToken;
 
-      if (nextPageToken && maxCnt-- > 0) {
+      if (nextPageToken  > 0 && maxCnt-->0) {
         listThreads(batches,maxCnt,nextPageToken,myPromises);
 
       } else {
@@ -288,7 +288,15 @@ function combineSubjects(allObjs, property) {
   };
 
   for (let i = 1; i < allObjs.length; i++) {
-    let jaccardIdx = jaccard(allObjs[i][property], obj[property][0]);
+    let jaccardIdx = 0;
+    if(allObjs[i][property].toUpperCase()===obj[property][0].toUpperCase())
+    {
+      jaccardIdx = 1;
+    }
+
+    else{
+      jaccardIdx = jaccard(allObjs[i][property].toUpperCase(), obj[property][0].toUpperCase());
+    }
     if (jaccardIdx >= 0.8) {
       obj.counter++;
       ids.push(allObjs[i].id);

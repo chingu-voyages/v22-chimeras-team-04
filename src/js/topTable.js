@@ -1,7 +1,8 @@
 import { listSubjects } from './gmailConnector'
 let topSendersTbl = document.getElementById("topSendersTbl");
-let selectiveTbl = document.getElementById("selectiveTbl"); //temporary
+let selectiveTbl = document.getElementById("selectiveTbl"); 
 let topTblData = [];
+let selectiveTblData = [];
 
 const loaderBg = document.querySelector('.loader_bg');
 
@@ -13,31 +14,44 @@ function getData(extData) {
 
   topTblData = extData;
   orderData(topSendersTbl, topTblData, false);
-  genericSort(compareNumDesc)
+  genericSort(compareNumDesc, false)
 }
 
-/*Temporary*/
 function getDataSubjects(extData) {
   let length = selectiveTbl.rows.length;
   for (let j = length - 1; j > 0; j--)
     selectiveTbl.deleteRow(j);
 
-  let selectiveTblData = [];
   selectiveTblData = extData;
   orderData(selectiveTbl, selectiveTblData, true);
+  genericSort(compareNumDesc, true)
+
 }
 
 document.getElementById('sortNumUp').onclick = function () {
-  genericSort(compareNumAsc)
+  genericSort(compareNumAsc,false)
 }
 document.getElementById('sortNumDown').onclick = function () {
-  genericSort(compareNumDesc)
+  genericSort(compareNumDesc,false)
 }
 document.getElementById('sortAlphUp').onclick = function () {
-  genericSort(compareStrAsc)
+  genericSort(compareEmailAsc,false)
 }
 document.getElementById('sortAlphDown').onclick = function () {
-  genericSort(compareStrDesc)
+  genericSort(compareEmailDesc,false)
+}
+
+document.getElementById('sortNumUpSelective').onclick = function () {
+  genericSort(compareNumAsc,true)
+}
+document.getElementById('sortNumDownSelective').onclick = function () {
+  genericSort(compareNumDesc,true)
+}
+document.getElementById('sortAlphUpSelective').onclick = function () {
+  genericSort(compareSubjectAsc,true)
+}
+document.getElementById('sortAlphDownSelective').onclick = function () {
+  genericSort(compareSubjectDesc,true)
 }
 
 function orderData(inTable, data, isSelective) {
@@ -91,19 +105,37 @@ function compareNumDesc(a, b) {
   return compareFunc(a.counter, b.counter)
 }
 
-function compareStrAsc(a, b) {
+function compareEmailAsc(a, b) {
   return compareFunc(b.emailAddress, a.emailAddress)
 }
 
-function compareStrDesc(a, b) {
+function compareEmailDesc(a, b) {
   return compareFunc(a.emailAddress, b.emailAddress)
 }
 
-function genericSort(compareFunc) {
-  topTblData.sort(compareFunc);
-  for (let j = topTblData.length; j > 0; j--)
-    topSendersTbl.deleteRow(j);
-  orderData(topSendersTbl, topTblData);
+function compareSubjectAsc(a, b) {
+  return compareFunc(b.subject, a.subject)
+}
+
+function compareSubjectDesc(a, b) {
+  return compareFunc(a.subject, b.subject)
+}
+
+function genericSort(compareFunc, isSelective) {
+  if(isSelective)
+  {
+    selectiveTblData.sort(compareFunc);
+    for (let j = selectiveTblData.length; j > 0; j--)
+    selectiveTbl.deleteRow(j);
+    orderData(selectiveTbl, selectiveTblData, true);
+  }
+
+  else{ 
+    topTblData.sort(compareFunc);
+    for (let j = topTblData.length; j > 0; j--)
+      topSendersTbl.deleteRow(j);
+    orderData(topSendersTbl, topTblData, false);
+  }
 }
 const topTable = document.querySelector('.all-senders');
 const selectiveTable = document.querySelector('.selective');
