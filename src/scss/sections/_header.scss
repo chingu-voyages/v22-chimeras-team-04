@@ -43,6 +43,7 @@
     flex-direction: column;
     padding-top: 1.5rem;
     font-size: 1.25rem;
+    line-height: 1.5;
 
     .total-emails {
       padding-top: 1.5rem;
@@ -75,7 +76,7 @@
     }
 
     .user-info {
-      padding-top: 0;
+      padding-top: 1.25rem;
       text-align: center;
       font-size: 0.65em;
       top: -3rem;
