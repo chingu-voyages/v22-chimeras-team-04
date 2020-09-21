@@ -1,187 +1,124 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Webpack starter kit</title>
+  </head>
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Webpack starter kit</title>
-</head>
+  <body>
+    <header class="header">
+      <div class="logo-container">
+        <a href="#">
+          <img class="logo" src="../images/icon.svg" alt="app-logo" />
+        </a>
+      </div>
 
-<body>
-  <header class="header">
-    <div class="logo-container" href="#">
-        <img class="logo" src="../images/icon.png" alt="app-logo">
-    </div>
-    <div class="user-info">
+      <div class="user-info">
         <div id="user-email"></div>
-    </div>
-    <div class="user-info">
-        <span id="total-emails"></span> 
-    </div>
-    <button id="threads_button">Refresh Table</button>
 
+        <div id="total-emails"></div>
+      </div>
 
-    <div class="options">
-        <div id="sign-out" class='option' style="display: none;">Sign Out</div> 
-        <div id="sign-in" class='option'>Sign In</div>            
+      <div class="options">
+        <div id="sign-out" class="option" style="display: none">
+          <img
+            class="filter-blue"
+            src="../images/sign-out.svg"
+            alt="logout icon"
+          />
+        </div>
+        <div id="sign-in" class="option">
+          <img
+            class="filter-blue"
+            src="../images/sign-in.svg"
+            alt="login icon"
+          />
+        </div>
+      </div>
+      <button id="threads_button">
+        <img
+          class="refresh filter-blue"
+          src="../images/refresh.svg"
+          alt="refresh button"
+        />
+      </button>
+    </header>
+    <div class="loader_bg">
+      <div class="loader" style="display: block">
+        <img src="../images/just-mail.svg" alt="envelope" />
+      </div>
+      <div class="loading-text">Loading ...</div>
     </div>
-</header>
-  <div class="loader_bg">
-    
-    <div class="loader">
-    <svg width="97" height="78" viewBox="0 0 97 78" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M87.1703 77.0233H8.97487C5.89238 77.0233 3.39336 74.5243 3.39336 71.4416L0 5.58233C0 2.49966 2.49902 0.000823975 5.58151 0.000823975H90.5634C93.6461 0.000823975 96.1449 2.49984 96.1449 5.58233L92.7516 71.4416C92.7518 74.5243 90.2528 77.0233 87.1703 77.0233V77.0233Z" fill="url(#paint0_linear)"/>
-        <path d="M90.5636 77.0224H5.58151C2.49902 77.0224 0 74.5234 0 71.4408C0 69.884 0.642853 68.3963 1.77642 67.3295L43.7381 27.8412C46.1734 25.5495 49.9717 25.5495 52.407 27.8412L94.3687 67.3295C95.5025 68.3963 96.1451 69.884 96.1451 71.4408C96.1451 74.5234 93.6461 77.0224 90.5636 77.0224V77.0224Z" fill="url(#paint1_linear)"/>
-        <path d="M0.79837 56.9792V71.4408C0.79837 74.5234 3.25592 77.0223 6.28732 77.0223H89.8578C92.8892 77.0223 95.3468 74.5232 95.3468 71.4408V56.9792H0.79837Z" fill="url(#paint2_linear)"/>
-        <path d="M0 5.58252V71.4418C0 74.5244 2.49902 77.0233 5.58151 77.0233H9.19355V0.000823975H5.58151C2.49902 0.000823975 0 2.49984 0 5.58252H0Z" fill="url(#paint3_linear)"/>
-        <path d="M1.96493 9.69275L73.8998 77.0224H90.5636C93.6463 77.0224 96.1451 74.5234 96.1451 71.4409V5.5817C96.1451 2.49902 93.6461 0.377228 90.5636 0.377228H5.5815C2.49901 0.377039 0.188507 2.49902 0.188507 5.5817C0.188507 7.1383 0.83136 8.62592 1.96493 9.69275V9.69275Z" fill="url(#paint4_linear)"/>
-        <path d="M96.1451 5.5817V71.4409C96.1451 74.5236 93.6461 77.0224 90.5636 77.0224H86.9516V0H90.5636C93.6461 0 96.1451 2.49902 96.1451 5.5817V5.5817Z" fill="url(#paint5_linear)"/>
-        <path d="M90.5636 0.377045H86.9516V34.4984H96.1451V5.95874C96.1451 2.87606 93.6461 0.377045 90.5636 0.377045V0.377045Z" fill="url(#paint6_linear)"/>
-        <path d="M5.58151 0.377045H9.19355V34.4984H0V5.95874C0 2.87606 2.49902 0.377045 5.58151 0.377045V0.377045Z" fill="url(#paint7_linear)"/>
-        <path d="M90.5636 0.000823975H5.58151C2.49902 0.000823975 0 2.49984 0 5.58252C0 7.13932 0.642853 8.06137 1.77642 9.1282L43.7381 48.6165C46.1734 50.9082 49.9717 50.9082 52.407 48.6165L94.3687 9.12801C95.5023 8.06118 96.1451 7.13913 96.1451 5.58252C96.1451 2.49984 93.6461 0.000823975 90.5636 0.000823975V0.000823975Z" fill="url(#paint8_linear)"/>
-        <path d="M90.4472 0.000823975C90.2249 0.000823975 90.0111 0.0856579 89.8494 0.237793L52.4071 35.4733C49.9718 37.7649 46.1735 37.7649 43.7382 35.4733L6.29604 0.237983C6.13429 0.0856585 5.92032 0.000823975 5.69825 0.000823975C2.85028 0.000823975 0.372938 2.08944 0.039258 4.9178C-0.172073 6.7093 0.482468 8.47574 1.77666 9.69357L43.7384 49.1819C46.1737 51.4735 49.972 51.4735 52.4073 49.1819L94.3689 9.69357C95.6631 8.47555 96.3177 6.7093 96.1063 4.9178C95.7725 2.08944 93.2951 0.000823975 90.4472 0.000823975V0.000823975Z" fill="url(#paint9_linear)"/>
-        <defs>
-        <linearGradient id="paint0_linear" x1="41.2808" y1="20.289" x2="71.6885" y2="85.5681" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#E3E5E4"/>
-        <stop offset="1" stop-color="#CBD0E4"/>
-        </linearGradient>
-        <linearGradient id="paint1_linear" x1="39.0317" y1="62.3867" x2="54.7373" y2="78.0923" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#EBEFF0"/>
-        <stop offset="1" stop-color="#E3E5E4"/>
-        </linearGradient>
-        <linearGradient id="paint2_linear" x1="48.0726" y1="64.9223" x2="48.0726" y2="81.0498" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#CBD0E4" stop-opacity="0"/>
-        <stop offset="1" stop-color="#6A7D83"/>
-        </linearGradient>
-        <linearGradient id="paint3_linear" x1="3.26762" y1="38.512" x2="10.9383" y2="38.512" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#FF637B"/>
-        <stop offset="1" stop-color="#F90217"/>
-        </linearGradient>
-        <linearGradient id="paint4_linear" x1="79.1706" y1="38.3325" x2="67.3566" y2="25.8902" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#CBD0E4" stop-opacity="0"/>
-        <stop offset="1" stop-color="#6A7D83"/>
-        </linearGradient>
-        <linearGradient id="paint5_linear" x1="91.1179" y1="38.5112" x2="97.025" y2="38.5112" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#FF637B"/>
-        <stop offset="1" stop-color="#F90217"/>
-        </linearGradient>
-        <linearGradient id="paint6_linear" x1="94.4045" y1="22.4018" x2="86.4867" y2="13.4471" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#F90217" stop-opacity="0"/>
-        <stop offset="0.2669" stop-color="#E7010F" stop-opacity="0.267"/>
-        <stop offset="0.7232" stop-color="#CE0004" stop-opacity="0.723"/>
-        <stop offset="1" stop-color="#C50000"/>
-        </linearGradient>
-        <linearGradient id="paint7_linear" x1="1.7406" y1="22.4018" x2="9.65844" y2="13.4471" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#F90217" stop-opacity="0"/>
-        <stop offset="0.2669" stop-color="#E7010F" stop-opacity="0.267"/>
-        <stop offset="0.7232" stop-color="#CE0004" stop-opacity="0.723"/>
-        <stop offset="1" stop-color="#C50000"/>
-        </linearGradient>
-        <linearGradient id="paint8_linear" x1="44.1902" y1="0.631046" x2="65.2635" y2="26.2" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#EBEFF0"/>
-        <stop offset="1" stop-color="#E3E5E4"/>
-        </linearGradient>
-        <linearGradient id="paint9_linear" x1="49.2086" y1="7.51447" x2="73.5907" y2="48.6118" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#FF637B"/>
-        <stop offset="1" stop-color="#F90217"/>
-        </linearGradient>
-        </defs>
-        </svg>
-        
-    </div>
-    <div class="loading-text">
-      Loading ...
-    </div>
-   
-</div>
 
-<main class="main-table"> 
-
-       
-    
-  <section class="all-senders">
-      <table id="topSendersTbl">
+    <main class="main-table">
+      <section class="all-senders">
+        <table id="topSendersTbl">
           <tr>
-              
-              <th>Contacts <div id="sortAlphUp" class="sortTriangle"> &#9650;</div>
-                  <div id="sortAlphDown" class="sortTriangle">&#9660;</div>
-              </th>
-              <th>Names</th>
-              
-              <th>Emails №<div id="sortNumUp" class="sortTriangle"> &#9650;</div>
-                  <div id="sortNumDown" class="sortTriangle">&#9660;</div>
-              </th>
-              <th>Ids</th>
-              <th>Delete</th>
-          </tr>
-
-      
-      </table>
-  </section>
-   <!--Temporary-->
-   <section class="selective">
-    <button class="back">
-        Return to All
-    </button>
-    <table id="selectiveTbl">
-        <tr>
-            <th>Subjects <div id="sortAlphUp" class="sortTriangle"> &#9650;</div>
-                <div id="sortAlphDown" class="sortTriangle">&#9660;</div>
+            <th>
+              Contacts
+              <div id="sortAlphUp" class="sortTriangle">&#9650;</div>
+              <div id="sortAlphDown" class="sortTriangle">&#9660;</div>
             </th>
-            <th>Emails №<div id="sortNumUp" class="sortTriangle"> &#9650;</div>
-                <div id="sortNumDown" class="sortTriangle">&#9660;</div>
+            <th>Names</th>
+
+            <th>
+              Emails №
+              <div id="sortNumUp" class="sortTriangle">&#9650;</div>
+              <div id="sortNumDown" class="sortTriangle">&#9660;</div>
             </th>
             <th>Ids</th>
             <th>Delete</th>
-        </tr>
-    </table>
+          </tr>
+        </table>
+      </section>
+      <!--Temporary-->
+      <section class="selective">
+        <button class="back">Return to All</button>
+        <table id="selectiveTbl">
+          <tr>
+            <th>
+              Subjects
+              <div id="sortAlphUp" class="sortTriangle">&#9650;</div>
+              <div id="sortAlphDown" class="sortTriangle">&#9660;</div>
+            </th>
+            <th>
+              Emails №
+              <div id="sortNumUp" class="sortTriangle">&#9650;</div>
+              <div id="sortNumDown" class="sortTriangle">&#9660;</div>
+            </th>
+            <th>Ids</th>
+            <th>Delete</th>
+          </tr>
+        </table>
+      </section>
+      <div class="modal-box">
+        <button class="closeBtn">x</button>
 
-</section>
-<div class="modal-box">
-  <button class="closeBtn">x</button>
-         
-      <h3>Do you want to delete your emails permamently?</h3>
-      <button class="btn-delete">Delete</button>
-      <h3>Do you want to move your emails to trash?</h3>
-      <button class="btn-trash">Trash</button>
- 
-</div>
-<div class="modal-trash-info">
-  <button class="close">x</button>
-  <h3 class="info-text"></h3>
-</div>
-<div class="modal-error">
-  <button class="errorCls">x</button>
-  <h3 class="error-message"></h3>
-</div>
-<div class="modal-loader">
-  <div class="loader-broom">
-      <svg width="86" height="86" viewBox="0 0 86 86" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M24.6987 18.0463H21.4096V14.7575C21.4096 13.3758 20.2895 12.2559 18.9081 12.2559C17.5266 12.2559 16.4063 13.376 16.4063 14.7575V18.0465H13.1171C11.7355 18.0465 10.6154 19.1666 10.6154 20.5482C10.6154 21.9299 11.7355 23.05 13.1171 23.05H16.4063V26.3392C16.4063 27.7208 17.5264 28.8409 18.9081 28.8409C20.2897 28.8409 21.4096 27.7208 21.4096 26.3392V23.05H24.6987C26.0803 23.05 27.2004 21.9299 27.2004 20.5482C27.2004 19.1666 26.0803 18.0463 24.6987 18.0463Z" fill="#F1F1FA"/>
-      <path d="M77.8096 60.9185H74.5206V57.6294C74.5206 56.2478 73.4005 55.1279 72.0189 55.1279C70.6372 55.1279 69.5171 56.2479 69.5171 57.6294V60.9185H66.2279C64.8463 60.9185 63.7263 62.0386 63.7263 63.42C63.7263 64.8015 64.8464 65.9218 66.2279 65.9218H69.5171V69.211C69.5171 70.5926 70.6372 71.7125 72.0189 71.7125C73.4005 71.7125 74.5206 70.5924 74.5206 69.211V65.9218H77.8096C79.1913 65.9218 80.3114 64.8017 80.3114 63.42C80.3114 62.0384 79.1911 60.9185 77.8096 60.9185V60.9185Z" fill="#DED8F8"/>
-      <path d="M76.4137 33.4233C77.6262 33.4233 78.6892 32.514 78.8834 31.3192C79.0562 30.2565 78.5009 29.1694 77.5384 28.6871C76.6845 28.259 75.639 28.3598 74.883 28.9435C74.0528 29.5844 73.7125 30.7112 74.0405 31.7057C74.3738 32.7163 75.348 33.4233 76.4137 33.4233Z" fill="#CAC5EF"/>
-      <path d="M44.5537 11.6872C43.6212 11.1182 42.4084 11.222 41.5866 11.9422C40.8142 12.6192 40.5418 13.7419 40.9039 14.6999C41.2672 15.661 42.2135 16.3189 43.2431 16.3189C44.398 16.3189 45.4244 15.4927 45.6818 14.3707C45.9175 13.3427 45.4545 12.2369 44.5537 11.6872Z" fill="#DED8F8"/>
-      <path d="M56.8177 72.4767C55.9486 71.882 54.7606 71.9007 53.9144 72.5303C53.0595 73.1664 52.6929 74.3113 53.0297 75.324C53.3667 76.3371 54.3354 77.0408 55.4046 77.0408C56.5411 77.0408 57.5545 76.2439 57.8307 75.1446C58.0824 74.144 57.6686 73.0589 56.8177 72.4767V72.4767Z" fill="#F1F1FA"/>
-      <path d="M41.8938 43.3452C40.8894 42.3408 40.8894 40.7125 41.8938 39.7081L80.8488 0.753277C81.8532 -0.251113 83.4815 -0.251113 84.4859 0.753277C85.4903 1.75767 85.4903 3.38603 84.4859 4.39042L45.531 43.3452C44.5266 44.3496 42.8982 44.3496 41.8938 43.3452Z" fill="#2973F4"/>
-      <path d="M84.4857 0.753273L41.8938 43.3452C42.8982 44.3496 44.5266 44.3496 45.531 43.3452L84.4857 4.39042C85.4901 3.38603 85.4901 1.7575 84.4857 0.753273V0.753273Z" fill="#425796"/>
-      <path d="M46.9354 57.2162C46.9354 57.2162 37.7462 68.0389 32.4318 83.5035C31.9795 84.8199 30.5619 85.5369 29.2335 85.1212C26.1745 84.1639 20.3713 81.3539 12.1282 73.1108C3.88533 64.8679 1.0751 59.0647 0.117995 56.0056C-0.297712 54.677 0.419163 53.2596 1.73571 52.8073C17.2003 47.4928 28.023 38.3036 28.023 38.3036L38.6917 46.5475L46.9354 57.2162Z" fill="#F4D844"/>
-      <path d="M32.4318 83.5035C37.7463 68.0388 46.9354 57.2162 46.9354 57.2162L38.6915 46.5475L12.1282 73.1108C20.3711 81.3537 26.1744 84.1639 29.2335 85.1212C30.562 85.5367 31.9795 84.8199 32.4318 83.5035V83.5035Z" fill="#ECBD2C"/>
-      <path d="M21.9937 81.431L25.9729 77.4517C26.9773 76.4473 26.9773 74.8189 25.9729 73.8145C24.9685 72.8102 23.3402 72.8102 22.3358 73.8145L17.8329 78.3174C19.3369 79.553 20.7244 80.5784 21.9937 81.431V81.431Z" fill="#E28023"/>
-      <path d="M11.4245 59.2661C10.4201 58.2617 8.79175 58.2617 7.78736 59.2661L3.80809 63.2454C4.66081 64.5146 5.68601 65.9019 6.92165 67.4061L11.4245 62.9033C12.4287 61.8989 12.4287 60.2705 11.4245 59.2661Z" fill="#ECBD2C"/>
-      <path d="M12.1282 73.1108C12.758 73.7406 13.3718 74.335 13.973 74.903L23.5481 65.3279C24.5525 64.3235 24.5525 62.6952 23.5481 61.6908C22.5437 60.6864 20.9153 60.6864 19.9109 61.6908L10.3359 71.2659C10.9041 71.8672 11.4984 72.481 12.1282 73.1108V73.1108Z" fill="#ECBD2C"/>
-      <path d="M23.5481 61.6909L12.1282 73.1108C12.758 73.7406 13.3718 74.335 13.973 74.903L23.5481 65.3279C24.5525 64.3237 24.5525 62.6952 23.5481 61.6909V61.6909Z" fill="#E28023"/>
-      <path d="M46.9324 57.2425L37.4645 47.7746L27.9965 38.3066L34.8721 31.431C35.849 30.4541 37.4329 30.4541 38.41 31.431L53.8082 46.8292C54.7851 47.8061 54.7851 49.3902 53.8082 50.3671L46.9324 57.2425Z" fill="#2973F4"/>
-      <path d="M53.7584 46.7796L46.109 39.13L37.4645 47.7745L46.9326 57.2425L53.7585 50.4166C54.7628 49.4123 54.7628 47.784 53.7584 46.7796Z" fill="#425796"/>
-      </svg>
-  </div>
-</div>
+        <h3>Do you want to delete your emails permamently?</h3>
+        <button class="btn-delete">Delete</button>
+        <h3>Do you want to move your emails to trash?</h3>
+        <button class="btn-trash">Trash</button>
+      </div>
+      <div class="modal-trash-info">
+        <button class="close">x</button>
+        <h3 class="info-text"></h3>
+      </div>
+      <div class="modal-error">
+        <button class="errorCls">x</button>
+        <h3 class="error-message"></h3>
+      </div>
+      <div class="modal-loader">
+        <div class="loader-broom">
+          <img src="../images/light-dust-broom.svg" alt="broom" />
+        </div>
+      </div>
 
-
-<div id="info"></div>
-</main>
-
-</body>
-
-
+      <div id="info"></div>
+    </main>
+  </body>
 </html>
