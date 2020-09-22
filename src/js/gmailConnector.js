@@ -12,8 +12,8 @@ const DISCOVERY_DOCS = [
 const SCOPES = "https://mail.google.com/";
 
 const limiter = new Bottleneck({
-  maxConcurrent: 1,
-  minTime: 1500,
+  maxConcurrent: 2,
+  minTime: 1000
 });
 
 let threadsButton = document.getElementById("threads_button");
@@ -26,34 +26,35 @@ function handleClientLoad() {
 }
 
 function initClient() {
-  gapi.client
-    .init({
-      apiKey: API_KEY,
-      clientId: CLIENT_ID,
-      discoveryDocs: DISCOVERY_DOCS,
-      scope: SCOPES,
-    })
-    .then(
-      function () {
-        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-        signIn.onclick = handleAuthClick;
-        signOut.onclick = handleSignoutClick;
-        threadsButton.onclick = listThreads;
-        listThreads();
-      },
-      function (error) {
-        console.log(JSON.stringify(error, null, 2));
-      }
-    );
+  gapi.client.init({
+    apiKey: API_KEY,
+    clientId: CLIENT_ID,
+    discoveryDocs: DISCOVERY_DOCS,
+    scope: SCOPES
+  }).then(function () {
+    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+    signIn.onclick = handleAuthClick;
+    signOut.onclick = handleSignoutClick;
+    threadsButton.onclick = listThreadsWrapper;
+    if(!gapi.auth2.getAuthInstance().isSignedIn.get())
+    {
+      handleAuthClick();
+    }
+
+  }, function (error) {
+    console.log(JSON.stringify(error, null, 2));
+  });
 }
 
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     // currentStatDiv.innerHTML = "*****signed-in*****";
-    getEmailProfile();
-    signOut.style.display = "block";
-    signIn.style.display = "none";
+    getEmailProfile()
+    listThreadsWrapper()
+
+    signOut.style.display = 'block';
+    signIn.style.display = 'none';
   } else {
     // currentStatDiv.innerHTML = "*****signed-out*****";
     userEmail.innerText = "";
@@ -80,20 +81,18 @@ function threadsGeMetatReq(id) {
   });
 }
 
-let myPromises = [];
-let cnt = 0;
-let batches = [];
 
 function createNewBatch() {
   let batch = gapi.client.newBatch();
-  batches.push(batch);
   return batch;
 }
 
-function listSubjects(from, ids) {
+function listSubjects(ids) {
   let allSubjects = [];
   let batch = createNewBatch();
   let myBatches = [];
+  let mySubPromises = [];
+
 
   for (let i = 0; i < ids.length; i++) {
     let val = getSubjectById(ids[i]);
@@ -106,8 +105,8 @@ function listSubjects(from, ids) {
   }
 
   myBatches.push(batch);
-  let mySubPromises = [];
-  myBatches.forEach((batch) => {
+  myBatches.forEach(batch => {
+
     let promise = new Promise(function (resolve, reject) {
       limiter.schedule(() => {
         batch.then(function (resp) {
@@ -138,7 +137,8 @@ function listSubjects(from, ids) {
   });
 
   Promise.allSettled(mySubPromises).then(() => {
-    let newArr = removeDuplicates(allSubjects, "subject");
+
+    let newArr = combineSubjects(allSubjects, "subject");
     getDataSubjects(newArr);
   });
 }
@@ -153,17 +153,27 @@ function getSubjectById(id) {
   });
 }
 
-function listThreads(nextPageToken = null) {
-  document.querySelector(".loader").style.display = "block";
-  let batch = createNewBatch();
-  let allEmails = [];
+function listThreadsWrapper()
+{
+  let maxCnt = 10;
+  let batches = [];
+  let myPromises = []
 
-  let newData = [];
+  listThreads(batches,maxCnt,null,myPromises)
+}
+
+
+function listThreads(batches, maxCnt, nextPageToken,myPromises) {
+
+  document.querySelector('.loader').style.display = "block";
+  let batch = createNewBatch();
+  batches.push(batch);
+  let allEmails = [];
   let reqObj = {
     userId: "me",
     labelIds: "INBOX",
   };
-  if (!isNaN(nextPageToken)) {
+  if (nextPageToken) {
     reqObj = {
       userId: "me",
       labelIds: "INBOX",
@@ -181,11 +191,11 @@ function listThreads(nextPageToken = null) {
         batch.add(val);
       }
 
-      cnt++;
       let nextPageToken = response.result.nextPageToken;
 
-      if (nextPageToken && cnt < 10) {
-        listThreads(nextPageToken);
+      if (nextPageToken  > 0 && maxCnt-->0) {
+        listThreads(batches,maxCnt,nextPageToken,myPromises);
+
       } else {
         batches.forEach((batch) => {
           let promise = new Promise(function (resolve, reject) {
@@ -199,14 +209,9 @@ function listThreads(nextPageToken = null) {
                   } else {
                     let res = item.result.messages[0].payload.headers[0].value;
                     let myData = {};
-                    // let fromArray = res.split(" ");
-                    // let arrayLength = fromArray.length;
-                    //
-                    // myData['name'] = fromArray.slice(0, arrayLength - 1).join(" ")
-                    // let address = fromArray.slice(-1)[0]
-                    // myData['emailAddress'] = address.substring(1, address.length - 1);
-                    myData["emailAddress"] = res;
-                    myData["id"] = threadid;
+
+                    myData['emailAddress'] = res;
+                    myData['id'] = threadid;
                     allEmails.push(myData);
                     resolve(res);
                   }
@@ -221,10 +226,8 @@ function listThreads(nextPageToken = null) {
         Promise.allSettled(myPromises).then(() => {
           let newArr = removeDuplicates(allEmails, "emailAddress");
           getData(newArr);
-          cnt = 0;
-          batches = [];
-          myPromises = [];
-          getEmailProfile();
+          getEmailProfile()
+
         });
       }
     } else {
@@ -269,7 +272,15 @@ function combineSubjects(allObjs, property) {
   };
 
   for (let i = 1; i < allObjs.length; i++) {
-    let jaccardIdx = jaccard(allObjs[i][property], obj[property][0]);
+    let jaccardIdx = 0;
+    if(allObjs[i][property].toUpperCase()===obj[property][0].toUpperCase())
+    {
+      jaccardIdx = 1;
+    }
+
+    else{
+      jaccardIdx = jaccard(allObjs[i][property].toUpperCase(), obj[property][0].toUpperCase());
+    }
     if (jaccardIdx >= 0.8) {
       obj.counter++;
       ids.push(allObjs[i].id);

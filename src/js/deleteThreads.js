@@ -149,20 +149,39 @@ function addMessage(action, number) {
         infoText.innerText += `were moved to trash`;
     }
 }
-window.deleteAllAct = function (id) {
-    let myid = id.replace('delete-', '');
+
+
+window.deleteAllAct = function (id, isSelective) {
+
+    let myid = id.replace('p-delete-', '');
+    
+    if(isSelective){
+        myid = id.replace('s-delete-', '')
+    }
+
     let cells = topSendersTbl.rows[myid].cells;
+    if(isSelective){
+        cells = selectiveTbl.rows[myid].cells;
+    }
     let threads = cells[2].innerText.split(',');
 
-    let row = document.getElementById('row-' + myid);
+    let row = document.getElementById('p-row-' + myid);
+    if(isSelective)
+    {
+        row =  document.getElementById('s-row-' + myid);
+    }
     popUp();
 
-    btnTrash.addEventListener('click', function toTrash() {
+    let trashHandler = function(event){
         listBatches(threads, "trash", row);
-    }, { once: true });
+        btnDelete.removeEventListener('click', deleteHandler,{once:true});
+    };
 
-    btnDelete.addEventListener('click', function deleteEmails() {
+    let deleteHandler = function(event){
         listBatches(threads, "delete", row);
-    }, { once: true });
+        btnTrash.removeEventListener('click', trashHandler,{once:true});
+    }
+    btnTrash.addEventListener('click', trashHandler, { once: true });
+    btnDelete.addEventListener('click', deleteHandler, { once: true });
 
 }
