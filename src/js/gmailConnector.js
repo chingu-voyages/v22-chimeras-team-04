@@ -1,28 +1,28 @@
-import { gapi } from 'gapi-script';
-import { getData, getDataSubjects } from './topTable';
+import { gapi } from "gapi-script";
+import { getData, getDataSubjects } from "./topTable";
 import Bottleneck from "bottleneck";
-import { jaccard } from 'wuzzy';
+import { jaccard } from "wuzzy";
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const API_KEY = process.env.API_KEY;
 const DISCOVERY_DOCS = [
-  "https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
+  "https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest",
+];
 
-const SCOPES = 'https://mail.google.com/';
+const SCOPES = "https://mail.google.com/";
 
 const limiter = new Bottleneck({
   maxConcurrent: 2,
   minTime: 1000
 });
 
-
-let threadsButton = document.getElementById('threads_button');
-const modalBg = document.querySelector('.loader_bg');
+let threadsButton = document.getElementById("threads_button");
+const modalBg = document.querySelector(".loader_bg");
 
 handleClientLoad();
 
 function handleClientLoad() {
-  gapi.load('client:auth2', initClient);
+  gapi.load("client:auth2", initClient);
 }
 
 function initClient() {
@@ -59,8 +59,8 @@ function updateSigninStatus(isSignedIn) {
     // currentStatDiv.innerHTML = "*****signed-out*****";
     userEmail.innerText = "";
     totalEmails.innerText = "";
-    signOut.style.display = 'none';
-    signIn.style.display = 'block';
+    signOut.style.display = "none";
+    signIn.style.display = "block";
   }
 }
 
@@ -73,14 +73,13 @@ function handleSignoutClick() {
 }
 function threadsGeMetatReq(id) {
   return gapi.client.gmail.users.threads.get({
-    'userId': 'me',
-    'id': id,
-    'format': 'METADATA',
-    'metadataHeaders': ['From'],
-    'maxResults': '1'
-  })
+    userId: "me",
+    id: id,
+    format: "METADATA",
+    metadataHeaders: ["From"],
+    maxResults: "1",
+  });
 }
-
 
 
 function createNewBatch() {
@@ -111,56 +110,47 @@ function listSubjects(ids) {
     let promise = new Promise(function (resolve, reject) {
       limiter.schedule(() => {
         batch.then(function (resp) {
-
           let items = resp.result;
-          Object.values(items).forEach(item => {
+          Object.values(items).forEach((item) => {
             let threadId = item.result.id;
             if (item.result.error) {
-              reject(item.result.error)
+              reject(item.result.error);
             } else {
-
               console.log(threadId);
               let payload = item.result.messages[0].payload;
-              let res = ""
-              if (payload.hasOwnProperty('headers')) {
+              let res = "";
+              if (payload.hasOwnProperty("headers")) {
                 res = payload.headers[0].value;
               }
               let myData = {};
-              myData['subject'] = res;
-              myData['id'] = threadId;
+              myData["subject"] = res;
+              myData["id"] = threadId;
               allSubjects.push(myData);
-              resolve(res)
-
+              resolve(res);
             }
-          })
-
-        })
-      })
-    })
+          });
+        });
+      });
+    });
 
     mySubPromises.push(promise);
-
-
-  })
+  });
 
   Promise.allSettled(mySubPromises).then(() => {
 
     let newArr = combineSubjects(allSubjects, "subject");
     getDataSubjects(newArr);
-
   });
-
-
 }
 
 function getSubjectById(id) {
   return gapi.client.gmail.users.threads.get({
-    'userId': 'me',
-    'id': id,
-    'format': 'METADATA',
-    'metadataHeaders': ['Subject'],
-    'maxResults': '1'
-  })
+    userId: "me",
+    id: id,
+    format: "METADATA",
+    metadataHeaders: ["Subject"],
+    maxResults: "1",
+  });
 }
 
 function listThreadsWrapper()
@@ -180,19 +170,18 @@ function listThreads(batches, maxCnt, nextPageToken,myPromises) {
   batches.push(batch);
   let allEmails = [];
   let reqObj = {
-    'userId': 'me',
-    'labelIds': 'INBOX'
+    userId: "me",
+    labelIds: "INBOX",
   };
   if (nextPageToken) {
     reqObj = {
-      'userId': 'me',
-      'labelIds': 'INBOX',
-      'pageToken': nextPageToken
-    }
+      userId: "me",
+      labelIds: "INBOX",
+      pageToken: nextPageToken,
+    };
   }
 
   gapi.client.gmail.users.threads.list(reqObj).then(function (response) {
-
     let threads = response.result.threads;
 
     if (threads && threads.length > 0) {
@@ -208,17 +197,15 @@ function listThreads(batches, maxCnt, nextPageToken,myPromises) {
         listThreads(batches,maxCnt,nextPageToken,myPromises);
 
       } else {
-
-        batches.forEach(batch => {
-
+        batches.forEach((batch) => {
           let promise = new Promise(function (resolve, reject) {
             limiter.schedule(() => {
               batch.then(function (resp) {
                 let items = resp.result;
-                Object.values(items).forEach(item => {
+                Object.values(items).forEach((item) => {
                   let threadid = item.result.id;
                   if (item.result.error) {
-                    reject(item.result.error)
+                    reject(item.result.error);
                   } else {
                     let res = item.result.messages[0].payload.headers[0].value;
                     let myData = {};
@@ -228,15 +215,13 @@ function listThreads(batches, maxCnt, nextPageToken,myPromises) {
                     allEmails.push(myData);
                     resolve(res);
                   }
-                })
-              })
-            })
-          })
-
+                });
+              });
+            });
+          });
 
           myPromises.push(promise);
-
-        })
+        });
 
         Promise.allSettled(myPromises).then(() => {
           let newArr = removeDuplicates(allEmails, "emailAddress");
@@ -248,33 +233,32 @@ function listThreads(batches, maxCnt, nextPageToken,myPromises) {
     } else {
       console.log("No threads found");
     }
-  }
-
-  );
-}
-
-const userEmail = document.getElementById('user-email');
-const totalEmails = document.getElementById('total-emails');
-const signOut = document.getElementById('sign-out');
-const signIn = document.getElementById('sign-in');
-
-function getEmailProfile() {
-  gapi.client.gmail.users.getProfile({
-    'userId': 'me'
-  }).then(function (response) {
-    let { emailAddress, threadsTotal } = response.result
-    userEmail.innerText = `Email Address: ${emailAddress}`;
-    totalEmails.innerText = `Total Email: ${threadsTotal}`;
-    return response.result;
   });
 }
 
+const userEmail = document.getElementById("user-email");
+const totalEmails = document.getElementById("total-emails");
+const signOut = document.getElementById("sign-out");
+const signIn = document.getElementById("sign-in");
+
+function getEmailProfile() {
+  gapi.client.gmail.users
+    .getProfile({
+      userId: "me",
+    })
+    .then(function (response) {
+      let { emailAddress, threadsTotal } = response.result;
+      userEmail.innerText = `${emailAddress}`;
+      totalEmails.innerText = `(${threadsTotal})`;
+      return response.result;
+    });
+}
 
 function combineSubjects(allObjs, property) {
   allObjs.sort(function (a, b) {
     var textA = a[property].toUpperCase();
     var textB = b[property].toUpperCase();
-    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+    return textA < textB ? -1 : textA > textB ? 1 : 0;
   });
   let ids = [];
   let newArr = [];
@@ -284,7 +268,7 @@ function combineSubjects(allObjs, property) {
   let obj = {
     [property]: subjects,
     counter: 1,
-    threadIds: ids
+    threadIds: ids,
   };
 
   for (let i = 1; i < allObjs.length; i++) {
@@ -318,15 +302,13 @@ function combineSubjects(allObjs, property) {
   newArr.push(obj);
 
   return newArr;
-
 }
-
 
 function removeDuplicates(allObjs, property) {
   allObjs.sort(function (a, b) {
     let textA = a[property].toUpperCase();
     let textB = b[property].toUpperCase();
-    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+    return textA < textB ? -1 : textA > textB ? 1 : 0;
   });
 
   let sum = 1;
@@ -336,7 +318,7 @@ function removeDuplicates(allObjs, property) {
   let obj = {
     [property]: allObjs[0][property],
     counter: 1,
-    threadIds: ids
+    threadIds: ids,
   };
 
   for (let i = 1; i < allObjs.length; i++) {
@@ -357,7 +339,6 @@ function removeDuplicates(allObjs, property) {
   newArr.push(obj);
 
   return newArr;
-
 }
 
 export { listSubjects, handleAuthClick };
