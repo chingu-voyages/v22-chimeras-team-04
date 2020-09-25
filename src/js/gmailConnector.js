@@ -213,9 +213,12 @@ function listThreads(batches, maxCnt, nextPageToken,myPromises) {
                     myData['emailAddress'] = res;
                     myData['id'] = threadid;
                     allEmails.push(myData);
+
                     resolve(res);
                   }
                 });
+                let newArr = removeDuplicates(allEmails, "emailAddress");
+                getData(newArr);
               });
             });
           });
@@ -223,11 +226,9 @@ function listThreads(batches, maxCnt, nextPageToken,myPromises) {
           myPromises.push(promise);
         });
 
+        
         Promise.allSettled(myPromises).then(() => {
-          let newArr = removeDuplicates(allEmails, "emailAddress");
-          getData(newArr);
           getEmailProfile()
-
         });
       }
     } else {
