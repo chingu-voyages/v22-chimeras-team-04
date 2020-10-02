@@ -247,8 +247,18 @@ function getEmailProfile() {
       userId: "me",
     })
     .then(function (response) {
-      let { emailAddress, threadsTotal } = response.result;
+      let { emailAddress } = response.result;
       userEmail.innerText = `${emailAddress}`;
+      return response.result;
+    });
+
+    gapi.client.gmail.users
+    .labels.get({
+      userId: "me",
+      id: "INBOX"
+    })
+    .then(function (response) {
+      let { threadsTotal } = response.result;
       totalEmails.innerText = `(${threadsTotal})`;
       return response.result;
     });
