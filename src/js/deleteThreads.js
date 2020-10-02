@@ -1,4 +1,4 @@
-import { getData, getDataSubjects } from './topTable';
+import {getEmailProfile} from './gmailConnector';
 import Bottleneck from 'bottleneck';
 
 const modalBox = document.querySelector('.modal-box');
@@ -15,9 +15,6 @@ const btnTrash = document.querySelector('.btn-trash');
 const closeInfoModal = document.querySelector('.close');
 const errorCls = document.querySelector('.errorCls');
 
-// modalBox.style.display = "none";
-// modalInfo.style.display = 'none';
-// modalError.style.display = "none";
 modalLoader.style.display = "none";
 
 const popUp = () => {
@@ -114,6 +111,7 @@ const listBatches = (threads, action, row) => {
         row.style.display = "none";
         infoPopUp();
         addMessage(action, threads.length);
+        getEmailProfile();
     })
     let end = Date.now();
     let functionTime = end - start;

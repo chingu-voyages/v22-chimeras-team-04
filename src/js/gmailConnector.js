@@ -17,7 +17,6 @@ const limiter = new Bottleneck({
 });
 
 let threadsButton = document.getElementById("threads_button");
-const modalBg = document.querySelector(".loader_bg");
 
 handleClientLoad();
 
@@ -162,9 +161,8 @@ function listThreadsWrapper()
   listThreads(batches,maxCnt,null,myPromises)
 }
 
-
 function listThreads(batches, maxCnt, nextPageToken,myPromises) {
-
+  document.querySelector('.loader_bg').style.display ="";
   document.querySelector('.loader').style.display = "block";
   let batch = createNewBatch();
   batches.push(batch);
@@ -351,4 +349,4 @@ function removeDuplicates(allObjs, property) {
   return newArr;
 }
 
-export { listSubjects, handleAuthClick };
+export { listSubjects, handleAuthClick,getEmailProfile };
