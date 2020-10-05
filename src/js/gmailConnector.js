@@ -17,7 +17,6 @@ const limiter = new Bottleneck({
 });
 
 let threadsButton = document.getElementById("threads_button");
-const modalBg = document.querySelector(".loader_bg");
 
 handleClientLoad();
 
@@ -162,9 +161,8 @@ function listThreadsWrapper()
   listThreads(batches,maxCnt,null,myPromises)
 }
 
-
 function listThreads(batches, maxCnt, nextPageToken,myPromises) {
-
+  document.querySelector('.loader_bg').style.display ="";
   document.querySelector('.loader').style.display = "block";
   let batch = createNewBatch();
   batches.push(batch);
@@ -248,8 +246,18 @@ function getEmailProfile() {
       userId: "me",
     })
     .then(function (response) {
-      let { emailAddress, threadsTotal } = response.result;
+      let { emailAddress } = response.result;
       userEmail.innerText = `${emailAddress}`;
+      return response.result;
+    });
+
+    gapi.client.gmail.users
+    .labels.get({
+      userId: "me",
+      id: "INBOX"
+    })
+    .then(function (response) {
+      let { threadsTotal } = response.result;
       totalEmails.innerText = `(${threadsTotal})`;
       return response.result;
     });
@@ -342,4 +350,4 @@ function removeDuplicates(allObjs, property) {
   return newArr;
 }
 
-export { listSubjects, handleAuthClick };
+export { listSubjects, handleAuthClick,getEmailProfile };
