@@ -82,7 +82,8 @@
 }
 
 .btn-delete,
-.btn-trash {
+.btn-trash,
+.btn-untrash {
     padding: 0.5rem 1.25rem;
     border-radius: 5px;
     display: block;
@@ -104,4 +105,9 @@
 .btn-trash {
     background: $cl-green;
     border: 2px solid $cl-green;
+}
+
+.btn-untrash {
+    background: $cl-yellow;
+    border: 2px solid $cl-yellow;
 }

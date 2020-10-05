@@ -12,6 +12,8 @@ const modalLoader = document.querySelector('.modal-loader');
 const closeBtn = document.querySelector('.closeBtn')
 const btnDelete = document.querySelector('.btn-delete');
 const btnTrash = document.querySelector('.btn-trash');
+const btnUnTrash = document.querySelector('.btn-untrash');
+
 const closeInfoModal = document.querySelector('.close');
 const errorCls = document.querySelector('.errorCls');
 
@@ -30,6 +32,7 @@ const popUp = () => {
 const infoPopUp = () => {
     modalBox.style.display = "none";
     modalInfo.style.display = 'block';
+
     if (!modalLoader.closed) {
         modalLoader.style.display = "none";
     }
@@ -65,6 +68,16 @@ const batchThreads = () => {
     return batch;
 }
 
+
+
+
+const unTrash = (threads, row) => {
+    for (let i = 0; i < threads.length; i++) {
+        untrashById(threads[i]);
+       }
+    
+       row.style.display = "";
+}
 const listBatches = (threads, action, row) => {
     let start = Date.now();
     let batch = batchThreads();
@@ -140,6 +153,16 @@ function trashById(id) {
     })
 }
 
+function untrashById(id) {
+    gapi.client.gmail.users.threads.untrash({
+        'userId': 'me',
+        'id': id
+    })
+.then(function (response) {
+      return response.result;
+    });
+}
+
 function addMessage(action, number) {
     infoText.innerText = `${number} messages  \r\n`;
     // infoText.innerText += `${cells[0].innerText} \r\n`;
@@ -181,7 +204,13 @@ window.deleteAllAct = function (id, isSelective) {
         listBatches(threads, "delete", row);
         btnTrash.removeEventListener('click', trashHandler,{once:true});
     }
+
+    let unTrashHandler = function(event){
+        unTrash(threads, row);
+        btnUnTrash.removeEventListener('click', unTrashHandler,{once:true});
+    }
     btnTrash.addEventListener('click', trashHandler, { once: true });
     btnDelete.addEventListener('click', deleteHandler, { once: true });
+    btnUnTrash.addEventListener('click', unTrashHandler, { once: true });
 
 }
