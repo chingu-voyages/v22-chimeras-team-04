@@ -1,34 +1,104 @@
 .header {
-    height: 100px;
-    width: 100%;
-    display: flex;
-    justify-content:space-evenly;
-    background-color:white;
-    cursor: pointer;
-    padding: 1.5em;
-    font-family: $font-stack;
-    
-    .logo-container {
-      margin-right: 3.5em;
-      
-      .logo{
-        position: absolute;
-        top: 0;
-        left: 10px;
-        width: 80px;
-        height: auto;
-        margin-right: 3em;
-        // margin-bottom: 5em;
-      }
-    }
-    
+  height: 100px;
+  width: 95%;
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  cursor: pointer;
+  padding: 1.5em 0.5rem 0;
+  font-family: $font-stack;
+  vertical-align: baseline;
+  color: $bg-darkblue;
+  margin: 0 auto;
+  font-weight: bold;
 
-    div {
-      margin-left: .8em;
-
-      @media only screen and (max-width: 800px) {
-        margin-left: 0.8em;
-      }
-    }
-
+  .logo {
+    width: 80px;
+    height: auto;
   }
+
+  .filter-blue {
+    filter: invert(6%) sepia(60%) saturate(4393%) hue-rotate(213deg)
+      brightness(98%) contrast(98%);
+  }
+
+  #threads_button {
+    background: transparent;
+    height: 55px;
+    width: 55px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-top: 0.25rem;
+    padding-top: 1.5rem;
+  }
+
+  .refresh {
+    height: 55px;
+    width: 55px;
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1.5rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+
+    .total-emails {
+      padding-top: 1.5rem;
+    }
+  }
+  .options {
+    padding-top: 1.75rem;
+  }
+
+  #sign-in,
+  #sign-out {
+    max-width: 55px;
+  }
+}
+@media screen and (max-width: $max-xs) {
+  .user-info {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: $max-sm) {
+  .header {
+    padding: 0.75rem 0.25rem;
+    height: 2rem;
+    line-height: 2rem;
+
+    .logo {
+      width: 2.5rem;
+      padding-top: 0.25rem;
+    }
+
+    .user-info {
+      padding-top: 1.25rem;
+      text-align: center;
+      font-size: 0.65em;
+      top: -3rem;
+    }
+    #threads_button {
+      height: 1.9rem;
+      width: 1.9rem;
+      margin-top: 0.75rem;
+      padding-top: 0.25rem;
+    }
+    .refresh {
+      width: 1.9rem;
+      height: 1.9rem;
+    }
+
+    .options {
+      padding-top: 1rem;
+    }
+    #sign-in,
+    #sign-out {
+      height: 2rem;
+      width: 2rem;
+    }
+  }
+}
