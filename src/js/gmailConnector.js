@@ -154,7 +154,7 @@ function getSubjectById(id) {
 
 function listThreadsWrapper()
 {
-  let maxCnt = 10;
+  let maxCnt = 2;
   let batches = [];
   let myPromises = []
 

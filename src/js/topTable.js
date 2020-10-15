@@ -66,12 +66,15 @@ function orderData(inTable, data, isSelective) {
       row.id = "s-row-" + (i + 1)
 
     }
+
+    let cell = row.insertCell(cellCnt++);
+    cell.innerHTML = '<input type="checkbox">';
     for (const [key, value] of Object.entries(data[i])) {
-      let cell = row.insertCell(cellCnt++);
+       cell = row.insertCell(cellCnt++);
       cell.innerText = decodeURIComponent(value);
     }
 
-    let cell = row.insertCell(cellCnt++);
+     cell = row.insertCell(cellCnt++);
     let action = '<button class=btn-all id=p-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,false) >All</button>  <button class=btn-selective id=p-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,false)>Selective</button>';
     if(isSelective){
        action = '<button class=btn-all id=s-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,true) >All</button>  <button class=btn-selective id=s-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,true)>Selective</button>';
