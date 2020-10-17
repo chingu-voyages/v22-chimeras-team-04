@@ -5,7 +5,7 @@ table {
     border: none;
     width: 95%;
     margin: 2rem auto;  
-   
+    
     th:nth-child(3),
     th:nth-child(5),
     td:nth-child(4)  {
@@ -13,8 +13,11 @@ table {
     }
 
     th {
+        
         display: flex; 
-        height: 50px;       
+        height: 50px; 
+        
+    
     }  
 
 
@@ -99,6 +102,9 @@ tr:nth-child(1) {
     cursor: pointer;
   }
 
+.selectOptsPopUp  {
+    display: none;
+}
 @media screen and (min-width: $max-sm) {
     tr {
         grid-template-columns: 450px auto;
