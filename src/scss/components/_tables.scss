@@ -103,7 +103,15 @@ tr:nth-child(1) {
   }
 
 .selectOptsPopUp  {
+   
     display: none;
+    width: 75px;
+    background-color: #3399ff;
+    color: white;
+    height: 100px;
+    li:hover{
+        background-color: #0c56a0
+    }
 }
 @media screen and (min-width: $max-sm) {
     tr {
