@@ -20,11 +20,11 @@ let checkboxMainHandler = function(event){
     if(checkboxMain.checked)
     {
         selectAllCheckbox();
-
     }
 
-    deselectAllCheckbox();
-    
+    else{
+        deselectAllCheckbox();
+    }
 }
 
 let selectAllCheckbox = function(){
@@ -34,7 +34,8 @@ let selectAllCheckbox = function(){
     for(let i = 0; i < length ; i++)
     {
         inputCheck = topSendersTbl.rows[i].cells[0].children[0];
-        inputCheck.setAttribute('checked','');
+        inputCheck.checked = true;
+        
     }
 }
 
@@ -45,7 +46,8 @@ let deselectAllCheckbox = function(){
     for(let i = 0; i < length ; i++)
     {
         inputCheck = topSendersTbl.rows[i].cells[0].children[0];
-        inputCheck.removeAttribute('checked');
+        inputCheck.checked = false;
+        
     }
 
 }
