@@ -212,3 +212,14 @@ window.deleteAllAct = function (id, isSelective) {
     btnUnTrash.addEventListener('click', unTrashHandler, { once: true });
 
 }
+
+ function deleteGroupAct() {
+
+        let rowsLen = topSendersTbl.rows.length;
+        for(let i = 1; i<rowsLen; i++)
+        {
+            let row = document.getElementById('c-row-' + i);
+            console.log(row);
+        }
+}
+
