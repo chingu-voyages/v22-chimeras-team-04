@@ -1,5 +1,5 @@
 
-
+import {deleteCheckBoxed} from './deleteThreads';
 let checkboxSelect = document.getElementById("checkBoxSelect");
 
 let checkboxMain = document.getElementById("checkboxMain");
@@ -8,6 +8,7 @@ let selectAll = document.getElementById("selectAll");
 let selectNone = document.getElementById("selectNone");
 let topSendersTbl = document.getElementById("topSendersTbl");
 let tablePageBody = document.getElementById("tablePageBody");
+
 
 let openSelectListHandler = function(event){
     let selectOpts = document.querySelector('.selectOptsPopUp');
@@ -31,11 +32,16 @@ let selectAllCheckbox = function(){
     let length = topSendersTbl.rows.length;
     let row = null;
     let inputCheck = null;
+    let trashIcon = document.getElementById('trashIcon');
+    let style = window.getComputedStyle(trashIcon);   
+    if(style.display=='none')
+    {
+        trashIcon.style.display = "block";
+    }
     for(let i = 0; i < length ; i++)
     {
         inputCheck = topSendersTbl.rows[i].cells[0].children[0];
         inputCheck.checked = true;
-        
     }
 }
 
@@ -43,11 +49,18 @@ let deselectAllCheckbox = function(){
     let length = topSendersTbl.rows.length;
     let row = null;
     let inputCheck = null;
+
+    let trashIcon = document.getElementById('trashIcon');
+    let style = window.getComputedStyle(trashIcon);   
+    if(style.display=='block')
+    {
+        trashIcon.style.display = "none";
+    }
+
     for(let i = 0; i < length ; i++)
     {
         inputCheck = topSendersTbl.rows[i].cells[0].children[0];
-        inputCheck.checked = false;
-        
+        inputCheck.checked = false;   
     }
 
 }
@@ -71,10 +84,69 @@ let hideSelectPopup = function(event){
     selectOpts.style.display = "none";
 }
 
-checkboxMain.addEventListener('change', checkboxMainHandler);
-checkboxSelect.addEventListener('click', openSelectListHandler);
-selectAll.addEventListener('click', selectAllHandler);
-selectNone.addEventListener('click', selectNoneHandler);
+let showTrashIcon = function(event)
+{
+    if(event.currentTarget.checked)
+    {
+        let trashIcon = document.getElementById('trashIcon');
+        let style = window.getComputedStyle(trashIcon);   
+        if(style.display=='none')
+        {
+            trashIcon.style.display = "block";
+        }
+    }
+
+    else {
+        let inputRow;
+        let isAllFalse = true;
+        let length = topSendersTbl.rows.length;
+
+        for(let i = 1; i < length ; i++)
+        {
+            inputRow = document.getElementById('c-row-' + i);
+            if(inputRow.checked)
+            {
+                return;
+            }
+        }
+
+        if(isAllFalse){
+            let trashIcon = document.getElementById('trashIcon');
+            let style = window.getComputedStyle(trashIcon);   
+            if(style.display=='block')
+            {
+                trashIcon.style.display = "none";
+            }
+        }
+    }
+
+}
+let deleteChecked = function(){
+    deleteCheckBoxed();
+}
+let initEventListeners = function()
+{
+    checkboxMain.addEventListener('change', checkboxMainHandler);
+    checkboxSelect.addEventListener('click', openSelectListHandler);
+    selectAll.addEventListener('click', selectAllHandler);
+    selectNone.addEventListener('click', selectNoneHandler);
+    let trashIcon = document.getElementById('trashIcon');
+    trashIcon.addEventListener('click',deleteChecked);
+
+    let length = topSendersTbl.rows.length;
+    let inputRow ;
+    for(let i = 1; i < length ; i++)
+    {
+        inputRow = document.getElementById('c-row-' + i);
+        inputRow.addEventListener('change', showTrashIcon);  //TODO: verify that all those listeners are cleared once the table is refreshed   
+    }
+
+}
+
+export { initEventListeners };
+
+
+
 
 
 

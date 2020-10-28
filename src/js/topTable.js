@@ -68,7 +68,7 @@ function orderData(inTable, data, isSelective) {
     }
 
     let cell = row.insertCell(cellCnt++);
-    cell.innerHTML = '<input type="checkbox" id="'+"c-row"+(i+1)+'">';
+    cell.innerHTML = '<input type="checkbox" id="'+"c-row-"+(i+1)+'">';
     for (const [key, value] of Object.entries(data[i])) {
        cell = row.insertCell(cellCnt++);
       cell.innerText = decodeURIComponent(value);

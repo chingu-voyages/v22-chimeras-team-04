@@ -184,7 +184,7 @@ window.deleteAllAct = function (id, isSelective) {
     if(isSelective){
         cells = selectiveTbl.rows[myid].cells;
     }
-    let threads = cells[2].innerText.split(',');
+    let threads = cells[3].innerText.split(',');
 
     let row = document.getElementById('p-row-' + myid);
     if(isSelective)
@@ -213,13 +213,24 @@ window.deleteAllAct = function (id, isSelective) {
 
 }
 
- function deleteGroupAct() {
+ function deleteCheckBoxed() {
 
         let rowsLen = topSendersTbl.rows.length;
+        let threads = '';
+        let row;
+        let cells;
         for(let i = 1; i<rowsLen; i++)
         {
-            let row = document.getElementById('c-row-' + i);
-            console.log(row);
+            row = document.getElementById('c-row-' + i);
+            if(row.checked)
+            {
+                 cells = topSendersTbl.rows[i].cells;
+                 threads += cells[3].innerText.split(',');
+            }
+
         }
+        console.log(threads);
+
 }
 
+export {deleteCheckBoxed};
