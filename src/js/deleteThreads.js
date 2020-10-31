@@ -1,5 +1,6 @@
 import {getEmailProfile} from './gmailConnector';
 import Bottleneck from 'bottleneck';
+import { isArray } from 'util';
 
 const modalBox = document.querySelector('.modal-box');
 const modalInfo = document.querySelector('.modal-trash-info');
@@ -121,7 +122,18 @@ const listBatches = (threads, action, row) => {
 
 
     Promise.allSettled(nextPromises).then(() => {
-        row.style.display = "none";
+        if(isArray(row))
+        {
+            for(let i =0; i< row.length; i++)
+            {
+                row[i].style.display = "none";
+            }
+        }
+
+        else{
+            row.style.display = "none";
+
+        }
         infoPopUp();
         addMessage(action, threads.length);
         getEmailProfile();
@@ -219,17 +231,26 @@ window.deleteAllAct = function (id, isSelective) {
         let threads = '';
         let row;
         let cells;
+        let cnt = 0;
+        let rowArr = [];
         for(let i = 1; i<rowsLen; i++)
         {
             row = document.getElementById('c-row-' + i);
             if(row.checked)
             {
                  cells = topSendersTbl.rows[i].cells;
+                 if(cnt > 0)
+                 {
+                     threads += ',';
+                 }
                  threads += cells[3].innerText.split(',');
+
+                 cnt++;
+                 rowArr.push(row);
             }
 
         }
-        console.log(threads);
+       listBatches(threads,'trash',rowArr);
 
 }
 
