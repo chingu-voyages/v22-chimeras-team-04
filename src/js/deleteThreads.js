@@ -229,14 +229,15 @@ window.deleteAllAct = function (id, isSelective) {
 
         let rowsLen = topSendersTbl.rows.length;
         let threads = '';
-        let row;
+        let input;
         let cells;
         let cnt = 0;
-        let rowArr = [];
+        let rowsArr = [];
+        let row
         for(let i = 1; i<rowsLen; i++)
         {
-            row = document.getElementById('c-row-' + i);
-            if(row.checked)
+            input = document.getElementById('c-row-' + i);
+            if(input.checked)
             {
                  cells = topSendersTbl.rows[i].cells;
                  if(cnt > 0)
@@ -244,13 +245,15 @@ window.deleteAllAct = function (id, isSelective) {
                      threads += ',';
                  }
                  threads += cells[3].innerText.split(',');
-
                  cnt++;
-                 rowArr.push(row);
+                 row = document.getElementById('p-row-' + i);
+                 rowsArr.push(row);
             }
 
         }
-       listBatches(threads,'trash',rowArr);
+
+       
+       listBatches(threads.split(','),'trash',rowsArr);
 
 }
 
