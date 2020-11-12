@@ -252,9 +252,26 @@ window.deleteAllAct = function (id, isSelective) {
 
         }
 
-       
-       listBatches(threads.split(','),'trash',rowsArr);
+        popUp();
 
-}
+        let trashHandler = function(event){
+            listBatches(threads.split(','),'trash',rowsArr);
+            btnDelete.removeEventListener('click', deleteHandler,{once:true});
+        };
+    
+        let deleteHandler = function(event){
+            listBatches(threads.split(','),'delete',rowsArr);
+            btnTrash.removeEventListener('click', trashHandler,{once:true});
+        }
+    
+        let unTrashHandler = function(event){
+            unTrash(threads, row);
+            btnUnTrash.removeEventListener('click', unTrashHandler,{once:true});
+        }
+        btnTrash.addEventListener('click', trashHandler, { once: true });
+        btnDelete.addEventListener('click', deleteHandler, { once: true });
+        btnUnTrash.addEventListener('click', unTrashHandler, { once: true });
+        
+    }
 
 export {deleteCheckBoxed};
