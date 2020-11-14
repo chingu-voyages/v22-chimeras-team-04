@@ -152,8 +152,7 @@ window.deleteSomeAct = function (id, isSelective) {
     myid = id.replace("s-select-", '')
   }
   let cells = topSendersTbl.rows[myid].cells;
-  let threads = cells[2].innerText.split(',');
-  let from = cells[0].innerText;
+  let threads = cells[3].innerText.split(',');
 
   topTable.style.display = "none";
 
