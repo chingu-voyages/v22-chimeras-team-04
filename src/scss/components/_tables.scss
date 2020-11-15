@@ -106,7 +106,19 @@ tr:nth-child(1) {
     display: none;
 }
 
-.selectOptsPopUp  {
+.selectOptsPopUp {
+   
+    display: none;
+    width: 75px;
+    background-color: #3399ff;
+    color: white;
+    height: 100px;
+    li:hover{
+        background-color: #0c56a0
+    }
+}
+
+.s-selectOptsPopUp {
    
     display: none;
     width: 75px;

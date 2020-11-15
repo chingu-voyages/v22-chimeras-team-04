@@ -1,17 +1,26 @@
 
 import {deleteCheckBoxed} from './deleteThreads';
 let checkboxSelect = document.getElementById("checkBoxSelect");
+let selectiveCheckboxSelect = document.getElementById("s-checkBoxSelect");
 
 let checkboxMain = document.getElementById("checkboxMain");
 
 let selectAll = document.getElementById("selectAll");
 let selectNone = document.getElementById("selectNone");
 let topSendersTbl = document.getElementById("topSendersTbl");
+let selectiveTbl = document.getElementById("selectiveTbl");
+
 let tablePageBody = document.getElementById("tablePageBody");
 
 
 let openSelectListHandler = function(event){
     let selectOpts = document.querySelector('.selectOptsPopUp');
+
+    if(event.currentTarget.isSelective)
+    {
+         selectOpts = document.querySelector('.s-selectOptsPopUp');
+    }
+
     selectOpts.style.display = "inline-block";
     event.stopPropagation();
     tablePageBody.addEventListener('click', hideSelectPopup, {once:true});
@@ -127,7 +136,14 @@ let deleteChecked = function(){
 let initEventListeners = function()
 {
     checkboxMain.addEventListener('change', checkboxMainHandler);
+
     checkboxSelect.addEventListener('click', openSelectListHandler);
+    checkboxSelect.isSelective = false;
+
+
+    selectiveCheckboxSelect.addEventListener('click', openSelectListHandler);
+    selectiveCheckboxSelect.isSelective = true;
+
     selectAll.addEventListener('click', selectAllHandler);
     selectNone.addEventListener('click', selectNoneHandler);
     let trashIcon = document.getElementById('trashIcon');

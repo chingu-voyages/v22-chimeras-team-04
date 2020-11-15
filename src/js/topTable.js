@@ -75,9 +75,9 @@ function orderData(inTable, data, isSelective) {
     }
 
      cell = row.insertCell(cellCnt++);
-    let action = '<button class=btn-all id=p-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,false) >All</button>  <button class=btn-selective id=p-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,false)>Selective</button>';
+    let action = '<button class=btn-all id=p-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,false) >All</button>  <button class=btn-selective id=p-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id)>Selective</button>';
     if(isSelective){
-       action = '<button class=btn-all id=s-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,true) >All</button>  <button class=btn-selective id=s-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,true)>Selective</button>';
+       action = '<button class=btn-all id=s-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,true) >All</button>';
     }
     cell.innerHTML = action;
     cellCnt = 0;
@@ -145,12 +145,10 @@ const selectiveTable = document.querySelector('.selective');
 const btnBack = document.querySelector('.back');
 selectiveTable.style.display = "none";
 
-window.deleteSomeAct = function (id, isSelective) {
+window.deleteSomeAct = function (id) {
   
   let myid = id.replace("p-select-", '')
-  if(isSelective){
-    myid = id.replace("s-select-", '')
-  }
+
   let cells = topSendersTbl.rows[myid].cells;
   let threads = cells[3].innerText.split(',');
 
