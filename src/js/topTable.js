@@ -1,4 +1,5 @@
 import { listSubjects } from './gmailConnector'
+import {showTrashIcon} from './checkboxSelection'
 let topSendersTbl = document.getElementById("topSendersTbl");
 let selectiveTbl = document.getElementById("selectiveTbl"); 
 let topTblData = [];
@@ -58,17 +59,23 @@ function orderData(inTable, data, isSelective) {
 
   let table = inTable;
   let countRows = null;
+  
   for (let i = 0, cellCnt = 0; i < data.length; i++) {
     let row = table.insertRow(i + 1)
     
     row.id = "p-row-" + (i + 1)
     if(isSelective){
       row.id = "s-row-" + (i + 1)
-
     }
 
     let cell = row.insertCell(cellCnt++);
+   
     cell.innerHTML = '<input type="checkbox" id="'+"c-row-"+(i+1)+'">';
+    if(isSelective)
+    {
+      cell.innerHTML = '<input type="checkbox" id="'+"s-c-row-"+(i+1)+'">';
+
+    }
     for (const [key, value] of Object.entries(data[i])) {
        cell = row.insertCell(cellCnt++);
       cell.innerText = decodeURIComponent(value);
@@ -83,9 +90,20 @@ function orderData(inTable, data, isSelective) {
     cellCnt = 0;
     countRows++
   }
+if(isSelective){
+
+  let s_inputRow;
+ for (let i = 1; i < table.rows.length; i++) {
+     s_inputRow = document.getElementById('s-c-row-' + i);
+     s_inputRow.addEventListener('change', showTrashIcon);
+     s_inputRow.isSelective = true; //TODO: verify that all those listeners are cleared once the table is refreshed   
+ }
+}
   if (countRows > 1) {
     loaderBg.style.display = "none";
   }
+
+
 }
 
 

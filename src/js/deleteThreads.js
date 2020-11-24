@@ -225,7 +225,7 @@ window.deleteAllAct = function (id, isSelective) {
 
 }
 
- function deleteCheckBoxed() {
+ function deleteCheckBoxed(isSelective) {
 
         let rowsLen = topSendersTbl.rows.length;
         let threads = '';

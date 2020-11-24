@@ -63,6 +63,11 @@ let selectAllCheckbox = function (isSelective) {
     let row = null;
     let inputCheck = null;
     let trashIcon = document.getElementById('trashIcon');
+    
+    if(isSelective)
+    {
+        trashIcon = document.getElementById('s-trashIcon');
+    }
     let style = window.getComputedStyle(trashIcon);
     if (style.display == 'none') {
         trashIcon.style.display = "block";
@@ -95,7 +100,14 @@ let deselectAllCheckbox = function (isSelective) {
     let row = null;
     let inputCheck = null;
 
+
     let trashIcon = document.getElementById('trashIcon');
+
+    if(isSelective)
+    {
+        trashIcon = document.getElementById('s-trashIcon');
+    }
+
     let style = window.getComputedStyle(trashIcon);
     if (style.display == 'block') {
         trashIcon.style.display = "none";
@@ -152,7 +164,13 @@ let hideSelectPopup = function (event) {
 
 let showTrashIcon = function (event) {
     if (event.currentTarget.checked) {
+
         let trashIcon = document.getElementById('trashIcon');
+        if(event.currentTarget.isSelective){
+            trashIcon = document.getElementById('s-trashIcon');
+        }
+
+        
         let style = window.getComputedStyle(trashIcon);
         if (style.display == 'none') {
             trashIcon.style.display = "block";
@@ -160,7 +178,36 @@ let showTrashIcon = function (event) {
     } else {
         let inputRow;
         let isAllFalse = true;
-        let length = topSendersTbl.rows.length;
+        if(event.currentTarget.isSelective){
+            let length = selectiveTbl.rows.length;
+
+            let mainRow = document.getElementById('s-checkboxMain');
+            mainRow.checked = false;
+
+            for (let i = 1; i < length; i++) {
+                inputRow = document.getElementById('s-c-row-' + i);
+                if (inputRow.checked) {
+                    return;
+                }
+            }
+
+             
+        if (isAllFalse) {
+            let trashIcon = document.getElementById('s-trashIcon');
+            let style = window.getComputedStyle(trashIcon);
+            if (style.display == 'block') {
+                trashIcon.style.display = "none";
+            }
+        }
+        }
+
+        else{
+            let length = topSendersTbl.rows.length;
+
+        let mainRow = document.getElementById('checkboxMain');
+        mainRow.checked = false;
+
+
 
         for (let i = 1; i < length; i++) {
             inputRow = document.getElementById('c-row-' + i);
@@ -168,7 +215,7 @@ let showTrashIcon = function (event) {
                 return;
             }
         }
-
+    
         if (isAllFalse) {
             let trashIcon = document.getElementById('trashIcon');
             let style = window.getComputedStyle(trashIcon);
@@ -177,10 +224,11 @@ let showTrashIcon = function (event) {
             }
         }
     }
+    }
 
 }
-let deleteChecked = function () {
-    deleteCheckBoxed();
+let deleteChecked = function (event) {
+    deleteCheckBoxed(event.currentTarget.isSelective);
 }
 let initEventListeners = function () {
     checkboxMain.addEventListener('change', checkboxMainHandler);
@@ -204,15 +252,24 @@ let initEventListeners = function () {
     let trashIcon = document.getElementById('trashIcon');
     trashIcon.addEventListener('click', deleteChecked);
 
+    let trashIcon = document.getElementById('s-trashIcon');
+    trashIcon.addEventListener('click', deleteChecked);
+    trashIcon.isSelective =true;
+
     let length = topSendersTbl.rows.length;
     let inputRow;
     for (let i = 1; i < length; i++) {
         inputRow = document.getElementById('c-row-' + i);
-        inputRow.addEventListener('change', showTrashIcon); //TODO: verify that all those listeners are cleared once the table is refreshed   
+        inputRow.addEventListener('change', showTrashIcon);
+        inputRow.isSelective = false; 
+         //TODO: verify that all those listeners are cleared once the table is refreshed   
     }
+
+
 
 }
 
 export {
-    initEventListeners
+    initEventListeners,
+    showTrashIcon
 };
