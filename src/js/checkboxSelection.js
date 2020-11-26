@@ -252,9 +252,9 @@ let initEventListeners = function () {
     let trashIcon = document.getElementById('trashIcon');
     trashIcon.addEventListener('click', deleteChecked);
 
-    let trashIcon = document.getElementById('s-trashIcon');
-    trashIcon.addEventListener('click', deleteChecked);
-    trashIcon.isSelective =true;
+    let s_trashIcon = document.getElementById('s-trashIcon');
+    s_trashIcon.addEventListener('click', deleteChecked);
+    s_trashIcon.isSelective =true;
 
     let length = topSendersTbl.rows.length;
     let inputRow;

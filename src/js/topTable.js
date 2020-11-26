@@ -78,7 +78,7 @@ function orderData(inTable, data, isSelective) {
     }
     for (const [key, value] of Object.entries(data[i])) {
        cell = row.insertCell(cellCnt++);
-      cell.innerText = decodeURIComponent(value);
+      cell.innerText = value;
     }
 
      cell = row.insertCell(cellCnt++);

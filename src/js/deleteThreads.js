@@ -227,26 +227,36 @@ window.deleteAllAct = function (id, isSelective) {
 
  function deleteCheckBoxed(isSelective) {
 
-        let rowsLen = topSendersTbl.rows.length;
+        let table = topSendersTbl;
+        let checkboxStrId = 'c-row-';
+        let rowId = 'p-row-';
+        if(isSelective){
+            table = selectiveTbl;
+            checkboxStrId = 's-c-row-';
+            rowId = 's-row-';
+        }
+        let rowsLen = table.rows.length;
         let threads = '';
         let input;
         let cells;
         let cnt = 0;
         let rowsArr = [];
-        let row
+        let row;
+    
         for(let i = 1; i<rowsLen; i++)
         {
-            input = document.getElementById('c-row-' + i);
+          
+            input = document.getElementById(checkboxStrId + i);
             if(input.checked)
             {
-                 cells = topSendersTbl.rows[i].cells;
+                 cells = table.rows[i].cells;
                  if(cnt > 0)
                  {
                      threads += ',';
                  }
                  threads += cells[3].innerText.split(',');
                  cnt++;
-                 row = document.getElementById('p-row-' + i);
+                 row = document.getElementById(rowId + i);
                  rowsArr.push(row);
             }
 
