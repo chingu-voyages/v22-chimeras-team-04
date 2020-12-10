@@ -10,7 +10,7 @@
     <title>Webpack starter kit</title>
   </head>
 
-  <body>
+  <body id="tablePageBody">
     <header class="header">
       <div class="logo-container">
         <a href="#">
@@ -59,10 +59,15 @@
       <section class="all-senders">
         <table id="topSendersTbl">
           <tr>
+            <th><input name="checkboxMain" id="checkboxMain" type="checkbox"><div id="checkBoxSelect" >&#9660;</div>
+     <ul id="selectOptsPopUp" class="selectOptsPopUp"><li id="selectAll">All</li><li id="selectNone">None</li></ul>
+            </th>
             <th>
               Contacts
               <div id="sortAlphUp" class="sortTriangle">&#9650;</div>
               <div id="sortAlphDown" class="sortTriangle">&#9660;</div>
+              <div id="trashIcon" class="checkboxTrashIcon">&#128465;</div>
+
             </th>
             <th>Names</th>
             <th>
@@ -82,8 +87,16 @@
     </button>
     <table id="selectiveTbl">
         <tr>
+            <th><input name="checkboxMain" id="s-checkboxMain" type="checkbox"><div id="s-checkBoxSelect" >&#9660;</div>
+              <ul id="s-selectOptsPopUp" class="s-selectOptsPopUp"><li id="s-selectAll">All</li><li id="s-selectNone">None</li></ul>
+                            <div id="s-trashIcon" class="checkboxTrashIcon">&#128465;</div>
+
+            </th>
+
+
             <th>Subjects <div id="sortAlphUpSelective" class="sortTriangle"> &#9650;</div>
                 <div id="sortAlphDownSelective" class="sortTriangle">&#9660;</div>
+
             </th>
             <th>Emails №<div id="sortNumUpSelective" class="sortTriangle"> &#9650;</div>
                 <div id="sortNumDownSelective" class="sortTriangle">&#9660;</div>

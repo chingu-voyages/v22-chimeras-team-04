@@ -5,17 +5,19 @@ table {
     border: none;
     width: 95%;
     margin: 2rem auto;  
-   
-    th:nth-child(2),
-    th:nth-child(4),
+    
+    th:nth-child(3),
     th:nth-child(5),
-    td:nth-child(3)  {
+    td:nth-child(4)  {
      display: none;
     }
 
     th {
+        
         display: flex; 
-        height: 50px;       
+        height: 50px; 
+        
+    
     }  
 
 
@@ -38,12 +40,19 @@ tr {
         word-wrap: break-word;
         overflow-wrap: break-word;
     }
+
     td:nth-child(1) {
+        grid-area: check;
+        padding:  1rem;
+        border: none;  
+    }
+
+    td:nth-child(2) {
         grid-area: first;
         padding:  1rem;
-        border: none;       
+        border: none;  
     }
-    td:nth-child(2) {
+    td:nth-child(3) {
         grid-area: number;
         text-align: right;
         padding:  1rem;
@@ -52,7 +61,7 @@ tr {
         color: $cl-blue;
         font-weight: bolder;
     }
-    td:nth-child(4) {
+    td:nth-child(5) {
         grid-area: third;
         grid-column: 1 / 3;
         text-align: center;
@@ -75,7 +84,7 @@ tr:nth-child(1) {
         text-align: left;
         height: 50px;
     }
-    th:nth-child(4) {
+    th:nth-child(5) {
         display: none;
     }
     th:nth-child(1) {
@@ -93,6 +102,33 @@ tr:nth-child(1) {
     cursor: pointer;
   }
 
+.checkboxTrashIcon{
+    display: none;
+}
+
+.selectOptsPopUp {
+   
+    display: none;
+    width: 75px;
+    background-color: #3399ff;
+    color: white;
+    height: 100px;
+    li:hover{
+        background-color: #0c56a0
+    }
+}
+
+.s-selectOptsPopUp {
+   
+    display: none;
+    width: 75px;
+    background-color: #3399ff;
+    color: white;
+    height: 100px;
+    li:hover{
+        background-color: #0c56a0
+    }
+}
 @media screen and (min-width: $max-sm) {
     tr {
         grid-template-columns: 450px auto;
@@ -106,9 +142,9 @@ tr:nth-child(1) {
 
 @media screen and (min-width: $min-md)  {
     tr {
-        grid-template-columns: 1.5fr 0.4fr 1.1fr;
+        grid-template-columns: 0.1fr 1.5fr 0.4fr 1.1fr;
         grid-template-rows: auto;
-        grid-template-areas: "first number third";
+        grid-template-areas: "check first number third";
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
         margin-top: 0.75rem;
@@ -117,20 +153,20 @@ tr:nth-child(1) {
             line-height: 1.5;
         }
        
-        td:nth-child(4)  {
+        td:nth-child(5)  {
             grid-area: third;
-            grid-column:  3 / 4;
+            grid-column:  4 / 5;
             border: none;
         }        
     }
-    th:nth-child(5) {
+    th:nth-child(6) {
         display: flex;
         justify-content: center;
         color: $cl-red;
     }
 
     tr:nth-child(1) {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: 0.1fr 1.5fr 0.4fr 1.1fr;
         grid-template-rows: 50px;
         text-align: center;       
        

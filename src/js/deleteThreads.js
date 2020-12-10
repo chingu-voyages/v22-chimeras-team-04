@@ -1,5 +1,6 @@
 import {getEmailProfile} from './gmailConnector';
 import Bottleneck from 'bottleneck';
+import { isArray } from 'util';
 
 const modalBox = document.querySelector('.modal-box');
 const modalInfo = document.querySelector('.modal-trash-info');
@@ -121,7 +122,18 @@ const listBatches = (threads, action, row) => {
 
 
     Promise.allSettled(nextPromises).then(() => {
-        row.style.display = "none";
+        if(isArray(row))
+        {
+            for(let i =0; i< row.length; i++)
+            {
+                row[i].style.display = "none";
+            }
+        }
+
+        else{
+            row.style.display = "none";
+
+        }
         infoPopUp();
         addMessage(action, threads.length);
         getEmailProfile();
@@ -184,7 +196,7 @@ window.deleteAllAct = function (id, isSelective) {
     if(isSelective){
         cells = selectiveTbl.rows[myid].cells;
     }
-    let threads = cells[2].innerText.split(',');
+    let threads = cells[3].innerText.split(',');
 
     let row = document.getElementById('p-row-' + myid);
     if(isSelective)
@@ -212,3 +224,64 @@ window.deleteAllAct = function (id, isSelective) {
     btnUnTrash.addEventListener('click', unTrashHandler, { once: true });
 
 }
+
+ function deleteCheckBoxed(isSelective) {
+
+        let table = topSendersTbl;
+        let checkboxStrId = 'c-row-';
+        let rowId = 'p-row-';
+        if(isSelective){
+            table = selectiveTbl;
+            checkboxStrId = 's-c-row-';
+            rowId = 's-row-';
+        }
+        let rowsLen = table.rows.length;
+        let threads = '';
+        let input;
+        let cells;
+        let cnt = 0;
+        let rowsArr = [];
+        let row;
+    
+        for(let i = 1; i<rowsLen; i++)
+        {
+          
+            input = document.getElementById(checkboxStrId + i);
+            if(input.checked)
+            {
+                 cells = table.rows[i].cells;
+                 if(cnt > 0)
+                 {
+                     threads += ',';
+                 }
+                 threads += cells[3].innerText.split(',');
+                 cnt++;
+                 row = document.getElementById(rowId + i);
+                 rowsArr.push(row);
+            }
+
+        }
+
+        popUp();
+
+        let trashHandler = function(event){
+            listBatches(threads.split(','),'trash',rowsArr);
+            btnDelete.removeEventListener('click', deleteHandler,{once:true});
+        };
+    
+        let deleteHandler = function(event){
+            listBatches(threads.split(','),'delete',rowsArr);
+            btnTrash.removeEventListener('click', trashHandler,{once:true});
+        }
+    
+        let unTrashHandler = function(event){
+            unTrash(threads, row);
+            btnUnTrash.removeEventListener('click', unTrashHandler,{once:true});
+        }
+        btnTrash.addEventListener('click', trashHandler, { once: true });
+        btnDelete.addEventListener('click', deleteHandler, { once: true });
+        btnUnTrash.addEventListener('click', unTrashHandler, { once: true });
+        
+    }
+
+export {deleteCheckBoxed};

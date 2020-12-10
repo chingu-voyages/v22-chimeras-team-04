@@ -2,6 +2,7 @@ import { gapi } from "gapi-script";
 import { getData, getDataSubjects } from "./topTable";
 import Bottleneck from "bottleneck";
 import { jaccard } from "wuzzy";
+import {initEventListeners} from './checkboxSelection.js'
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const API_KEY = process.env.API_KEY;
@@ -48,14 +49,13 @@ function initClient() {
 
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
-    // currentStatDiv.innerHTML = "*****signed-in*****";
+    signOut.style.display = 'block';
+    signIn.style.display = 'none';
     getEmailProfile()
     listThreadsWrapper()
 
-    signOut.style.display = 'block';
-    signIn.style.display = 'none';
+
   } else {
-    // currentStatDiv.innerHTML = "*****signed-out*****";
     userEmail.innerText = "";
     totalEmails.innerText = "";
     signOut.style.display = "none";
@@ -154,7 +154,7 @@ function getSubjectById(id) {
 
 function listThreadsWrapper()
 {
-  let maxCnt = 10;
+  let maxCnt = 2;
   let batches = [];
   let myPromises = []
 
@@ -227,6 +227,8 @@ function listThreads(batches, maxCnt, nextPageToken,myPromises) {
         
         Promise.allSettled(myPromises).then(() => {
           getEmailProfile()
+          initEventListeners()
+
         });
       }
     } else {

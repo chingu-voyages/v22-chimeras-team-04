@@ -1,4 +1,5 @@
 import { listSubjects } from './gmailConnector'
+import {showTrashIcon} from './checkboxSelection'
 let topSendersTbl = document.getElementById("topSendersTbl");
 let selectiveTbl = document.getElementById("selectiveTbl"); 
 let topTblData = [];
@@ -58,31 +59,51 @@ function orderData(inTable, data, isSelective) {
 
   let table = inTable;
   let countRows = null;
+  
   for (let i = 0, cellCnt = 0; i < data.length; i++) {
     let row = table.insertRow(i + 1)
     
     row.id = "p-row-" + (i + 1)
     if(isSelective){
       row.id = "s-row-" + (i + 1)
-
-    }
-    for (const [key, value] of Object.entries(data[i])) {
-      let cell = row.insertCell(cellCnt++);
-      cell.innerText = decodeURIComponent(value);
     }
 
     let cell = row.insertCell(cellCnt++);
-    let action = '<button class=btn-all id=p-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,false) >All</button>  <button class=btn-selective id=p-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,false)>Selective</button>';
+   
+    cell.innerHTML = '<input type="checkbox" id="'+"c-row-"+(i+1)+'">';
+    if(isSelective)
+    {
+      cell.innerHTML = '<input type="checkbox" id="'+"s-c-row-"+(i+1)+'">';
+
+    }
+    for (const [key, value] of Object.entries(data[i])) {
+       cell = row.insertCell(cellCnt++);
+      cell.innerText = value;
+    }
+
+     cell = row.insertCell(cellCnt++);
+    let action = '<button class=btn-all id=p-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,false) >All</button>  <button class=btn-selective id=p-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id)>Selective</button>';
     if(isSelective){
-       action = '<button class=btn-all id=s-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,true) >All</button>  <button class=btn-selective id=s-select-' + (i + 1) + ' onclick=deleteSomeAct(this.id,true)>Selective</button>';
+       action = '<button class=btn-all id=s-delete-' + (i + 1) + ' onclick=deleteAllAct(this.id,true) >All</button>';
     }
     cell.innerHTML = action;
     cellCnt = 0;
     countRows++
   }
+if(isSelective){
+
+  let s_inputRow;
+ for (let i = 1; i < table.rows.length; i++) {
+     s_inputRow = document.getElementById('s-c-row-' + i);
+     s_inputRow.addEventListener('change', showTrashIcon);
+     s_inputRow.isSelective = true; //TODO: verify that all those listeners are cleared once the table is refreshed   
+ }
+}
   if (countRows > 1) {
     loaderBg.style.display = "none";
   }
+
+
 }
 
 
@@ -142,15 +163,12 @@ const selectiveTable = document.querySelector('.selective');
 const btnBack = document.querySelector('.back');
 selectiveTable.style.display = "none";
 
-window.deleteSomeAct = function (id, isSelective) {
+window.deleteSomeAct = function (id) {
   
   let myid = id.replace("p-select-", '')
-  if(isSelective){
-    myid = id.replace("s-select-", '')
-  }
+
   let cells = topSendersTbl.rows[myid].cells;
-  let threads = cells[2].innerText.split(',');
-  let from = cells[0].innerText;
+  let threads = cells[3].innerText.split(',');
 
   topTable.style.display = "none";
 

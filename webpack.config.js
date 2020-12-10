@@ -5,7 +5,10 @@ const path = require('path');
 
 module.exports = {
   mode: "development",
-  entry: "./src/js/index.js",
+  entry:{
+    landing: "./src/js/landingPage.js",
+    main: "./src/js/index.js"
+  },
   devtool: "cheap-module-eval-source-map",
   devServer: {
     contentBase: path.join(__dirname, "dist"),
@@ -18,10 +21,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: "Webpack starter project",
       template: path.resolve("./src/index.html"),
+      chunks:['landing']
     }),
     new HtmlWebpackPlugin({ // Also generate a test.html
       filename: 'topTable.html',
-      template: 'src/html/topTable.html'
+      template: 'src/html/topTable.html',
+      chunks:['main']
     }),
     new MiniCssExtractPlugin({
       filename: "[name].css",
